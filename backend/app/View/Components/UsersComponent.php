@@ -14,7 +14,7 @@ class UsersComponent extends Component
     public function __construct()
     {
         $userController = new UserController();
-        $this->userData = $userController->getData();
+        $this->userData = $userController->Index();
     }
 
     /**

@@ -5,11 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Support\Facades\Crypt;
 
 class UserController extends Controller
 {
-    public function getData()
+
+    public function Index()
     {
         return User::all();
     }
