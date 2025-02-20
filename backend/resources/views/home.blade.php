@@ -81,7 +81,10 @@
                 {{ session('status') }}
             </div>
         @endif
-        <x-users-component />
+
+        @if (Auth::check() && Auth::user()->role == 'admin')
+            <x-users-component />
+        @endif
 
     </div>
 </body>
