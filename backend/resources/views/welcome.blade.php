@@ -18,7 +18,7 @@
 <div class="d-flex align-items-center justify-content-center vh-100">
     @if (Route::has('login'))
         @auth
-            <a class="btn btn-primary" href="{{ url('/Home') }}" role="button">Dashboard</a>
+            <a class="btn btn-primary" href="{{ url('/home') }}" role="button">Dashboard</a>
         @else
             <a class="btn btn-primary" href="{{ url('login') }}" role="button">Login</a>
         @endauth
