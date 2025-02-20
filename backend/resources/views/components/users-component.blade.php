@@ -25,19 +25,21 @@
                                         <td>{{ $user->role }}</td>
                                         <td>{{ $user->status }}</td>
                                         <td>
-                                            <a href="#" role="button"><i class="bi bi-pencil-square"></i></a>
-                                            <a href="#" role="button"><i class="bi bi-trash3"></i></a>
+                                            <a href="{{ route('users.edit', ['user' => $user->id]) }}" role="button"><i
+                                                    class="bi bi-pencil-square"></i></a>
+                                            <a href="{{ route('users.destroy', ['user' => $user->id]) }}"
+                                                role="button"><i class="bi bi-trash3"></i></a>
                                         </td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
+                        <div class="d-flex align-items-center justify-content-center">
+                            <a class="btn btn-primary" href="{{ route('users.create') }}" role="button">Add</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </main>
-<div class="d-flex align-items-center justify-content-center">
-    <a class="btn btn-primary" href="#" role="button">Add</a>
-</div>
