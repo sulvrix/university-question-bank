@@ -31,6 +31,18 @@
             <div class="alert alert-danger">{{ $message }}</div>
         @enderror
 
+        <label for="department_id">Department:</label>
+        <select name="department_id">
+            @foreach($departments as $department)
+                <option value="{{ $department->id }}" {{ $department->id == old('department_id', $user->department_id) ? 'selected' : '' }}>
+                    {{ $department->name }}
+                </option>
+            @endforeach
+        </select>
+        @error('department_id')
+            <div class="alert alert-danger">{{ $message }}</div>
+        @enderror
+
         <label for="new_password">New Password:</label>
         <input type="password" name="new_password">
         @error('new_password')

@@ -12,17 +12,14 @@
             <div class="row justify-content-center">
                 <div class="col-md-10">
                     <div class="card">
-                        <div class="card-header">{{ __('Users') }}</div>
+                        <div class="card-header">{{ __('Departments') }}</div>
                         <div class="card-body">
                             <table class="table table-striped" id="table">
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
                                         <th scope="col">Name</th>
-                                        <th scope="col">Email</th>
-                                        <th scope="col">Role</th>
-                                        <th scope="col">Status</th>
-                                        <th scope="col">Department</th>
+                                        <th scope="col">Faculty</th>
                                         <th scope="col">Manage</th>
                                     </tr>
                                 </thead>

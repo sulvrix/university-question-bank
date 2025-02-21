@@ -29,6 +29,18 @@
             <div class="error">{{ $message }}</div>
         @enderror
 
+        <label for="department_id">Department:</label>
+        <select name="department_id">
+            @foreach($departments as $department)
+            <option value="{{ $department->id }}" {{ old('department_id') == $department->id ? 'selected' : '' }}>
+                {{ $department->name }}
+            </option>
+            @endforeach
+        </select>
+        @error('department_id')
+            <div class="error">{{ $message }}</div>
+        @enderror
+
         <label for="password">Password:</label>
         <input type="password" name="password">
         @error('password')
