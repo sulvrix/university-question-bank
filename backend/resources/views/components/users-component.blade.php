@@ -14,7 +14,7 @@
                     <div class="card">
                         <div class="card-header">{{ __('Users') }}</div>
                         <div class="card-body">
-                            <table class="table table-striped" id="table">
+                            <table class="table table-hover" id="tableUsers">
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
@@ -59,7 +59,7 @@
     <script src="https://cdn.datatables.net/2.2.2/js/dataTables.bootstrap5.js"></script>
     <script>
         $(document).ready(function() {
-            new DataTable('#table', {
+            new DataTable('#tableUsers', {
                 layout: {
                     topStart: {
                         pageLength: {

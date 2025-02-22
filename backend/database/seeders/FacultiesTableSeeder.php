@@ -16,6 +16,9 @@ class FacultiesTableSeeder extends Seeder
         DB::table('faculties')->insert([
             [
                 'name' => 'Hadhramout University',
+            ],
+            [
+                'name' => 'Al-Arab University',
             ]
 
         ]);

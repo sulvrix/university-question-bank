@@ -76,7 +76,15 @@
     @endif
 
     @if (Auth::check() && Auth::user()->role == 'admin')
-        <x-users-component />
+        <div>
+            <x-users-component />
+        </div>
+        <div>
+            <x-departments-component />
+        </div>
+        {{-- <div>
+            <x-faculties-component />
+        </div> --}}
     @endif
 
 </div>

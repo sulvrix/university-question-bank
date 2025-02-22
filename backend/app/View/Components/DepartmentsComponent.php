@@ -5,15 +5,17 @@ namespace App\View\Components;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
+use App\Http\Controllers\DepartmentController;
 
 class DepartmentsComponent extends Component
 {
-    /**
-     * Create a new component instance.
-     */
+
+    public $departmentData;
+
     public function __construct()
     {
-        //
+        $departmentController = new DepartmentController();
+        $this->departmentData = $departmentController->Index();
     }
 
     /**

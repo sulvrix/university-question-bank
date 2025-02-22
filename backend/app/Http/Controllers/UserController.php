@@ -16,7 +16,21 @@ class UserController extends Controller
 
     public function create()
     {
-        return view('users.create');
+        // Fetch all users
+        $users = User::all();
+
+        // Get unique roles
+        $roles = $users->unique('role')->pluck('role');
+
+        // Get unique departments
+        $departments = $users->unique('department_id')->map(function ($user) {
+            return [
+                'id' => $user->department_id,
+                'name' => $user->department->name,
+            ];
+        });
+
+        return view('users.create', compact('users', 'roles', 'departments'));
     }
 
     public function store(Request $request)
@@ -30,6 +44,7 @@ class UserController extends Controller
                 'status' => 'required|string|in:active,inactive',
                 'password' => 'required|string|min:6|confirmed',
                 'password_confirmation' => 'required|string|min:6',
+                'department_id' => 'required|integer|exists:departments,id',
             ]);
 
             // Create a new user
@@ -39,6 +54,7 @@ class UserController extends Controller
                 'role' => $validatedData['role'],
                 'status' => $validatedData['status'],
                 'password' => bcrypt($validatedData['password']),
+                'department_id' => $validatedData['department_id'],
             ]);
 
             // Redirect to a specific route with a success message
@@ -64,6 +80,7 @@ class UserController extends Controller
             'status' => 'required|string|in:active,inactive',
             'new_password' => 'nullable|string|min:6|confirmed',
             'new_password_confirmation' => 'nullable|string|min:6',
+            'department_id' => 'required|integer|exists:departments,id',
         ]);
 
         // Update the user data
@@ -74,6 +91,7 @@ class UserController extends Controller
         if (!empty($validatedData['new_password'])) {
             $user->password = bcrypt($validatedData['new_password']);
         }
+        $user->department_id = $validatedData['department_id'];
         $user->save();
 
         // Redirect to a specific route with a success message

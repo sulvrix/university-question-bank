@@ -1,58 +1,81 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1>Add User</h1>
+    <div class="container mt-5">
+        <h1 class="mb-4">Add User</h1>
 
-    <form method="POST" action="{{ route('users.store') }}">
-        @csrf
-        <label for="name">Name:</label>
-        <input type="text" name="name" value="{{ old('name') }}">
-        @error('name')
-            <div class="error">{{ $message }}</div>
-        @enderror
+        <form method="POST" action="{{ route('users.store') }}">
+            @csrf
+            <div class="mb-3">
+                <label for="name" class="form-label">Name:</label>
+                <input type="text" class="form-control" name="name" value="{{ old('name') }}">
+                @error('name')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
 
-        <label for="email">Email:</label>
-        <input type="email" name="email" value="{{ old('email') }}">
-        @error('email')
-            <div class="error">{{ $message }}</div>
-        @enderror
+            <div class="mb-3">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" class="form-control" name="email" value="{{ old('email') }}">
+                @error('email')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
 
-        <label for="role">Role:</label>
-        <input type="text" name="role" value="{{ old('role') }}">
-        @error('role')
-            <div class="error">{{ $message }}</div>
-        @enderror
+            <div class="mb-3">
+                <label for="role" class="form-label">Role:</label>
+                <select class="form-select" name="role">
+                    @foreach ($roles as $role)
+                        <option value="{{ $role }}" {{ old('role') == $role ? 'selected' : '' }}>
+                            {{ ucfirst($role) }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('role')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
 
-        <label for="status">Status:</label>
-        <input type="text" name="status" value="{{ old('status') }}">
-        @error('status')
-            <div class="error">{{ $message }}</div>
-        @enderror
+            <div class="mb-3">
+                <label for="status" class="form-label">Status:</label>
+                <input type="text" class="form-control" name="status" value="{{ old('status') }}">
+                @error('status')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
 
-        <label for="department_id">Department:</label>
-        <select name="department_id">
-            @foreach($departments as $department)
-            <option value="{{ $department->id }}" {{ old('department_id') == $department->id ? 'selected' : '' }}>
-                {{ $department->name }}
-            </option>
-            @endforeach
-        </select>
-        @error('department_id')
-            <div class="error">{{ $message }}</div>
-        @enderror
+            <div class="mb-3">
+                <label for="department_id" class="form-label">Department:</label>
+                <select class="form-select" name="department_id">
+                    @foreach ($departments as $department)
+                        <option value="{{ $department['id'] }}"
+                            {{ old('department_id') == $department['id'] ? 'selected' : '' }}>
+                            {{ $department['name'] }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('department_id')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
 
-        <label for="password">Password:</label>
-        <input type="password" name="password">
-        @error('password')
-            <div class="error">{{ $message }}</div>
-        @enderror
+            <div class="mb-3">
+                <label for="password" class="form-label">Password:</label>
+                <input type="password" class="form-control" name="password">
+                @error('password')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
 
-        <label for="password_confirmation">Confirm Password:</label>
-        <input type="password" name="password_confirmation">
-        @error('password_confirmation')
-            <div class="error">{{ $message }}</div>
-        @enderror
+            <div class="mb-3">
+                <label for="password_confirmation" class="form-label">Confirm Password:</label>
+                <input type="password" class="form-control" name="password_confirmation">
+                @error('password_confirmation')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
+            </div>
 
-        <button type="submit">Add User</button>
-    </form>
+            <button type="submit" class="btn btn-primary">Add User</button>
+        </form>
+    </div>
 @endsection
