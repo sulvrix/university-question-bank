@@ -25,7 +25,7 @@ class FacultyController extends Controller
         $faculties = Faculty::all(); // Fetch all unique faculties
         $universities = University::all(); // Fetch all unique faculties
 
-        return view('faculties.create', compact('faculties', 'universities'));
+        return view('admin.faculties.create', compact('faculties', 'universities'));
     }
 
     /**
@@ -70,7 +70,7 @@ class FacultyController extends Controller
         $faculties = Faculty::all(); // Fetch all unique faculties
         $universities = University::all(); // Fetch all unique faculties
 
-        return view('faculties.edit', compact('faculties', 'universities'));
+        return view('admin.faculties.edit', compact('faculties', 'universities'));
     }
 
     /**

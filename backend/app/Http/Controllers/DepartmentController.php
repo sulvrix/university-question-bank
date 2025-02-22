@@ -25,7 +25,7 @@ class DepartmentController extends Controller
         $faculties = Faculty::all(); // Fetch all unique faculties
         $departments = Department::all();
 
-        return view('departments.create', compact('faculties', 'departments'));
+        return view('admin.departments.create', compact('faculties', 'departments'));
     }
 
     /**
@@ -62,7 +62,7 @@ class DepartmentController extends Controller
 
         $faculties = Faculty::all(); // Fetch all unique faculties
 
-        return view('departments.edit', compact('department', 'faculties'));
+        return view('admin.departments.edit', compact('department', 'faculties'));
     }
 
     /**

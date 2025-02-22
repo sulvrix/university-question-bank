@@ -27,7 +27,7 @@ class UserController extends Controller
         // Fetch unique departments (if needed)
         $departments = Department::all();
 
-        return view('users.create', compact('users', 'roles', 'statuses', 'departments'));
+        return view('admin.users.create', compact('users', 'roles', 'statuses', 'departments'));
     }
 
     public function store(Request $request)
@@ -74,7 +74,7 @@ class UserController extends Controller
         // Fetch unique departments
         $departments = Department::all();
 
-        return view('users.edit', compact('user', 'roles', 'statuses', 'departments'));
+        return view('admin.users.edit', compact('user', 'roles', 'statuses', 'departments'));
     }
 
     public function update(Request $request, User $user)
