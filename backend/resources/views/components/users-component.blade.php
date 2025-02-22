@@ -14,7 +14,7 @@
                     <div class="card">
                         <div class="card-header">{{ __('Users') }}</div>
                         <div class="card-body">
-                            <table class="table table-hover" id="tableUsers">
+                            <table class="table table-hover" style="font-size: 1.25em" id="tableUsers">
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
@@ -26,10 +26,10 @@
                                         <th scope="col">Manage</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="table-group-divider">
                                     @foreach ($userData as $user)
                                         <tr>
-                                            <th scope="row">{{ $user->id }}</th>
+                                            <td>{{ $user->id }}</td>
                                             <td>{{ $user->name }}</td>
                                             <td>{{ $user->email }}</td>
                                             <td>{{ $user->role }}</td>
@@ -80,12 +80,12 @@
                 columnDefs: [
                     // targets may be classes
                     {
-                        targets: 5,
+                        targets: 6,
                         orderable: false,
                         searchable: false,
                     },
                     {
-                        targets: 1,
+                        targets: 2,
                         data: 'name',
                         render: function(data, type, row, meta) {
                             return type === 'display' && data.length > 40 ?
@@ -93,7 +93,11 @@
                                 '...</span>' :
                                 data;
                         }
-                    }
+                    },
+                    {
+                        className: 'dt-left',
+                        targets: '_all'
+                    },
                 ],
             });
         });

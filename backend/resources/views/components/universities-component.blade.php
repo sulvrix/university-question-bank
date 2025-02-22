@@ -12,27 +12,25 @@
             <div class="row justify-content-center">
                 <div class="col-md-10">
                     <div class="card">
-                        <div class="card-header">{{ __('Departments') }}</div>
+                        <div class="card-header">{{ __('Universities') }}</div>
                         <div class="card-body">
-                            <table class="table table-hover" style="font-size: 1.25em" id="tableDepartments">
+                            <table class="table table-hover" style="font-size: 1.25em" id="tableUniversities">
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
                                         <th scope="col">Name</th>
-                                        <th scope="col">Faculty</th>
                                         <th scope="col">Manage</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-group-divider">
-                                    @foreach ($departmentData as $department)
+                                    @foreach ($universityData as $university)
                                         <tr>
-                                            <td>{{ $department->id }}</td>
-                                            <td>{{ $department->name }}</td>
-                                            <td>{{ $department->faculty->name }}</td>
+                                            <td>{{ $university->id }}</td>
+                                            <td>{{ $university->name }}</td>
                                             <td>
-                                                <a href="{{ route('departments.edit', ['department' => $department->id]) }}"
+                                                <a href="{{ route('universities.edit', ['university' => $university->id]) }}"
                                                     role="button"><i class="bi bi-pencil-square"></i></a>
-                                                <a href="{{ route('departments.destroy', ['department' => $department->id]) }}"
+                                                <a href="{{ route('universities.destroy', ['university' => $university->id]) }}"
                                                     role="button"><i class="bi bi-trash3"></i></a>
                                             </td>
                                         </tr>
@@ -40,7 +38,7 @@
                                 </tbody>
                             </table>
                             <div class="d-flex align-items-center justify-content-center">
-                                <a class="btn btn-primary" href="{{ route('departments.create') }}"
+                                <a class="btn btn-primary" href="{{ route('universities.create') }}"
                                     role="button">Add</a>
                             </div>
                         </div>
@@ -54,7 +52,7 @@
     <script src="https://cdn.datatables.net/2.2.2/js/dataTables.bootstrap5.js"></script>
     <script>
         $(document).ready(function() {
-            new DataTable('#tableDepartments', {
+            new DataTable('#tableUniversities', {
                 layout: {
                     topStart: {
                         pageLength: {
@@ -75,7 +73,7 @@
                 columnDefs: [
                     // targets may be classes
                     {
-                        targets: 3,
+                        targets: 2,
                         orderable: false,
                         searchable: false,
                     },

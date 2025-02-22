@@ -75,15 +75,29 @@
         </div>
     @endif
 
+    {{-- Admin Dashboard Content --}}
     @if (Auth::check() && Auth::user()->role == 'admin')
-        <div>
-            <x-users-component />
-        </div>
-        <div>
-            <x-departments-component />
-        </div>
-        <div>
-            <x-faculties-component />
+        <div class="container text-center">
+            <div class="row">
+                <div class="col">
+                    <x-users-component />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <x-departments-component />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <x-faculties-component />
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <x-universities-component />
+                    </div>
+                </div>
+            </div>
         </div>
     @endif
 

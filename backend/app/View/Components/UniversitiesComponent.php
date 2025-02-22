@@ -7,7 +7,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 use App\Http\Controllers\UniversityController;
 
-class UnivesitiesComponent extends Component
+class UniversitiesComponent extends Component
 {
     public $universityData;
 
@@ -22,6 +22,6 @@ class UnivesitiesComponent extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.univesities-component');
+        return view('components.universities-component');
     }
 }

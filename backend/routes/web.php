@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\FacultyController;
+use App\Http\Controllers\UniversityController;
 
 Route::get('/', function () {
     return view('home');
@@ -35,7 +36,13 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('dashboard')->group(function () {
             Route::resource('faculties', FacultyController::class);
         });
+
+        //universities routes
+        Route::prefix('dashboard')->group(function () {
+            Route::resource('universities', UniversityController::class);
+        });
     });
+
     Route::fallback(function () {
         return response()->view('errors.404', [], 404);
     });

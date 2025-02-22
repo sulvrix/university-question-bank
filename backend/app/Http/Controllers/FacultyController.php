@@ -68,8 +68,9 @@ class FacultyController extends Controller
     {
 
         $faculties = Faculty::all(); // Fetch all unique faculties
+        $universities = University::all(); // Fetch all unique faculties
 
-        return view('faculties.edit', compact('faculties'));
+        return view('faculties.edit', compact('faculties', 'universities'));
     }
 
     /**
@@ -80,9 +81,11 @@ class FacultyController extends Controller
         // Validate the request data
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
+            'university_id' => 'required|integer|exists:universities,id',
         ]);
 
         $faculty->name = $validatedData['name'];
+        $faculty->university_id = $validatedData['university_id'];
         $faculty->save();
 
         // Redirect to a specific route with a success message

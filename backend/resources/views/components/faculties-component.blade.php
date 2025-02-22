@@ -14,7 +14,7 @@
                     <div class="card">
                         <div class="card-header">{{ __('Faculties') }}</div>
                         <div class="card-body">
-                            <table class="table table-hover" id="tableFaculties">
+                            <table class="table table-hover" style="font-size: 1.25em" id="tableFaculties">
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
@@ -23,10 +23,10 @@
                                         <th scope="col">Manage</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="table-group-divider">
                                     @foreach ($facultyData as $faculty)
                                         <tr>
-                                            <th scope="row">{{ $faculty->id }}</th>
+                                            <td>{{ $faculty->id }}</td>
                                             <td>{{ $faculty->name }}</td>
                                             <td>{{ $faculty->University->name }}</td>
                                             <td>
@@ -88,7 +88,11 @@
                                 '...</span>' :
                                 data;
                         }
-                    }
+                    },
+                    {
+                        className: 'dt-left',
+                        targets: '_all'
+                    },
                 ],
             });
         });
