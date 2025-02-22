@@ -38,7 +38,13 @@
 
             <div class="mb-3">
                 <label for="status" class="form-label">Status:</label>
-                <input type="text" class="form-control" name="status" value="{{ old('status') }}">
+                <select class="form-select" name="status">
+                    @foreach ($statuses as $status)
+                        <option value="{{ $status }}" {{ old('status') == $status ? 'selected' : '' }}>
+                            {{ ucfirst($status) }}
+                        </option>
+                    @endforeach
+                </select>
                 @error('status')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror
@@ -75,6 +81,7 @@
                 @enderror
             </div>
 
+            <a class="btn btn-secondary" href="{{ '/dashboard' }}" role="button">Back</a>
             <button type="submit" class="btn btn-primary">Add User</button>
         </form>
     </div>

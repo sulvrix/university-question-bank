@@ -19,9 +19,17 @@ class DepartmentsTableSeeder extends Seeder
                 'faculty_id' => 1
             ],
             [
-                'name' => 'Medicine',
-                'faculty_id' => 1
-            ]
+                'name' => 'Human Medicine',
+                'faculty_id' => 2
+            ],
+            [
+                'name' => 'Pharmacy',
+                'faculty_id' => 2
+            ],
+            [
+                'name' => 'Computer Engineering',
+                'faculty_id' => 3
+            ],
 
         ]);
     }

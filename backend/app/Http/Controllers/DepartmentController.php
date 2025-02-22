@@ -23,8 +23,9 @@ class DepartmentController extends Controller
     public function create()
     {
         $faculties = Faculty::all(); // Fetch all unique faculties
+        $departments = Department::all();
 
-        return view('departments.create', compact('faculties'));
+        return view('departments.create', compact('faculties', 'departments'));
     }
 
     /**
@@ -39,14 +40,13 @@ class DepartmentController extends Controller
                 'faculty_id' => 'required|integer|exists:faculties,id',
             ]);
 
-            // Create a new user
             Department::create([
                 'name' => $validatedData['name'],
                 'faculty_id' => $validatedData['faculty_id'],
             ]);
 
             // Redirect to a specific route with a success message
-            return redirect('/home')->with('success', 'User created successfully.');
+            return redirect('/dashboard')->with('success', 'Department created successfully.');
         } catch (ValidationException $e) {
             // Return an error response if validation fails
             return redirect()->back()->withErrors($e->validator->errors())->withInput();
@@ -58,7 +58,11 @@ class DepartmentController extends Controller
      */
     public function edit(Department $department)
     {
-        return view('departments.edit', ['department' => $department]);
+        $department = Department::findOrFail($department->id);
+
+        $faculties = Faculty::all(); // Fetch all unique faculties
+
+        return view('departments.edit', compact('department', 'faculties'));
     }
 
     /**
@@ -72,21 +76,21 @@ class DepartmentController extends Controller
             'faculty_id' => 'required|integer|exists:faculties,id',
         ]);
 
-        // Update the user data
         $department->name = $validatedData['name'];
-        $department->faculty_id = $validatedData['department_id'];
+        $department->faculty_id = $validatedData['faculty_id'];
         $department->save();
 
         // Redirect to a specific route with a success message
-        return redirect('/home')->with('success', 'User updated successfully.');
+        return redirect('/dashboard')->with('success', 'Department updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    public function show(Department $department)
+    {
+        return $this->destroy($department);
+    }
     public function destroy(Department $department)
     {
         $department->delete();
-        return redirect('/home')->with('success', 'User deleted successfully.');
+        return redirect('/dashboard')->with('success', 'Department deleted successfully.');
     }
 }

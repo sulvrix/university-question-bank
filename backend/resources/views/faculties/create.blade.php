@@ -2,8 +2,8 @@
 
 @section('content')
     <div class="container mt-5">
-        <h2 class="mb-4">Create Department</h2>
-        <form action="{{ route('departments.store') }}" method="POST">
+        <h2 class="mb-4">Create Faculty</h2>
+        <form action="{{ route('faculties.store') }}" method="POST">
             @csrf
             <div class="mb-3">
                 <label for="name" class="form-label">Name:</label>
@@ -14,15 +14,15 @@
             </div>
 
             <div class="mb-3">
-                <label for="faculty_id" class="form-label">Faculty:</label>
-                <select class="form-select" name="faculty_id">
-                    @foreach ($faculties as $faculty)
-                        <option value="{{ $faculty->id }}">
-                            {{ $faculty->name }}
+                <label for="university_id" class="form-label">University:</label>
+                <select class="form-select" name="university">
+                    @foreach ($universities as $univeristy)
+                        <option value="{{ $university->id }}">
+                            {{ $university->name }}
                         </option>
                     @endforeach
                 </select>
-                @error('faculty_id')
+                @error('university_id')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror
             </div>

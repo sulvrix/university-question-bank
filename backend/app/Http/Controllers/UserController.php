@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Department;
 use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
@@ -16,21 +17,17 @@ class UserController extends Controller
 
     public function create()
     {
-        // Fetch all users
+        // Define all possible roles explicitly
+        $roles = ['admin', 'staff', 'commissioner', 'teacher'];
+        $statuses = ['active', 'inactive'];
+
+        // Fetch all users (if needed)
         $users = User::all();
 
-        // Get unique roles
-        $roles = $users->unique('role')->pluck('role');
+        // Fetch unique departments (if needed)
+        $departments = Department::all();
 
-        // Get unique departments
-        $departments = $users->unique('department_id')->map(function ($user) {
-            return [
-                'id' => $user->department_id,
-                'name' => $user->department->name,
-            ];
-        });
-
-        return view('users.create', compact('users', 'roles', 'departments'));
+        return view('users.create', compact('users', 'roles', 'statuses', 'departments'));
     }
 
     public function store(Request $request)
@@ -58,7 +55,7 @@ class UserController extends Controller
             ]);
 
             // Redirect to a specific route with a success message
-            return redirect('/home')->with('success', 'User created successfully.');
+            return redirect('/dashboard')->with('success', 'User created successfully.');
         } catch (ValidationException $e) {
             // Return an error response if validation fails
             return redirect()->back()->withErrors($e->validator->errors())->withInput();
@@ -67,7 +64,17 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        return view('users.edit', ['user' => $user]);
+        // Fetch the user being edited
+        $user = User::findOrFail($user->id);
+
+        // Fetch unique roles
+        $roles = ['admin', 'staff', 'commissioner', 'teacher'];
+        $statuses = ['active', 'inactive'];
+
+        // Fetch unique departments
+        $departments = Department::all();
+
+        return view('users.edit', compact('user', 'roles', 'statuses', 'departments'));
     }
 
     public function update(Request $request, User $user)
@@ -95,12 +102,17 @@ class UserController extends Controller
         $user->save();
 
         // Redirect to a specific route with a success message
-        return redirect('/home')->with('success', 'User updated successfully.');
+        return redirect('/dashboard')->with('success', 'User updated successfully.');
+    }
+
+    public function show(User $user)
+    {
+        return $this->destroy($user);
     }
 
     public function destroy(User $user)
     {
         $user->delete();
-        return redirect('/home')->with('success', 'User deleted successfully.');
+        return redirect('/dashboard')->with('success', 'User deleted successfully.');
     }
 }

@@ -26,17 +26,28 @@
 
             <div class="mb-3">
                 <label for="role" class="form-label">Role:</label>
-                <input type="text" class="form-control" name="role" value="{{ old('role', $user->role) }}">
+                <select class="form-select" name="role">
+                    @foreach ($roles as $role)
+                        <option value="{{ $role }}" {{ $user->role == $role ? 'selected' : '' }}>
+                            {{ ucfirst($role) }}
+                        </option>
+                    @endforeach
+                </select>
                 @error('role')
-                    <div class="alert alert-danger mt-2">{{ $message }}</div>
+                    <div class="text-danger">{{ $message }}</div>
                 @enderror
             </div>
-
             <div class="mb-3">
-                <label for="status" class="form-label">Status:</label>
-                <input type="text" class="form-control" name="status" value="{{ old('status', $user->status) }}">
+                <label for="status" class="form-label">Role:</label>
+                <select class="form-select" name="status">
+                    @foreach ($statuses as $status)
+                        <option value="{{ $status }}" {{ $user->status == $status ? 'selected' : '' }}>
+                            {{ ucfirst($status) }}
+                        </option>
+                    @endforeach
+                </select>
                 @error('status')
-                    <div class="alert alert-danger mt-2">{{ $message }}</div>
+                    <div class="text-danger">{{ $message }}</div>
                 @enderror
             </div>
 
@@ -44,14 +55,14 @@
                 <label for="department_id" class="form-label">Department:</label>
                 <select class="form-select" name="department_id">
                     @foreach ($departments as $department)
-                        <option value="{{ $department->id }}"
-                            {{ $department->id == old('department_id', $user->department_id) ? 'selected' : '' }}>
-                            {{ $department->name }}
+                        <option value="{{ $department['id'] }}"
+                            {{ $user->department_id == $department['id'] ? 'selected' : '' }}>
+                            {{ $department['name'] }}
                         </option>
                     @endforeach
                 </select>
                 @error('department_id')
-                    <div class="alert alert-danger mt-2">{{ $message }}</div>
+                    <div class="text-danger">{{ $message }}</div>
                 @enderror
             </div>
 
@@ -70,7 +81,7 @@
                     <div class="alert alert-danger mt-2">{{ $message }}</div>
                 @enderror
             </div>
-
+            <a class="btn btn-secondary" href="{{ '/dashboard' }}" role="button">Back</a>
             <button type="submit" class="btn btn-primary">Update User</button>
         </form>
     </div>
