@@ -10,9 +10,14 @@ use Illuminate\Validation\ValidationException;
 class UserController extends Controller
 {
 
-    public function Index()
+    public function getData()
     {
         return User::all();
+    }
+
+    public function Index()
+    {
+        return response()->view('errors.404', [], 404);
     }
 
     public function create()

@@ -8,12 +8,14 @@ use Illuminate\Validation\ValidationException;
 
 class UniversityController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function getData()
     {
         return University::all();
+    }
+
+    public function index()
+    {
+        return response()->view('errors.404', [], 404);
     }
 
     /**

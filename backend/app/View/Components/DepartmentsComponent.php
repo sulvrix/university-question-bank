@@ -15,7 +15,7 @@ class DepartmentsComponent extends Component
     public function __construct()
     {
         $departmentController = new DepartmentController();
-        $this->departmentData = $departmentController->Index();
+        $this->departmentData = $departmentController->getData();
     }
 
     /**

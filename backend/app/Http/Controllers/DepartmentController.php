@@ -9,12 +9,14 @@ use Illuminate\Validation\ValidationException;
 
 class DepartmentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function getData()
     {
         return Department::all();
+    }
+
+    public function index()
+    {
+        return response()->view('errors.404', [], 404);
     }
 
     /**

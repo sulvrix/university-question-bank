@@ -14,7 +14,7 @@ class FacultiesComponent extends Component
     public function __construct()
     {
         $facultyController = new FacultyController();
-        $this->facultyData = $facultyController->Index();
+        $this->facultyData = $facultyController->getData();
     }
 
     /**
