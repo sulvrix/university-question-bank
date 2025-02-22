@@ -22,6 +22,15 @@ class UsersTableSeeder extends Seeder
                 'password' => Hash::make('123123'),
                 'role' => 'admin',
                 'status' => 'active',
+                'department_id' => 1,
+            ],
+            [
+                'name' => 'salem maher',
+                'email' => 'salem-ma@gmail.com',
+                'password' => Hash::make('123123'),
+                'role' => 'staff',
+                'status' => 'active',
+                'department_id' => '2',
             ]
 
         ]);

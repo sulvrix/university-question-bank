@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('password');
             $table->enum('role', ['admin', 'staff', 'commissioner', 'teacher']);
             $table->enum('status', ['active', 'inactive']);
+            $table->foreignId('department_id')->nullable()->constrained('users')->onDelete('cascade');
             $table->rememberToken();
             $table->timestamps();
         });
