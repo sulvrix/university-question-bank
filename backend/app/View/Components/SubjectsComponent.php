@@ -2,19 +2,19 @@
 
 namespace App\View\Components;
 
-use App\Http\Controllers\QuestionController;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
+use App\Http\Controllers\SubjectController;
 
-class questionsComponent extends Component
+class SubjectsComponent extends Component
 {
-    public $questionData;
+    public $subjectData;
 
     public function __construct()
     {
-        $questionController = new QuestionController();
-        $this->questionData = $questionController->getData();
+        $subjectController = new SubjectController();
+        $this->subjectData = $subjectController->getData();
     }
 
     /**
@@ -22,6 +22,6 @@ class questionsComponent extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.questions-component');
+        return view('components.subjects-component');
     }
 }

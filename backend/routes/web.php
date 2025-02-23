@@ -9,6 +9,7 @@ use App\Http\Controllers\FacultyController;
 use App\Http\Controllers\UniversityController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\ExamController;
+use App\Http\Controllers\SubjectController;
 
 Route::get('/', function () {
     return view('home');
@@ -33,6 +34,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('dashboard/administration')->g
     Route::resource('departments', DepartmentController::class);
     Route::resource('faculties', FacultyController::class);
     Route::resource('universities', UniversityController::class);
+    Route::resource('subjects', SubjectController::class);
 });
 
 // Questions routes (questions section)

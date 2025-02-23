@@ -6,6 +6,9 @@
             <x-users-component />
         </div>
         <div class="row">
+            <x-subjects-component />
+        </div>
+        <div class="row">
             <x-departments-component />
         </div>
         <div class="row">
