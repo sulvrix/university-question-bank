@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\FacultyController;
 use App\Http\Controllers\UniversityController;
+use App\Http\Controllers\QuestionController;
 
 Route::get('/', function () {
     return view('home');
@@ -18,32 +19,36 @@ Route::get('/home', function () {
 
 Auth::routes();
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('home');
+// Dashboard route (default for authenticated users)
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-Route::middleware(['auth'])->group(function () {
-    Route::middleware(['role:admin'])->group(function () {
-        //users routes
-        Route::prefix('dashboard')->group(function () {
-            Route::resource('users', UserController::class);
-        });
+// Admin routes (administration section)
+Route::middleware(['auth', 'role:admin'])->prefix('dashboard/administration')->group(function () {
+    Route::get('/', function () {
+        return view('admin.index'); // Return the admin index view
+    })->name('dashboard.administration');
 
-        //departments routes
-        Route::prefix('dashboard')->group(function () {
-            Route::resource('departments', DepartmentController::class);
-        });
+    Route::resource('users', UserController::class);
+    Route::resource('departments', DepartmentController::class);
+    Route::resource('faculties', FacultyController::class);
+    Route::resource('universities', UniversityController::class);
+});
 
-        //faculties routes
-        Route::prefix('dashboard')->group(function () {
-            Route::resource('faculties', FacultyController::class);
-        });
+// Questions routes (questions section)
+Route::middleware(['auth'])->prefix('dashboard/questions')->group(function () {
+    Route::get('/', function () {
+        return view('questions.index'); // Return the questions index view
+    })->name('dashboard.questions');
+});
 
-        //universities routes
-        Route::prefix('dashboard')->group(function () {
-            Route::resource('universities', UniversityController::class);
-        });
-    });
+// Questions routes (questions section)
+Route::middleware(['auth'])->prefix('dashboard/exams')->group(function () {
+    Route::get('/', function () {
+        return view('exams.index'); // Return the questions index view
+    })->name('dashboard.exams');
+});
 
-    Route::fallback(function () {
-        return response()->view('errors.404', [], 404);
-    });
+// Fallback route for 404 errors
+Route::fallback(function () {
+    return response()->view('errors.404', [], 404);
 });
