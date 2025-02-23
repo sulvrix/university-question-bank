@@ -60,7 +60,7 @@ class FacultyController extends Controller
      */
     public function show(Faculty $faculty)
     {
-        return $this->destroy($faculty);
+        return $this->edit($faculty);
     }
 
     /**

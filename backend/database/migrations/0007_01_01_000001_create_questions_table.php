@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('exams', function (Blueprint $table) {
+        Schema::create('questions', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->enum('level', ['1', '2', '3']);
-            $table->enum('block', ['1', '2', '3', '4', '5', '6']);
-            $table->foreignId('department_id')->nullable()->constrained()->onDelete('cascade');
+            $table->text('text');
+            $table->json('answers');
+            $table->enum('difficulty', ['easy', 'medium', 'hard'])->nullable();
+            $table->smallInteger('points')->nullable();
+            $table->foreignId('subject_id')->constrained('subjects')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('exams');
+        Schema::dropIfExists('questions');
     }
 };

@@ -56,7 +56,7 @@ class UniversityController extends Controller
      */
     public function show(University $university)
     {
-        return $this->destroy($university);
+        return $this->edit($university);
     }
 
     /**

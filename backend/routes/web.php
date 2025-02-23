@@ -8,6 +8,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\FacultyController;
 use App\Http\Controllers\UniversityController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\ExamController;
 
 Route::get('/', function () {
     return view('home');
@@ -35,18 +36,19 @@ Route::middleware(['auth', 'role:admin'])->prefix('dashboard/administration')->g
 });
 
 // Questions routes (questions section)
-Route::middleware(['auth'])->prefix('dashboard/questions')->group(function () {
-    Route::get('/', function () {
-        return view('questions.index'); // Return the questions index view
-    })->name('dashboard.questions');
+Route::middleware(['auth'])->prefix('dashboard')->group(function () {
+    Route::resource('questions', QuestionController::class)->names([
+        'index' => 'dashboard.questions', // Customize the route name
+    ]);
 });
 
 // Questions routes (questions section)
-Route::middleware(['auth'])->prefix('dashboard/exams')->group(function () {
-    Route::get('/', function () {
-        return view('exams.index'); // Return the questions index view
-    })->name('dashboard.exams');
+Route::middleware(['auth'])->prefix('dashboard')->group(function () {
+    Route::resource('exams', ExamController::class)->names([
+        'index' => 'dashboard.exams', // Customize the route name
+    ]);
 });
+
 
 // Fallback route for 404 errors
 Route::fallback(function () {

@@ -112,7 +112,7 @@ class UserController extends Controller
 
     public function show(User $user)
     {
-        return $this->destroy($user);
+        return $this->edit($user);
     }
 
     public function destroy(User $user)

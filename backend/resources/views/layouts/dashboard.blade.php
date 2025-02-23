@@ -11,15 +11,17 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.bootstrap5.css" />
 </head>
 
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm py-2">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
@@ -87,12 +89,66 @@
             </div>
         @endif
 
-        {{-- Admin Dashboard Content --}}
+        {{-- Dashboard Content --}}
         <main class="py-4">
             @yield('content')
         </main>
-
     </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.bootstrap5.js"></script>
+    <script>
+        $(document).ready(function() {
+            var tables = $('table').DataTable({
+                layout: {
+                    topStart: {
+                        pageLength: {
+                            menu: [10, 25, 50, 100],
+                        }
+                    },
+                    topEnd: {
+                        search: {
+                            placeholder: 'Type Something..'
+                        }
+                    },
+                    bottomEnd: {
+                        paging: {
+                            buttons: 3
+                        }
+                    },
+                },
+                columnDefs: [
+                    // targets may be classes
+                    {
+                        targets: -1,
+                        orderable: false,
+                        searchable: false,
+                        width: '50px',
+                        className: 'dt-center',
+                    },
+                    {
+                        targets: 0,
+                        width: '50px',
+                        className: 'dt-center',
+                    },
+                    {
+                        targets: 1,
+                        data: 'name',
+                        render: function(data, type, row, meta) {
+                            return type === 'display' && data.length > 40 ?
+                                '<span title="' + data + '">' + data.substr(0, 38) +
+                                '...</span>' :
+                                data;
+                        }
+                    },
+                    {
+                        className: 'dt-left',
+                        targets: '_all'
+                    },
+                ],
+            });
+        });
+    </script>
 </body>
 
 </html>

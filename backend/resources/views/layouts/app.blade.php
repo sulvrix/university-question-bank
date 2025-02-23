@@ -13,6 +13,7 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.bootstrap5.css" />
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
@@ -20,8 +21,10 @@
 
 <body>
     <div id="app">
-        <main class="py-4">
-            @yield('content')
+        <main>
+            <div class="d-flex align-items-center vh-100">
+                @yield('content')
+            </div>
         </main>
     </div>
 </body>

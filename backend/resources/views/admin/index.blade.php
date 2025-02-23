@@ -3,24 +3,16 @@
 @section('content')
     <div class="container text-center">
         <div class="row">
-            <div class="col">
-                <x-users-component />
-            </div>
+            <x-users-component />
         </div>
         <div class="row">
-            <div class="col">
-                <x-departments-component />
-            </div>
+            <x-departments-component />
         </div>
         <div class="row">
-            <div class="col">
-                <x-faculties-component />
-            </div>
-            <div class="row">
-                <div class="col">
-                    <x-universities-component />
-                </div>
-            </div>
+            <x-faculties-component />
+        </div>
+        <div class="row">
+            <x-universities-component />
         </div>
     </div>
 @endsection

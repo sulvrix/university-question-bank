@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Question extends Model
 {
     protected $guarded = [];
+    protected $casts = ['answers' => 'array'];
 
     public function exams(): BelongsToMany
     {

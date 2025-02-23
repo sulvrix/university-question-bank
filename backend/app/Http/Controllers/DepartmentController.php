@@ -85,10 +85,9 @@ class DepartmentController extends Controller
         // Redirect to a specific route with a success message
         return redirect('/dashboard')->with('success', 'Department updated successfully.');
     }
-
     public function show(Department $department)
     {
-        return $this->destroy($department);
+        return $this->edit($department);
     }
     public function destroy(Department $department)
     {
