@@ -82,7 +82,7 @@
                     </div>
                 </div>
             </div>
-
+            <a href="javascript:history.back();" class="btn btn-secondary">Go Back</a>
             <button type="submit" class="btn btn-primary">Create Question</button>
         </form>
     </div>

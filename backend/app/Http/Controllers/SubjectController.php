@@ -6,12 +6,23 @@ use App\Models\Subject;
 use App\Models\Department;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Auth;
 
 class SubjectController extends Controller
 {
     public function getData()
     {
-        return Subject::all();
+        $user = Auth::user();
+
+        if ($user->role === 'admin') {
+            // Admins can see all subjects
+            $subjects = Subject::all();
+        } else {
+            // Non-admins can only see subjects from their department
+            $subjects = Subject::where('department_id', $user->department_id)->get();
+        }
+
+        return $subjects;
     }
 
     public function index()
@@ -24,9 +35,17 @@ class SubjectController extends Controller
      */
     public function create()
     {
-        $departments = Department::all(); // Fetch all unique departments
-        $subjects = Subject::all(); // Fetch all unique departments
-        return view('admin.subjects.create', compact('departments', 'subjects'));
+        $user = Auth::user();
+
+        if ($user->role === 'admin') {
+            // Admins can create subjects for any department
+            $departments = Department::all();
+        } else {
+            // Non-admins can only create subjects for their own department
+            $departments = Department::where('id', $user->department_id)->get();
+        }
+
+        return view('admin.subjects.create', compact('departments'));
     }
 
     /**

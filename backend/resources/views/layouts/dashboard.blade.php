@@ -35,7 +35,7 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
-                        @if (Auth::check() && Auth::user()->role == 'admin')
+                        @if (Auth::check() && (Auth::user()->role == 'admin' || Auth::user()->role == 'staff'))
                             <li class="nav-item">
                                 <a class="nav-link"
                                     href="{{ route('dashboard.administration') }}">{{ __('Administration') }}</a>

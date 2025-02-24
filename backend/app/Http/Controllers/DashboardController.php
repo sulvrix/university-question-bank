@@ -24,7 +24,7 @@ class DashboardController extends Controller
     public function index()
     {
         // Check the user's role and redirect accordingly
-        if (Auth::user()->role === 'admin') {
+        if (Auth::user()->role === 'admin' || Auth::user()->role === 'staff') {
             return redirect()->route('dashboard.administration');
         } else {
             return redirect()->route('dashboard.questions');

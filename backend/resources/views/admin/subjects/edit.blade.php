@@ -26,20 +26,24 @@
                 @endif
             </div>
 
-            <div class="mb-3">
-                <label for="department_id" class="form-label">Department:</label>
-                <select class="form-select" name="department_id" id="department_id" required>
-                    @foreach ($departments as $department)
-                        <option value="{{ $department->id }}"
-                            {{ $subject->department_id == $department->id ? 'selected' : '' }}>
-                            {{ $department->name }}
-                        </option>
-                    @endforeach
-                </select>
-                @if ($errors->has('department_id'))
-                    <div class="text-danger">{{ $errors->first('department_id') }}</div>
-                @endif
-            </div>
+            @if (auth()->user()->role == 'admin')
+                <div class="mb-3">
+                    <label for="department_id" class="form-label">Department:</label>
+                    <select class="form-select" name="department_id" id="department_id" required>
+                        @foreach ($departments as $department)
+                            <option value="{{ $department->id }}"
+                                {{ $subject->department_id == $department->id ? 'selected' : '' }}>
+                                {{ $department->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @if ($errors->has('department_id'))
+                        <div class="text-danger">{{ $errors->first('department_id') }}</div>
+                    @endif
+                </div>
+            @else
+                <input type="hidden" name="department_id" value="{{ auth()->user()->department_id }}">
+            @endif
 
             <a class="btn btn-secondary" href="{{ '/dashboard' }}" role="button">Back</a>
             <button type="submit" class="btn btn-primary">Update</button>

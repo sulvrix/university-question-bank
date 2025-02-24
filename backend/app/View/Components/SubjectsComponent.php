@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 use App\Http\Controllers\SubjectController;
+use Illuminate\Support\Facades\Auth;
 
 class SubjectsComponent extends Component
 {
