@@ -10,7 +10,8 @@
                     <label for="text" class="form-label">Question:</label>
                     <div class="input-group">
                         <textarea name="text" id="text" class="form-control @error('text') is-invalid @enderror" required rows="1">{{ old('text') }}</textarea>
-                        <button type="button" id="rephraseButton" class="btn btn-secondary">Rephrase Question</button>
+                        <button type="button" id="rephraseButton" class="btn btn-secondary">Rephrase
+                            Question</button>
                     </div>
                     @error('text')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -19,11 +20,11 @@
             </div>
             <div class="row mb-3">
                 <div class="col-md-8">
-                    <h3>Answers</h3>
+                    {{-- <h3>Answers</h3> --}}
                     @for ($i = 0; $i < 4; $i++)
                         <div class="row mb-2 align-items-center">
                             <div class="col-10">
-                                <label class="form-label">Answer {{ $i + 1 }}:</label>
+                                <label class="form-label">Choice {{ $i + 1 }}:</label>
                                 <input type="text" name="answers[{{ $i }}][text]"
                                     class="form-control @error('answers.' . $i . '.text') is-invalid @enderror"
                                     value="{{ old('answers.' . $i . '.text') }}" required>
@@ -111,6 +112,18 @@
     </div>
 
     <style>
+        .custom-radio {
+            margin-top: 30px;
+            width: 30px;
+            /* Adjust the width */
+            height: 30px;
+            /* Adjust the height */
+
+            /* Remove default margin */
+            cursor: pointer;
+            /* Add pointer cursor */
+        }
+
         /* Ensure modal is centered and scrollable */
         .modal-dialog-centered {
             display: flex;
@@ -150,81 +163,6 @@
         }
     </style>
 
-    <!-- Include Bootstrap 5.3.3 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Your custom JavaScript -->
-    <script>
-        document.getElementById('rephraseButton').addEventListener('click', function() {
-            const questionText = document.getElementById('text').value;
-            if (!questionText) {
-                alert('Please enter a question to rephrase');
-                return;
-            }
-
-            fetch('/api/rephrase', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
-                            'content')
-                    },
-                    body: JSON.stringify({
-                        question: questionText
-                    })
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        return response.json().then(errorData => {
-                            throw new Error(errorData.error || 'Something went wrong');
-                        });
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.rephrases) {
-                        // Check if any rephrase contains the word "wrong"
-                        if (data.rephrases.some(rephrase => rephrase.toLowerCase() === 'wrong')) {
-                            alert('The question is invalid, please try a different question.');
-                            return; // Exit the function if the response is "wrong"
-                        }
-                        const originalQuestion = document.getElementById('originalQuestion');
-                        const rephraseList = document.getElementById('rephraseList');
-
-                        // Display the original question
-                        originalQuestion.textContent = `Original: ${questionText}`;
-
-                        // Clear previous rephrased questions
-                        rephraseList.innerHTML = '';
-
-                        // Ensure that each rephrase is added individually
-                        data.rephrases.forEach(rephrase => {
-                            const rephrasedQuestion = document.createElement('div');
-                            rephrasedQuestion.className = 'rephrased-question';
-                            rephrasedQuestion.textContent = rephrase;
-
-                            // Add click event to replace textarea content
-                            rephrasedQuestion.addEventListener('click', function() {
-                                document.getElementById('text').value = rephrase;
-                                const modal = bootstrap.Modal.getInstance(document
-                                    .getElementById('rephraseModal'));
-                                modal.hide();
-                            });
-
-                            rephraseList.appendChild(rephrasedQuestion);
-                        });
-
-                        // Show the modal
-                        const modal = new bootstrap.Modal(document.getElementById('rephraseModal'));
-                        modal.show();
-                    } else {
-                        throw new Error('No rephrases found in response');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert(error.message); // Show an alert with the error message
-                });
-        });
-    </script>
+    <script src="{{ asset('js/rephrase.js') }}"></script>
 @endsection
