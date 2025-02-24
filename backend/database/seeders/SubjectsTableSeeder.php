@@ -15,22 +15,22 @@ class SubjectsTableSeeder extends Seeder
     {
         DB::table('subjects')->insert([
             [
-                'name' => 'Anatomy',
+                'name' => 'Introduction to medicine and emergency',
                 'level' => '1',
                 'department_id' => 2
             ],
             [
-                'name' => 'Physics',
+                'name' => 'Human and environment',
                 'level' => '1',
                 'department_id' => 2
             ],
             [
-                'name' => 'Chemistry',
+                'name' => 'Computer Science',
                 'level' => '1',
                 'department_id' => 4
             ],
             [
-                'name' => 'Computer Science',
+                'name' => 'Data Structure',
                 'level' => '1',
                 'department_id' => 4
             ],

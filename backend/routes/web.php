@@ -19,7 +19,7 @@ Route::get('/home', function () {
     return view('home');
 });
 
-Auth::routes();
+Auth::routes(['register' => false]);
 
 // Dashboard route (default for authenticated users)
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

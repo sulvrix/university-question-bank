@@ -35,7 +35,7 @@ class QuestionsTableSeeder extends Seeder
                     ['text' => 'Stomach', 'is_correct' => false],
                 ]),
                 'difficulty' => 'medium',
-                'points' => 1,
+                'points' => 5,
                 'subject_id' => 1,
             ],
             [
@@ -47,8 +47,44 @@ class QuestionsTableSeeder extends Seeder
                     ['text' => '160/100 mmHg', 'is_correct' => false],
                 ]),
                 'difficulty' => 'hard',
-                'points' => 1,
+                'points' => 2,
                 'subject_id' => 1,
+            ],
+            [
+                'text' => 'What does CPU stand for?',
+                'answers' => json_encode([
+                    ['text' => 'Central Processing Unit', 'is_correct' => true],
+                    ['text' => 'Central Programming Unit', 'is_correct' => false],
+                    ['text' => 'Central Performance Unit', 'is_correct' => false],
+                    ['text' => 'Central Power Unit', 'is_correct' => false],
+                ]),
+                'difficulty' => 'easy',
+                'points' => 2,
+                'subject_id' => 3,
+            ],
+            [
+                'text' => 'Which data structure uses LIFO (Last In, First Out) principle?',
+                'answers' => json_encode([
+                    ['text' => 'Queue', 'is_correct' => false],
+                    ['text' => 'Stack', 'is_correct' => true],
+                    ['text' => 'Array', 'is_correct' => false],
+                    ['text' => 'Linked List', 'is_correct' => false],
+                ]),
+                'difficulty' => 'medium',
+                'points' => 1,
+                'subject_id' => 4,
+            ],
+            [
+                'text' => 'What is the time complexity of binary search algorithm?',
+                'answers' => json_encode([
+                    ['text' => 'O(n)', 'is_correct' => false],
+                    ['text' => 'O(log n)', 'is_correct' => true],
+                    ['text' => 'O(n^2)', 'is_correct' => false],
+                    ['text' => 'O(1)', 'is_correct' => false],
+                ]),
+                'difficulty' => 'hard',
+                'points' => 1,
+                'subject_id' => 4,
             ],
         ]);
     }
