@@ -86,8 +86,10 @@
                     </div>
                 </div>
             </div>
-            <a href="javascript:history.back();" class="btn btn-secondary">Go Back</a>
-            <button type="submit" class="btn btn-primary">Create Question</button>
+            <div class="d-flex align-items-center justify-content-center gap-3">
+                <a href="javascript:history.back();" class="btn btn-secondary">Go Back</a>
+                <button type="submit" class="btn btn-primary">Create Question</button>
+            </div>
         </form>
     </div>
     <!-- Bootstrap 5.3.3 Modal -->
