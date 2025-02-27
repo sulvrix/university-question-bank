@@ -46,12 +46,19 @@ Route::middleware(['auth'])->prefix('dashboard/administration')->group(function 
 
 // Questions and Exams routes (questions and exams section)
 Route::middleware(['auth'])->prefix('dashboard')->group(function () {
-    Route::resource('questions', QuestionController::class)->names([
-        'index' => 'dashboard.questions', // Customize the route name
-    ]);
-    Route::resource('exams', ExamController::class)->names([
-        'index' => 'dashboard.exams', // Customize the route name
-    ]);
+    // Routes accessible to all roles
+    Route::middleware(['role:teacher,commissioner,staff,admin'])->group(function () {
+        Route::resource('questions', QuestionController::class)->names([
+            'index' => 'dashboard.questions', // Customize the route name
+        ]);
+    });
+
+    // Routes accessible only to commissioner and staff and admin
+    Route::middleware(['role:commissioner,staff,admin'])->group(function () {
+        Route::resource('exams', ExamController::class)->names([
+            'index' => 'dashboard.exams', // Customize the route name
+        ]);
+    });
 });
 
 

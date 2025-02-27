@@ -13,10 +13,11 @@
                                     <tr>
                                         <th scope="col">#</th>
                                         <th scope="col">Text</th>
-                                        <th scope="col">Correct Answer</th>
+                                        <th scope="col">Answer</th>
                                         <th scope="col">Difficulty</th>
                                         <th scope="col">Points</th>
                                         <th scope="col">Subject</th>
+                                        <th scope="col">Created At</th>
                                         <th scope="col">Manage</th>
                                     </tr>
                                 </thead>
@@ -29,6 +30,7 @@
                                             <td>{{ $question->difficulty }}</td>
                                             <td>{{ $question->points }}</td>
                                             <td>{{ $question->subject->name }}</td>
+                                            <td>{{ $question->created_at }}</td>
                                             <td>
                                                 <a href="{{ route('questions.edit', $question) }}" role="button"><i
                                                         class="bi bi-pencil-square"></i></a>

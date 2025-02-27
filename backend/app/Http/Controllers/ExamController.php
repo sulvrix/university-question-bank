@@ -2,17 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Department;
 use App\Models\Exam;
+use App\Models\Question;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ExamController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('exams.index');
+        $user = $request->user();
+
+        if ($user->role === 'admin') {
+            // Admins can see all questions
+            $exams = Exam::all();
+        } else {
+            // Non-admins can only see questions from their department
+            $exams = Exam::where('department_id', $user->department_id)->get();
+        }
+        return view('exams.index', compact('exams'));
     }
 
     /**
@@ -20,7 +32,19 @@ class ExamController extends Controller
      */
     public function create()
     {
-        //
+        $user = Auth::user();
+
+        if ($user->role === 'admin') {
+            $departments = Department::all();
+            $questions = Question::with('subject')->get(); // Eager load subject
+        } else {
+            $departments = Department::where('id', $user->department_id)->get();
+            $questions = Question::whereHas('subject', function ($query) use ($user) {
+                $query->where('department_id', $user->department_id);
+            })->with('subject')->get(); // Eager load subject
+        }
+
+        return view('exams.create', compact('departments', 'questions'));
     }
 
     /**

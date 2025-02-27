@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Question;
 use App\Models\Subject;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class QuestionController extends Controller
 {
@@ -40,9 +41,9 @@ class QuestionController extends Controller
     }
 
     // Show the form to create a new question
-    public function create(Request $request)
+    public function create()
     {
-        $user = $request->user();
+        $user = Auth::user();
 
         if ($user->role === 'admin') {
             // Admins can see all subjects

@@ -44,9 +44,12 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('dashboard.questions') }}">{{ __('Questions') }}</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('dashboard.exams') }}">{{ __('Exams') }}</a>
-                        </li>
+                        @if (Auth::check() &&
+                                (Auth::user()->role == 'admin' || Auth::user()->role == 'staff' || Auth::user()->role == 'commissioner'))
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('dashboard.exams') }}">{{ __('Exams') }}</a>
+                            </li>
+                        @endif
                     </ul>
 
                     <!-- Right Side Of Navbar -->
