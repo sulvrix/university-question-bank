@@ -17,6 +17,7 @@ return new class extends Migration
             $table->enum('level', ['1', '2', '3']);
             $table->enum('block', ['1', '2', '3', '4', '5', '6']);
             $table->foreignId('department_id')->constrained('departments')->onDelete('cascade');
+            $table->string('pdf_path')->nullable();
             $table->timestamps();
         });
     }

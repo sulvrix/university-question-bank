@@ -14,6 +14,7 @@
                                         <th scope="col">#</th>
                                         <th scope="col">Name</th>
                                         <th scope="col">Block</th>
+                                        <th scope="col">Level</th>
                                         <th scope="col">Department</th>
                                         <th scope="col">Created At</th>
                                         <th scope="col">Manage</th>
@@ -25,17 +26,22 @@
                                             <td>{{ $exam->id }}</td>
                                             <td>{{ $exam->name }}</td>
                                             <td>{{ $exam->block }}</td>
+                                            <td>{{ $exam->level }}</td>
                                             <td>{{ $exam->department->name }}</td>
                                             <td>{{ $exam->created_at }}</td>
                                             <td>
                                                 <a href="{{ route('exams.edit', $exam) }}" role="button"><i
-                                                        class="bi bi-pencil-square"></i></a>
+                                                        class="bi bi-pencil-square"
+                                                        style="display: inline-flex;padding: 5px"></i></a>
+                                                <a href="{{ route('exams.show', $exam) }}" target="_blank" role="button"><i
+                                                        class="bi bi-eye-fill"
+                                                        style="display: inline-flex; color:green;padding: 5px"></i></a>
                                                 <form action="{{ route('exams.destroy', $exam) }}" method="POST"
-                                                    style="display:inline;">
+                                                    style="display: inline-flex">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit"
-                                                        style="border:none; background:none;color:red;"><i
+                                                        style="border:none; background:none;color:red; padding: 5px;"><i
                                                             class="bi bi-trash3"></i></button>
                                                 </form>
                                             </td>

@@ -126,7 +126,7 @@
                         targets: -1,
                         orderable: false,
                         searchable: false,
-                        width: '50px',
+                        width: '120px',
                         className: 'dt-center',
                     },
                     {

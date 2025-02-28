@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-    <div class="container mt-5">
+    <div class="container mt-5 mb-5">
         <div class="card shadow">
             <div class="card-header bg-primary text-white">
                 <h1 class="card-title mb-0">Create Exam</h1>
@@ -13,6 +13,9 @@
                     <div class="mb-3">
                         <label for="name" class="form-label">Exam Name</label>
                         <input type="text" name="name" id="name" class="form-control" required>
+                        @error('name')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <!-- Level Radio Buttons -->
@@ -31,6 +34,9 @@
                             <input class="form-check-input" type="radio" name="level" value="3" id="level3">
                             <label class="form-check-label" for="level3">Level 3</label>
                         </div>
+                        @error('level')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <!-- Block Dropdown -->
@@ -41,6 +47,9 @@
                                 <option value="{{ $i }}">{{ $i }}</option>
                             @endfor
                         </select>
+                        @error('block')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <!-- Department Dropdown -->
@@ -54,29 +63,25 @@
                             </select>
                         </div>
                     @endif
-            </div>
-        </div>
-    </div>
-    <div class="container mt-3">
-        <div class="card shadow">
-            <div class="card-body">
-                <!-- Questions Table -->
-                <div class="mb-3">
-                    <label class="form-label">Questions</label>
-                    <div class="table-responsive" id="questions-table-container">
-                        <!-- The table will be dynamically created here by JavaScript -->
+                    <div class="card-header bg-primary text-white">
+                        <h1 class="card-title mb-0">Questions</h1>
                     </div>
-                </div>
+                    <div class="card-body">
+                        <!-- Questions Table -->
+                        <div class="mb-3">
+                            <div class="table-responsive" id="questions-table-container">
+                                <!-- The table will be dynamically created here by JavaScript -->
+                            </div>
+                        </div>
 
-                <!-- Submit Button -->
-                <div class="d-flex align-items-center justify-content-center gap-3">
-                    <a href="javascript:history.back();" class="btn btn-secondary">Go Back</a>
-                    <button type="submit" class="btn btn-primary">Create Exam</button>
-                    </form>
-                </div>
+                        <!-- Submit Button -->
+                        <div class="d-flex align-items-center justify-content-center gap-3">
+                            <a href="javascript:history.back();" class="btn btn-secondary">Go Back</a>
+                            <button type="submit" class="btn btn-primary">Create Exam</button>
+                        </div>
+                </form>
             </div>
         </div>
-    </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
@@ -110,14 +115,14 @@
                         </thead>
                         <tbody>
                             ${questions.map(question => `
-                                        <tr>
-                                            <td><input type="checkbox" name="questions[]" value="${question.id}" class="form-check-input"></td>
-                                            <td>${question.text}</td>
-                                            <td>${question.difficulty}</td>
-                                            <td>${question.points}</td>
-                                            <td>${question.subject.name}</td>
-                                        </tr>
-                                    `).join('')}
+                                                                                                    <tr>
+                                                                                                        <td><input type="checkbox" name="questions[]" value="${question.id}" class="form-check-input"></td>
+                                                                                                        <td>${question.text}</td>
+                                                                                                        <td>${question.difficulty}</td>
+                                                                                                        <td>${question.points}</td>
+                                                                                                        <td>${question.subject.name}</td>
+                                                                                                    </tr>
+                                                                                                `).join('')}
                         </tbody>
                     </table>
                 `;
@@ -156,7 +161,7 @@
                 const filteredQuestions = allQuestions.filter(question => {
                     return question.subject &&
                         question.subject.level == level &&
-                        question.subject.department_id == departmentId;
+                        (departmentId == 1 || question.subject.department_id == departmentId);
                 });
 
                 // Create and populate the table with filtered questions
@@ -173,6 +178,17 @@
                 const level = $('input[name="level"]:checked').val();
                 const departmentId = $('#department_id').val();
                 filterQuestions(level, departmentId);
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('form').submit(function(event) {
+                const selectedQuestions = $('input[name="questions[]"]:checked').length;
+                if (selectedQuestions < 5) {
+                    alert('Please select at least five questions.');
+                    event.preventDefault(); // Prevent form submission
+                }
             });
         });
     </script>

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
+    <div class="container vh-100 d-flex justify-content-center align-items-center">
         <div class="text-center">
             <h1 class="display-1">404</h1>
             <p class="lead">Page Not Found</p>

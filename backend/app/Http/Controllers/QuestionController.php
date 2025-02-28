@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\Auth;
 class QuestionController extends Controller
 {
     // Display a list of questions
-    public function index(Request $request)
+    public function index()
     {
-        $user = $request->user();
+        $user = Auth::user();
 
         if ($user->role === 'admin') {
             // Admins can see all questions
@@ -87,9 +87,9 @@ class QuestionController extends Controller
     }
 
     // Show the form to edit a question
-    public function edit(Request $request, Question $question)
+    public function edit(Question $question)
     {
-        $user = $request->user();
+        $user = Auth::user();
 
         if ($user->role === 'admin') {
             // Admins can see all subjects
@@ -132,9 +132,9 @@ class QuestionController extends Controller
         return redirect()->route('dashboard.questions')->with('success', 'Question updated successfully.');
     }
 
-    public function show(Request $request, Question $question)
+    public function show(Question $question)
     {
-        return $this->edit($request, $question);
+        return $this->edit($question);
     }
     // Delete a question
     public function destroy(Question $question)

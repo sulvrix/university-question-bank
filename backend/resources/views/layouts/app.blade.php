@@ -25,7 +25,7 @@
 <body>
     <div id="app">
         <main>
-            <div class="align-items-center vh-100">
+            <div>
                 @yield('content')
             </div>
         </main>
