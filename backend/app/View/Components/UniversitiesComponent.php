@@ -14,7 +14,7 @@ class UniversitiesComponent extends Component
     public function __construct()
     {
         $universityController = new UniversityController();
-        $this->universityData = $universityController->Index();
+        $this->universityData = $universityController->getData();
     }
 
     /**

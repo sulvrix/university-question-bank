@@ -9,12 +9,14 @@ use Illuminate\Validation\ValidationException;
 
 class DepartmentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function getData()
     {
         return Department::all();
+    }
+
+    public function index()
+    {
+        return response()->view('errors.404', [], 404);
     }
 
     /**
@@ -25,7 +27,7 @@ class DepartmentController extends Controller
         $faculties = Faculty::all(); // Fetch all unique faculties
         $departments = Department::all();
 
-        return view('departments.create', compact('faculties', 'departments'));
+        return view('admin.departments.create', compact('faculties', 'departments'));
     }
 
     /**
@@ -62,7 +64,7 @@ class DepartmentController extends Controller
 
         $faculties = Faculty::all(); // Fetch all unique faculties
 
-        return view('departments.edit', compact('department', 'faculties'));
+        return view('admin.departments.edit', compact('department', 'faculties'));
     }
 
     /**
@@ -83,10 +85,9 @@ class DepartmentController extends Controller
         // Redirect to a specific route with a success message
         return redirect('/dashboard')->with('success', 'Department updated successfully.');
     }
-
     public function show(Department $department)
     {
-        return $this->destroy($department);
+        return $this->edit($department);
     }
     public function destroy(Department $department)
     {

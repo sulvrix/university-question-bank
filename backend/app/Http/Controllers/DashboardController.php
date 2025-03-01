@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
+
 class DashboardController extends Controller
 {
     /**
@@ -21,6 +23,11 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return view('dashboard');
+        // Check the user's role and redirect accordingly
+        if (Auth::user()->role === 'admin' || Auth::user()->role === 'staff') {
+            return redirect()->route('dashboard.administration');
+        } else {
+            return redirect()->route('dashboard.questions');
+        }
     }
 }

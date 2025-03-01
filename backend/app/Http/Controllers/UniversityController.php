@@ -8,12 +8,14 @@ use Illuminate\Validation\ValidationException;
 
 class UniversityController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function getData()
     {
         return University::all();
+    }
+
+    public function index()
+    {
+        return response()->view('errors.404', [], 404);
     }
 
     /**
@@ -23,7 +25,7 @@ class UniversityController extends Controller
     {
         $universities = University::all(); // Fetch all unique faculties
 
-        return view('faculties.create', compact('universities'));
+        return view('admin.universities.create', compact('universities'));
     }
 
     /**
@@ -54,7 +56,7 @@ class UniversityController extends Controller
      */
     public function show(University $university)
     {
-        return $this->destroy($university);
+        return $this->edit($university);
     }
 
     /**
@@ -64,7 +66,7 @@ class UniversityController extends Controller
     {
         $universities = University::all();
 
-        return view('universities.edit', compact('universities'));
+        return view('admin.universities.edit', compact('universities'));
     }
 
     /**

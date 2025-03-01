@@ -5,6 +5,9 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
 
 class CheckUserRole
 {
@@ -13,12 +16,20 @@ class CheckUserRole
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, $role)
+    public function handle($request, Closure $next, ...$roles)
     {
-        if (!$request->user() || !$request->user()->hasRole($role)) {
-            abort(404);
+        if (!Auth::check()) {
+            return redirect('login');
         }
 
-        return $next($request);
+        $user = Auth::user();
+        Log::info('User role: ' . $user->role); // Debugging statement
+        Log::info('Allowed roles: ' . implode(', ', $roles)); // Debugging statement
+
+        if (in_array($user->role, $roles)) {
+            return $next($request);
+        }
+
+        return redirect('dashboard')->with('error', 'You do not have access to this resource.');
     }
 }

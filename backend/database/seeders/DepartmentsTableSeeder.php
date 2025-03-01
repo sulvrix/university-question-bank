@@ -30,6 +30,10 @@ class DepartmentsTableSeeder extends Seeder
                 'name' => 'Computer Engineering',
                 'faculty_id' => 3
             ],
+            [
+                'name' => 'Electrical Engineering',
+                'faculty_id' => 3
+            ],
 
         ]);
     }
