@@ -46,6 +46,7 @@ Route::middleware(['auth'])->prefix('dashboard/administration')->group(function 
 
 // Questions and Exams routes (questions and exams section)
 Route::middleware(['auth'])->prefix('dashboard')->group(function () {
+    Route::get('questions/generate', [QuestionController::class, 'generate'])->name('questions.generate');
     // Routes accessible to all roles
     Route::middleware(['role:teacher,commissioner,staff,admin'])->group(function () {
         Route::resource('questions', QuestionController::class)->names([

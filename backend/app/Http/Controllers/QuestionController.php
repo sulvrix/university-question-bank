@@ -6,6 +6,10 @@ use App\Models\Question;
 use App\Models\Subject;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Smalot\PdfParser\Parser;
+use OpenAI\Laravel\Facades\OpenAI;
+
 
 class QuestionController extends Controller
 {
@@ -141,5 +145,10 @@ class QuestionController extends Controller
     {
         $question->delete();
         return redirect()->route('dashboard.questions')->with('success', 'Question deleted successfully.');
+    }
+
+    public function generate()
+    {
+        return view('questions.generate');
     }
 }
