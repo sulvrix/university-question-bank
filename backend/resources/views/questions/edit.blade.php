@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
+    <div class="container mt-5">
         <h1>Edit Question</h1>
         <form action="{{ route('questions.update', $question) }}" method="POST">
             @csrf
             @method('PUT')
-            <div class="row mb-3">
+            <div class="row mb-3 mt-5">
                 <div class="col-12">
                     <label for="text" class="form-label">Question:</label>
                     <div class="input-group">
@@ -89,7 +89,7 @@
                 </div>
             </div>
             <div class="d-flex align-items-center justify-content-center gap-3">
-                <a href="javascript:history.back();" class="btn btn-secondary">Go Back</a>
+                <a href="javascript:history.back();" class="btn btn-secondary">Back</a>
                 <button type="submit" class="btn btn-primary">Update Question</button>
             </div>
 
@@ -117,6 +117,24 @@
     </div>
 
     <style>
+        /* Loading overlay styles */
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            /* Semi-transparent white background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            /* Ensure it's above other content */
+            display: none;
+            /* Hidden by default */
+        }
+
         .custom-radio {
             margin-top: 30px;
             width: 30px;

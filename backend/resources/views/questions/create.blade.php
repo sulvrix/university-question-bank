@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
+    <div class="container mt-5">
         <h1>Create Question</h1>
         <form action="{{ route('questions.store') }}" method="POST">
             @csrf
-            <div class="row mb-3">
+            <div class="row mb-3 mt-5">
                 <div class="col-12">
                     <label for="text" class="form-label">Question:</label>
                     <div class="input-group">
@@ -87,8 +87,9 @@
                 </div>
             </div>
             <div class="d-flex align-items-center justify-content-center gap-3">
-                <a href="javascript:history.back();" class="btn btn-secondary">Go Back</a>
+                <a href="javascript:history.back();" class="btn btn-secondary">Back</a>
                 <button type="submit" class="btn btn-primary">Create Question</button>
+                <a href="{{ route('questions.generate') }}" class="btn btn-info">Generate</a>
             </div>
         </form>
     </div>
@@ -106,14 +107,38 @@
                         <!-- Rephrased questions will be inserted here dynamically -->
                     </div>
                 </div>
-                <div class="modal-footer">
+                {{-- <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
+                </div> --}}
             </div>
+        </div>
+    </div>
+    <!-- Loading Overlay -->
+    <div id="loading-overlay">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
         </div>
     </div>
 
     <style>
+        /* Loading overlay styles */
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            /* Semi-transparent white background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            /* Ensure it's above other content */
+            display: none;
+            /* Hidden by default */
+        }
+
         .custom-radio {
             margin-top: 30px;
             width: 30px;
@@ -167,4 +192,36 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('js/rephrase.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const question = urlParams.get('question');
+            const answers = JSON.parse(urlParams.get('answers') || []);
+            const correctAnswer = urlParams.get('correct_answer');
+
+            if (question) {
+                document.getElementById('text').value = question;
+            }
+
+            if (answers.length > 0) {
+                answers.forEach((answer, index) => {
+                    const answerInput = document.querySelector(`input[name="answers[${index}][text]"]`);
+                    if (answerInput) {
+                        answerInput.value = answer;
+                    }
+                });
+            }
+
+            if (correctAnswer) {
+                const correctAnswerIndex = answers.indexOf(correctAnswer);
+                if (correctAnswerIndex !== -1) {
+                    const correctAnswerRadio = document.querySelector(
+                        `input[name="correct_answer"][value="${correctAnswerIndex}"]`);
+                    if (correctAnswerRadio) {
+                        correctAnswerRadio.checked = true;
+                    }
+                }
+            }
+        });
+    </script>
 @endsection

@@ -1,3 +1,14 @@
+function showLoadingOverlay() {
+    const loadingOverlay = document.getElementById('loading-overlay');
+    loadingOverlay.style.display = 'flex'; // Show the overlay
+}
+
+// Function to hide the loading overlay
+function hideLoadingOverlay() {
+    const loadingOverlay = document.getElementById('loading-overlay');
+    loadingOverlay.style.display = 'none'; // Hide the overlay
+}
+
 document.getElementById('rephraseButton').addEventListener('click',
     function () {
         const questionText = document.getElementById('text').value;
@@ -5,7 +16,7 @@ document.getElementById('rephraseButton').addEventListener('click',
             alert('Please enter a question to rephrase');
             return;
         }
-
+        showLoadingOverlay();
         fetch('/api/rephrase', {
             method: 'POST',
             headers: {
@@ -68,5 +79,8 @@ document.getElementById('rephraseButton').addEventListener('click',
             .catch(error => {
                 console.error('Error:', error);
                 alert(error.message); // Show an alert with the error message
+            })
+            .finally(() => {
+                hideLoadingOverlay();
             });
     });
