@@ -76,7 +76,7 @@
 
                         <!-- Submit Button -->
                         <div class="d-flex align-items-center justify-content-center gap-3">
-                            <a href="javascript:history.back();" class="btn btn-secondary">Go Back</a>
+                            <a href="{{ route('dashboard.exams') }}" class="btn btn-secondary">Go Back</a>
                             <button type="submit" class="btn btn-primary">Create Exam</button>
                         </div>
                 </form>
@@ -115,14 +115,14 @@
                         </thead>
                         <tbody>
                             ${questions.map(question => `
-                                                                                                    <tr>
-                                                                                                        <td><input type="checkbox" name="questions[]" value="${question.id}" class="form-check-input"></td>
-                                                                                                        <td>${question.text}</td>
-                                                                                                        <td>${question.difficulty}</td>
-                                                                                                        <td>${question.points}</td>
-                                                                                                        <td>${question.subject.name}</td>
-                                                                                                    </tr>
-                                                                                                `).join('')}
+                                            <tr>
+                                                <td><input type="checkbox" name="questions[]" value="${question.id}" class="form-check-input"></td>
+                                                <td>${question.text}</td>
+                                                <td>${question.difficulty}</td>
+                                                <td>${question.points}</td>
+                                                <td>${question.subject.name}</td>
+                                            </tr>
+                                        `).join('')}
                         </tbody>
                     </table>
                 `;

@@ -87,7 +87,7 @@
                 </div>
             </div>
             <div class="d-flex align-items-center justify-content-center gap-3">
-                <a href="javascript:history.back();" class="btn btn-secondary">Back</a>
+                <a href="{{ route('dashboard.questions') }}" class="btn btn-secondary">Back</a>
                 <button type="submit" class="btn btn-primary">Create Question</button>
                 <a href="{{ route('questions.generate') }}" class="btn btn-info">Generate</a>
             </div>
