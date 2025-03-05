@@ -115,6 +115,12 @@
             </div>
         </div>
     </div>
+    <!-- Loading Overlay -->
+    <div id="loading-overlay">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
 
     <style>
         /* Loading overlay styles */

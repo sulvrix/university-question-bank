@@ -62,11 +62,20 @@
                                 @endforeach
                             </select>
                         </div>
+                    @else
+                        <input type="hidden" name="department_id" value="{{ auth()->user()->department_id }}">
                     @endif
                     <div class="card-header bg-primary text-white">
                         <h1 class="card-title mb-0">Questions</h1>
                     </div>
                     <div class="card-body">
+                        <!-- Select/Deselect All Checkbox -->
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="select-all-checkbox">
+                                <label class="form-check-label" for="select-all-checkbox">Select All</label>
+                            </div>
+                        </div>
                         <!-- Questions Table -->
                         <div class="mb-3">
                             <div class="table-responsive" id="questions-table-container">
@@ -76,8 +85,9 @@
 
                         <!-- Submit Button -->
                         <div class="d-flex align-items-center justify-content-center gap-3">
-                            <a href="{{ route('dashboard.exams') }}" class="btn btn-secondary">Go Back</a>
+                            <a href="{{ route('dashboard.exams') }}" class="btn btn-secondary">Back</a>
                             <button type="submit" class="btn btn-primary">Create Exam</button>
+                            <button type="button" id="random-exam-btn" class="btn btn-outline-success">Random</button>
                         </div>
                 </form>
             </div>
@@ -92,97 +102,38 @@
     </script>
 
     <!-- JavaScript for Filtering Questions -->
+    <script src="{{ asset('js/createFilter.js') }}"></script>
     <script>
         $(document).ready(function() {
-            let dataTable;
-
-            // Function to create and populate the table
-            function createAndPopulateTable(questions) {
-                // Clear the table container
-                $('#questions-table-container').empty();
-
-                // Create the table structure
-                const table = `
-                    <table class="table table-bordered table-hover" id="questionsTable">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Select</th>
-                                <th>Question</th>
-                                <th>Difficulty</th>
-                                <th>Points</th>
-                                <th>Subject</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${questions.map(question => `
-                                            <tr>
-                                                <td><input type="checkbox" name="questions[]" value="${question.id}" class="form-check-input"></td>
-                                                <td>${question.text}</td>
-                                                <td>${question.difficulty}</td>
-                                                <td>${question.points}</td>
-                                                <td>${question.subject.name}</td>
-                                            </tr>
-                                        `).join('')}
-                        </tbody>
-                    </table>
-                `;
-
-                // Append the table to the container
-                $('#questions-table-container').html(table);
-
-                // Initialize DataTable
-                dataTable = $('#questionsTable').DataTable({
-                    paging: true, // Enable pagination
-                    searching: true, // Enable search
-                    ordering: true, // Enable sorting
-                    info: true, // Show table information
-                    pageLength: 10, // Default number of rows per page
-                    lengthMenu: [10, 25, 50, 100], // Rows per page options
-                    columnDefs: [{
-                            targets: 0, // First column (Select)
-                            width: '50px',
-                            className: 'dt-center',
-                            orderable: false, // Disable sorting for this column
-                        },
-                        {
-                            targets: 1, // Second column (Question)
-                            className: 'dt-left',
-                        },
-                        {
-                            targets: [2, 3, 4], // Difficulty, Points, Subject columns
-                            className: 'dt-left',
-                        },
-                    ],
-                });
-            }
-
-            // Function to filter questions by level and department
-            function filterQuestions(level, departmentId) {
-                const filteredQuestions = allQuestions.filter(question => {
-                    return question.subject &&
-                        question.subject.level == level &&
-                        (departmentId == 1 || question.subject.department_id == departmentId);
-                });
-
-                // Create and populate the table with filtered questions
-                createAndPopulateTable(filteredQuestions);
-            }
-
-            // Load questions on page load (default level 1 and first department)
-            const defaultLevel = 1;
-            const defaultDepartmentId = $('#department_id').val();
-            filterQuestions(defaultLevel, defaultDepartmentId);
-
-            // Load questions when level or department changes
-            $('input[name="level"], #department_id').change(function() {
-                const level = $('input[name="level"]:checked').val();
-                const departmentId = $('#department_id').val();
-                filterQuestions(level, departmentId);
+            // Select/Deselect All Checkbox
+            $('#select-all-checkbox').change(function() {
+                const isChecked = $(this).prop('checked');
+                $('input[name="questions[]"]').prop('checked', isChecked);
             });
-        });
-    </script>
-    <script>
-        $(document).ready(function() {
+
+            // Generate Random Exam
+            $('#random-exam-btn').click(function() {
+                const questions = $('input[name="questions[]"]');
+                const totalQuestions = questions.length;
+                const requiredQuestions = 5; // Number of questions to select randomly
+
+                // Deselect all questions first
+                questions.prop('checked', false);
+
+                // Randomly select questions
+                const selectedIndices = new Set();
+                while (selectedIndices.size < requiredQuestions && selectedIndices.size < totalQuestions) {
+                    const randomIndex = Math.floor(Math.random() * totalQuestions);
+                    selectedIndices.add(randomIndex);
+                }
+
+                // Check the randomly selected questions
+                selectedIndices.forEach(index => {
+                    questions.eq(index).prop('checked', true);
+                });
+            });
+
+            // Validate at least 5 questions are selected before form submission
             $('form').submit(function(event) {
                 const selectedQuestions = $('input[name="questions[]"]:checked').length;
                 if (selectedQuestions < 5) {

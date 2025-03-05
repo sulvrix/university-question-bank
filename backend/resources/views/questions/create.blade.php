@@ -190,19 +190,35 @@
         }
     </style>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('js/rephrase.js') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
             const question = urlParams.get('question');
-            const answers = JSON.parse(urlParams.get('answers') || []);
+            const answersParam = urlParams.get('answers'); // Get the raw answers parameter
             const correctAnswer = urlParams.get('correct_answer');
 
-            if (question) {
-                document.getElementById('text').value = question;
+            let answers = [];
+            if (answersParam) {
+                try {
+                    // Attempt to parse the answers parameter as JSON
+                    answers = JSON.parse(answersParam);
+                } catch (error) {
+                    console.error('Failed to parse answers:', error);
+                    // If parsing fails, default to an empty array
+                    answers = [];
+                }
             }
 
+            // Set the question if it exists
+            if (question) {
+                const questionInput = document.getElementById('text');
+                if (questionInput) {
+                    questionInput.value = question;
+                }
+            }
+
+            // Set the answers if they exist
             if (answers.length > 0) {
                 answers.forEach((answer, index) => {
                     const answerInput = document.querySelector(`input[name="answers[${index}][text]"]`);
@@ -212,6 +228,7 @@
                 });
             }
 
+            // Set the correct answer if it exists
             if (correctAnswer) {
                 const correctAnswerIndex = answers.indexOf(correctAnswer);
                 if (correctAnswerIndex !== -1) {
