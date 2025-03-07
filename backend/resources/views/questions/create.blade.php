@@ -9,9 +9,9 @@
                 <div class="col-12">
                     <label for="text" class="form-label">Question:</label>
                     <div class="input-group">
-                        <textarea name="text" id="text" class="form-control @error('text') is-invalid @enderror" required rows="1">{{ old('text') }}</textarea>
-                        <button type="button" id="rephraseButton" class="btn btn-secondary">Rephrase
-                            Question</button>
+                        <input name="text" id="text" class="form-control @error('text') is-invalid @enderror"
+                            required>{{ old('text') }}</input>
+                        <button type="button" id="rephraseButton" class="btn btn-secondary">Rephrase</button>
                     </div>
                     @error('text')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -24,7 +24,8 @@
                     @for ($i = 0; $i < 4; $i++)
                         <div class="row mb-2 align-items-center">
                             <div class="col-10">
-                                <label class="form-label">Choice {{ $i + 1 }}:</label>
+                                <label class="form-label" for="answers[{{ $i }}][text]">Choice
+                                    {{ $i + 1 }}:</label>
                                 <input type="text" name="answers[{{ $i }}][text]"
                                     class="form-control @error('answers.' . $i . '.text') is-invalid @enderror"
                                     value="{{ old('answers.' . $i . '.text') }}" required>
@@ -48,7 +49,7 @@
                     <div class="mb-3">
                         <label for="difficulty" class="form-label">Difficulty:</label>
                         <select name="difficulty" id="difficulty"
-                            class="form-select @error('difficulty') is-invalid @enderror">
+                            class="form-control @error('difficulty') is-invalid @enderror">
                             <option value="easy" {{ old('difficulty') == 'easy' ? 'selected' : '' }}>Easy</option>
                             <option value="medium" {{ old('difficulty') == 'medium' ? 'selected' : '' }}>Medium</option>
                             <option value="hard" {{ old('difficulty') == 'hard' ? 'selected' : '' }}>Hard</option>
@@ -71,7 +72,7 @@
                     <div class="mb-3">
                         <label for="subject_id" class="form-label">Subject:</label>
                         <select name="subject_id" id="subject_id"
-                            class="form-select @error('subject_id') is-invalid @enderror" required>
+                            class="form-control @error('subject_id') is-invalid @enderror" required>
                             <option value="">Select a subject</option>
                             @foreach ($subjects as $subject)
                                 <option value="{{ $subject->id }}"
@@ -102,14 +103,13 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div id="originalQuestion" class="original-question"></div>
+                    <div id="originalQuestion"
+                        class="original-question p-3 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3">
+                    </div>
                     <div id="rephraseList">
                         <!-- Rephrased questions will be inserted here dynamically -->
                     </div>
                 </div>
-                {{-- <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div> --}}
             </div>
         </div>
     </div>
@@ -151,6 +151,11 @@
             /* Add pointer cursor */
         }
 
+        .form-check-input:checked {
+            background-color: #607de3;
+            border-color: #607de3;
+        }
+
         /* Ensure modal is centered and scrollable */
         .modal-dialog-centered {
             display: flex;
@@ -187,6 +192,51 @@
 
         .rephrased-question:hover {
             background-color: #f1f1f1;
+        }
+
+        .form-control {
+            /* max-width: 190px; */
+            height: 44px;
+            background-color: #05060f0a;
+            border-radius: .5rem;
+            padding: 0 1rem;
+            border: 2px solid transparent;
+            font-size: 1rem;
+            transition: border-color .3s cubic-bezier(.25, .01, .25, 1) 0s, color .3s cubic-bezier(.25, .01, .25, 1) 0s, background .2s cubic-bezier(.25, .01, .25, 1) 0s;
+        }
+
+        select {
+            width: 268px;
+            padding: 5px;
+            font-size: 16px;
+            line-height: 1;
+            border: 0;
+            border-radius: 5px;
+            height: 34px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16"> <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" /> </svg>') no-repeat right #ddd;
+            -webkit-appearance: none;
+            background-position-x: 98%;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: .3rem;
+            font-size: .9rem;
+            font-weight: bold;
+            color: #05060f99;
+            transition: color .3s cubic-bezier(.25, .01, .25, 1) 0s;
+        }
+
+        .form-control:hover,
+        .form-control:focus,
+        .form-control-group:hover .form-control {
+            outline: none;
+            border-color: #05060f;
+        }
+
+        .input-group:hover .label,
+        .form-control:focus {
+            color: #05060fc2;
         }
     </style>
 

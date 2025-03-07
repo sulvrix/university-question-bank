@@ -54,7 +54,7 @@ document.getElementById('rephraseButton').addEventListener('click', function () 
             const rephraseList = document.getElementById('rephraseList');
 
             // Display the original question
-            originalQuestion.textContent = `Original: ${questionText}`;
+            originalQuestion.textContent = `${questionText}`;
 
             // Clear previous rephrased questions
             rephraseList.innerHTML = '';
@@ -62,7 +62,7 @@ document.getElementById('rephraseButton').addEventListener('click', function () 
             // Add each rephrased question as a new row
             data.rephrases.forEach(rephrase => {
                 const rephrasedQuestion = document.createElement('div');
-                rephrasedQuestion.className = 'rephrased-question p-2 mb-2 border rounded bg-light';
+                rephrasedQuestion.className = 'rephrased-question p-3 text-primary-emphasis border border-secondary-subtle rounded-3';
                 rephrasedQuestion.textContent = rephrase;
 
                 // Click event to replace textarea content

@@ -29,7 +29,7 @@ class OpenAIController extends Controller
 
         try {
             // Updated prompt to check for invalid questions
-            $prompt = "If the following input is not a valid question, respond with only the word 'wrong'. Otherwise, rephrase the question three times, each on a new line:\n\n$question";
+            $prompt = "If the following input is not a valid question, respond with only the word 'wrong'. Otherwise, rephrase the question three times, each on a new line, ensuring it is suitable for a multiple choice answer:\n\n$question";
 
             $response = $this->openAIService->chat($prompt);
 

@@ -8,3 +8,84 @@
 // Bootstrap
 @import 'bootstrap/scss/bootstrap';
 @import 'bootstrap-icons/font/bootstrap-icons.css';
+
+//Buttons
+$primary: #607de3;
+$secondary: #a9aabc;
+$success: #40d5c5;
+$info: #afb4ec;
+$warning: #f9f871;
+$danger: #de5464;
+
+.btn-primary {
+    --bs-btn-bg: #{$primary};
+    --bs-btn-hover-bg: #3d62c4;
+    --bs-btn-active-bg: #0748a6;
+}
+
+.btn-secondary {
+    --bs-btn-bg: #{$secondary};
+    --bs-btn-hover-bg: #848596;
+    --bs-btn-active-bg: #616272;
+}
+
+.btn-success {
+    --bs-btn-bg: #{$success};
+    --bs-btn-hover-bg: #00aa9b;
+    --bs-btn-active-bg: #008073;
+}
+
+.btn-info {
+    --bs-btn-bg: #{$info};
+    --bs-btn-hover-bg: #878cc2;
+    --bs-btn-active-bg: #606799;
+}
+
+.btn-warning {
+    --bs-btn-bg: #{$warning};
+    --bs-btn-hover-bg: #c1c23c;
+    --bs-btn-active-bg: #8a8f00;
+}
+
+.btn-danger {
+    --bs-btn-bg: #{$danger};
+    --bs-btn-hover-bg: #bc354a;
+    --bs-btn-active-bg: #9b0c31;
+}
+
+//tables
+.table-primary {
+    --bs-table-bg: #{$primary};
+    --bs-table-hover-bg: #3d62c4;
+    --bs-table-active-bg: #0748a6;
+}
+
+.table-secondary {
+    --bs-table-bg: #{$secondary};
+    --bs-table-hover-bg: #848596;
+    --bs-table-active-bg: #616272;
+}
+
+.table-success {
+    --bs-table-bg: #{$success};
+    --bs-table-hover-bg: #2dc69c;
+    --bs-table-active-bg: #00956e;
+}
+
+.table-info {
+    --bs-table-bg: #{$info};
+    --bs-table-hover-bg: #878cc2;
+    --bs-table-active-bg: #606799;
+}
+
+.table-warning {
+    --bs-table-bg: #{$warning};
+    --bs-table-hover-bg: #c1c23c;
+    --bs-table-active-bg: #8a8f00;
+}
+
+.table-danger {
+    --bs-table-bg: #{$danger};
+    --bs-table-hover-bg: #bc354a;
+    --bs-table-active-bg: #9b0c31;
+}

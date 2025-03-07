@@ -4,7 +4,7 @@
             <div class="card">
                 <div class="card-header">{{ __('Subjects') }}</div>
                 <div class="card-body">
-                    <table class="table table-hover" style="font-size: 1.25em" id="table">
+                    <table class="table table-hover table-bordered" style="font-size: 1.25em" id="table">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
@@ -14,7 +14,7 @@
                                 <th scope="col">Manage</th>
                             </tr>
                         </thead>
-                        <tbody class="table-group-divider">
+                        <tbody>
                             @foreach ($subjectData as $subject)
                                 <tr>
                                     <td>{{ $subject->id }}</td>
