@@ -180,6 +180,11 @@
             color: #05060fc2;
         }
 
+        .page-link.active,
+        .active>.page-link {
+            background-color: #607de3;
+        }
+
         div.dt-length select {
             font-size: 16px;
             line-height: 1;
