@@ -59,7 +59,7 @@ function loadMoreQuestions() {
                         <strong>Correct Answer:</strong> ${question.correct_answer}
                     </div>
                     <div>
-                        <a href="/dashboard/questions/create?question=${encodeURIComponent(question.question)}&answers=${encodeURIComponent(JSON.stringify(question.choices))}&correct_answer=${encodeURIComponent(question.correct_answer)}" class="btn btn-sm btn-success">Create</a>
+                        <a href="/dashboard/questions/create?question=${encodeURIComponent(question.question)}&answers=${encodeURIComponent(JSON.stringify(question.choices))}&correct_answer=${encodeURIComponent(question.correct_answer)}" class="btn btn-sm btn-primary">Create</a>
                     </div>
                 `;
                     questionList.appendChild(questionDiv);
@@ -130,7 +130,7 @@ document.getElementById('pdf-upload').addEventListener('change', function (event
                         <strong>Correct Answer:</strong> ${question.correct_answer}
                     </div>
                     <div>
-                        <a href="/dashboard/questions/create?question=${encodeURIComponent(question.question)}&answers=${encodeURIComponent(JSON.stringify(question.choices))}&correct_answer=${encodeURIComponent(question.correct_answer)}" class="btn btn-sm btn-success">Create</a>
+                        <a href="/dashboard/questions/create?question=${encodeURIComponent(question.question)}&answers=${encodeURIComponent(JSON.stringify(question.choices))}&correct_answer=${encodeURIComponent(question.correct_answer)}" class="btn btn-sm btn-primary">Create</a>
                     </div>
                 `;
                     questionList.appendChild(questionDiv);

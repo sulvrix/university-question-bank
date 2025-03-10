@@ -239,8 +239,7 @@
             color: #05060fc2;
         }
     </style>
-
-    <script src="{{ asset('js/rephrase.js') }}"></script>
+    {{-- <script src="{{ asset('js/rephrase.js') }}"></script> --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);

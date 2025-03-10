@@ -20,7 +20,6 @@
 
 
     <!-- Scripts -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 
@@ -60,8 +59,8 @@
                                 @endif
                             </ul>
                         </div>
-                        <!-- Right Part: Get Started Button -->
-                        <ul class="navbar-nav ms-auto">
+                        <!-- Right Part -->
+                        <ul class="navbar-nav">
                             <!-- Authentication Links -->
                             @guest
                                 @if (Route::has('login'))
@@ -284,7 +283,7 @@
         }
 
         .navbar-nav .dropdown-toggle:hover {
-            color: var(--primary) !important;
+            color: var(--primary);
         }
 
         .form-control {
@@ -348,6 +347,7 @@
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.2.2/js/dataTables.bootstrap5.js"></script>
+    {{-- <script type="module" src="{{ asset('js/rephrase.js') }}"></script> --}}
     <script>
         $(document).ready(function() {
             var tables = $('table').DataTable({

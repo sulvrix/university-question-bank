@@ -242,5 +242,5 @@
             color: #05060fc2;
         }
     </style>
-    <script src="{{ asset('js/rephrase.js') }}"></script>
+    {{-- <script src="{{ asset('js/rephrase.js') }}"></script> --}}
 @endsection
