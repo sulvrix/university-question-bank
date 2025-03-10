@@ -29,7 +29,9 @@
                     <!-- Left Part: Logo -->
                     <div class="d-flex align-items-center">
                         <div class="logo-icon me-3"></div>
-                        <span class="fs-4 fw-medium">University Question Bank</span>
+                        <a class="fs-4 fw-medium ink-offset-2 link-underline link-underline-opacity-0 link-dark"
+                            href="{{ url('/') }}">University
+                            Question Bank</a>
                     </div>
                     <!-- Middle Part: Nav Links -->
                     <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
@@ -215,8 +217,8 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-6">
-                        <h3>University Exam Solutions</h3>
-                        <p>© 2023 University Exam Solutions. All rights reserved.</p>
+                        <h3>University Question Bank</h3>
+                        <p>© 2023 University Question Bank. All rights reserved.</p>
                     </div>
                     <div class="col-md-6 text-end">
                         <div class="social-icons">
@@ -277,6 +279,23 @@
                 top: 0;
                 z-index: 1000;
                 color: var(--text)
+            }
+
+            .logo-icon {
+                width: 28px;
+                height: 28px;
+                background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(96, 125, 227, 0.5) 31%, #607de3 100%);
+                border-radius: 50%;
+                position: relative;
+            }
+
+            .logo-icon::after {
+                content: '';
+                position: absolute;
+                width: 80%;
+                height: 80%;
+                background: linear-gradient(270deg, #607de3 0%, rgba(96, 125, 227, 0.56) 59%, rgba(0, 0, 0, 0) 100%);
+                transform: rotate(-50deg);
             }
 
             .navbar-nav .nav-link {

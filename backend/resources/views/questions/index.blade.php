@@ -2,12 +2,14 @@
 
 @section('content')
     <main class="py-4">
-        <div class="container">
+        <div class="container form-section">
             <div class="row justify-content-center">
-                <div class="col-md-10">
-                    <div class="card">
-                        <div class="card-header">{{ __('Questions') }}</div>
-                        <div class="card-body">
+                <div class="col-md-12">
+                    <div class="card shadow-lg animate__animated animate__fadeInUp">
+                        <div class="card-header bg-gradient-primary text-white text-center py-4">
+                            <h3 class="card-title mb-0">{{ __('Questions') }}</h3>
+                        </div>
+                        <div class="card-body p-4">
                             <table class="table table-hover table-bordered" style="font-size: 1.25em" id="table">
                                 <thead>
                                     <tr>
@@ -48,7 +50,8 @@
                                 </tbody>
                             </table>
                             <div class="d-flex align-items-center justify-content-center">
-                                <a href="{{ route('questions.create') }}" class="btn btn-primary mb-3">Create New
+                                <a href="{{ route('questions.create') }}" class="btn btn-primary custom-btn btn-lg">Create
+                                    New
                                     Question</a>
                             </div>
                         </div>

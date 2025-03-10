@@ -24,8 +24,8 @@ Route::get('/home', function () {
 
 Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 
-// Authentication routes (disable registration)
-Auth::routes(['register' => false]);
+// Authentication routes (disable registration and enable email verification)
+Auth::routes(['register' => false, 'verify' => true]);
 
 // Authenticated routes
 Route::middleware('auth')->group(function () {
