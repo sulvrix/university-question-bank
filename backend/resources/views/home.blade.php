@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{{ config('app.name', 'Laravel') }}- Home</title>
+    <title>{{ config('app.name', 'Laravel') }} - Home</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -29,7 +29,7 @@
                     <!-- Left Part: Logo -->
                     <div class="d-flex align-items-center">
                         <div class="logo-icon me-3"></div>
-                        <span class="fs-4 fw-medium">University Questions Bank</span>
+                        <span class="fs-4 fw-medium">University Question Bank</span>
                     </div>
                     <!-- Middle Part: Nav Links -->
                     <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
@@ -75,23 +75,19 @@
     <section class="hero-section" id="home">
         <div class="container">
             <div class="row align-items-center justify-content-center">
-                <div class="col-lg-6">
-                    <h1 class="animate__animated animate__fadeInLeft">The Future of University Exams</h1>
-                    <p class="animate__animated animate__fadeInLeft animate__delay-1s">Access a vast library of past
-                        exam papers, study materials, and solutions tailored to your course.</p>
+                <div class="col-lg-8 text-center">
+                    <h1 class="animate__animated animate__fadeInLeft">Empowering University Staff with Smart Exam
+                        Solutions</h1>
+                    <p class="animate__animated animate__fadeInLeft animate__delay-1s">Streamline exam creation, store
+                        questions securely, and leverage AI tools to enhance efficiency for commissioners and teachers.
+                    </p>
                     @if (Route::has('login'))
                         @auth
-                            <a class="btn custom-btn btn-lg animate__animated animate__fadeInLeft animate__delay-1s"
-                                href="{{ url('/dashboard') }}">Dashboard</a>
+                            <a class="btn custom-btn btn-lg " href="{{ url('/dashboard') }}">Dashboard</a>
                         @else
-                            <a class="btn custom-btn btn-lg animate__animated animate__fadeInLeft animate__delay-1s"
-                                href="{{ url('login') }}">Login</a>
+                            <a class="btn custom-btn btn-lg " href="{{ url('login') }}">Login</a>
                         @endauth
                     @endif
-                </div>
-                <div class="col-lg-6">
-                    <img src="{{ asset('images/hero.png') }}" alt="Hero Image" width="550" height="550"
-                        class="img-fluid animate__animated animate__fadeInRight">
                 </div>
             </div>
         </div>
@@ -104,23 +100,23 @@
             <div class="row g-4">
                 <div class="col-md-4">
                     <div class="feature-card text-center">
-                        <i class="fas fa-book-open feature-icon"></i>
-                        <h3>Comprehensive Library</h3>
-                        <p>Access a vast collection of past exam papers and study materials tailored to your course.</p>
+                        <i class="fas fa-database feature-icon"></i>
+                        <h3>Secure Question Bank</h3>
+                        <p>Store and manage exam questions securely with advanced access controls.</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="feature-card text-center">
-                        <i class="fas fa-search feature-icon"></i>
-                        <h3>Quick Search</h3>
-                        <p>Find what you need instantly with our powerful search and filter options.</p>
+                        <i class="fas fa-cogs feature-icon"></i>
+                        <h3>AI-Powered Tools</h3>
+                        <p>Use AI to generate, analyze, and optimize exam questions effortlessly.</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="feature-card text-center">
-                        <i class="fas fa-mobile-alt feature-icon"></i>
-                        <h3>Mobile-Friendly</h3>
-                        <p>Study anytime, anywhere with our mobile-friendly platform.</p>
+                        <i class="fas fa-clock feature-icon"></i>
+                        <h3>Time-Saving</h3>
+                        <p>Create exams faster with pre-built templates and automated workflows.</p>
                     </div>
                 </div>
             </div>
@@ -128,25 +124,25 @@
     </section>
 
     <!-- Statistics Section -->
-    <section class="stats-section">
+    <section class="stats-section" id="stats">
         <div class="container">
             <div class="row g-4">
                 <div class="col-md-4">
                     <div class="stat-card">
                         <h2>10,000+</h2>
-                        <p>Questions Available</p>
+                        <p>Questions Stored</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="stat-card">
                         <h2>500+</h2>
-                        <p>Universities Supported</p>
+                        <p>Exams Created</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="stat-card">
-                        <h2>1M+</h2>
-                        <p>Happy Students</p>
+                        <h2>1,000+</h2>
+                        <p>Happy Staff Members</p>
                     </div>
                 </div>
             </div>
@@ -154,42 +150,43 @@
     </section>
 
     <!-- Testimonials Section -->
-    <section class="testimonials-section">
+    <section class="testimonials-section" id="testimonials">
         <div class="container">
             <h2 class="text-center mb-5">What Our Users Say</h2>
             <div class="row g-4">
                 <div class="col-md-4">
                     <div class="testimonial-card">
-                        <p>"This platform has been a game-changer for my exam preparation. Highly recommended!"</p>
+                        <p>"This platform has revolutionized how we create and manage exams. Highly recommended!"</p>
                         <div class="user-info">
                             <img src="user1.jpg" alt="User 1">
                             <div>
-                                <h4>John Doe</h4>
-                                <p>Computer Science Student</p>
+                                <h4>Dr. John Doe</h4>
+                                <p>Head of Computer Science</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="testimonial-card">
-                        <p>"The resources are well-organized and easy to access. It's made studying so much easier."</p>
+                        <p>"The AI tools are a game-changer. They save us so much time and effort."</p>
                         <div class="user-info">
                             <img src="user2.jpg" alt="User 2">
                             <div>
-                                <h4>Jane Smith</h4>
-                                <p>Engineering Student</p>
+                                <h4>Prof. Jane Smith</h4>
+                                <p>Dean of Engineering</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="testimonial-card">
-                        <p>"I love the mobile-friendly design. I can study on the go without any hassle."</p>
+                        <p>"The question bank is incredibly secure and easy to use. It's a must-have for any
+                            university."</p>
                         <div class="user-info">
                             <img src="user3.jpg" alt="User 3">
                             <div>
-                                <h4>Alice Johnson</h4>
-                                <p>Business Student</p>
+                                <h4>Dr. Alice Johnson</h4>
+                                <p>Director of Academics</p>
                             </div>
                         </div>
                     </div>
@@ -201,329 +198,391 @@
     <!-- CTA Banner -->
     <section class="cta-banner">
         <div class="container">
-            <h2 class="animate__animated animate__fadeInUp">Ready to Ace Your Exams?</h2>
+            <h2 class="animate__animated animate__fadeInUp">Ready to Transform Exam Management?</h2>
             @if (Route::has('login'))
                 @auth
-                    <a class="btn custom-btn btn-lg animate__animated animate__fadeInUp animate__delay-1s"
-                        href="{{ url('/dashboard') }}">Dashboard</a>
+                    <a class="btn custom-btn btn-lg" href="{{ url('/dashboard') }}">Dashboard</a>
                 @else
-                    <a class="btn custom-btn btn-lg animate__animated animate__fadeInUp animate__delay-1s"
-                        href="{{ url('login') }}">Login</a>
+                    <a class="btn custom-btn btn-lg" href="{{ url('login') }}">Login</a>
                 @endauth
             @endif
         </div>
     </section>
-
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <h3>University Questions Bank</h3>
-                    <p>© 2023 University Questions Bank. All rights reserved.</p>
-                </div>
-                <div class="col-md-6 text-end">
-                    <div class="social-icons">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
+    <<!-- Contact -->
+        <x-contact-component />
+        <!-- Footer -->
+        <footer>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>University Exam Solutions</h3>
+                        <p>© 2023 University Exam Solutions. All rights reserved.</p>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <div class="social-icons">
+                            <a href="#"><i class="fab fa-facebook"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </footer>
+        </footer>
 
-    <style>
-        :root {
-            --primary: #607de3;
-            --primary-light: #8aa4f5;
-            --primary-dark: #4a6cd4;
-            --secondary: #4a4a4a;
-            --background: #f8f9fa;
-            --text: #333333;
-            --accent-gradient: linear-gradient(135deg, #607de3 0%, #8aa4f5 100%);
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            color: var(--text);
-            background-color: var(--background);
-        }
-
-        /* Sticky Navbar */
-        header {
-            background: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .navbar-nav .nav-link {
-            color: var(--text) !important;
-            font-weight: 500;
-            margin: 0 0.75rem;
-            position: relative;
-            transition: color 0.3s ease;
-        }
-
-        .navbar-nav .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            background: var(--primary);
-            bottom: -5px;
-            left: 0;
-            transition: width 0.3s ease;
-        }
-
-        .navbar-nav .nav-link:hover::after {
-            width: 100%;
-        }
-
-        .navbar-nav .nav-link:hover {
-            color: var(--primary) !important;
-        }
-
-        /* Custom Button Styles */
-        .custom-btn,
-        .custom-btn:active,
-        .custom-btn:focus,
-        .custom-btn:hover {
-            color: white !important;
-            /* Ensures text stays white */
-            background: var(--accent-gradient) !important;
-            /* Ensures gradient background */
-            border: none !important;
-            /* Removes any border */
-            outline: none !important;
-            /* Removes focus outline */
-            box-shadow: none !important;
-            /* Removes any box shadow */
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .custom-btn:hover {
-            background: var(--primary-dark) !important;
-            box-shadow: 0 5px 15px rgba(96, 125, 227, 0.3);
-            transform: translateY(-3px);
-        }
-
-        /* Hamburger Menu for Mobile */
-        .navbar-toggler {
-            border: none;
-        }
-
-        .navbar-toggler:focus {
-            box-shadow: none;
-        }
-
-        /* Hero Section */
-        .hero-section {
-            background: var(--accent-gradient);
-            color: white;
-            padding: 150px 0;
-            overflow: hidden;
-        }
-
-        .hero-section h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            line-height: 1.2;
-        }
-
-        .hero-section p {
-            font-size: 1.25rem;
-            margin-bottom: 2rem;
-        }
-
-        .hero-section .btn {
-            font-size: 1.25rem;
-            padding: 0.75rem 2rem;
-        }
-
-        .hero-image img {
-            border-radius: 20px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Features Section */
-        .features-section {
-            padding: 100px 0;
-        }
-
-        .feature-card {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 8px 20px rgba(96, 125, 227, 0.3);
-        }
-
-        .feature-icon {
-            font-size: 2.5rem;
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 1rem;
-        }
-
-        /* Statistics Section */
-        .stats-section {
-            background: var(--background);
-            padding: 100px 0;
-        }
-
-        .stat-card {
-            text-align: center;
-            padding: 2rem;
-        }
-
-        .stat-card h2 {
-            font-size: 3rem;
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        .stat-card p {
-            font-size: 1.25rem;
-            color: var(--secondary);
-        }
-
-        /* Testimonials Section */
-        .testimonials-section {
-            padding: 100px 0;
-        }
-
-        .testimonial-card {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .testimonial-card p {
-            font-size: 1rem;
-            color: var(--secondary);
-        }
-
-        .testimonial-card .user-info img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            margin-right: 1rem;
-        }
-
-        /* CTA Banner */
-        .cta-banner {
-            background: var(--accent-gradient);
-            color: white;
-            padding: 100px 0;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cta-banner::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(96, 125, 227, 0.8) 0%, rgba(138, 164, 245, 0.8) 100%);
-            z-index: 1;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-
-        .cta-banner:hover::before {
-            opacity: 1;
-        }
-
-        .cta-banner h2 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            position: relative;
-            z-index: 2;
-            animation: fadeInUp 1s ease;
-        }
-
-        .cta-banner .btn {
-            font-size: 1.25rem;
-            padding: 0.75rem 2rem;
-            position: relative;
-            z-index: 2;
-        }
-
-        .cta-banner .btn:hover {
-            background: var(--primary-dark);
-            box-shadow: 0 5px 20px rgba(96, 125, 227, 0.5);
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
+        <style>
+            :root {
+                --primary: #607de3;
+                --primary-light: #8aa4f5;
+                --primary-dark: #4a6cd4;
+                --secondary: #4a4a4a;
+                --background: #f8f9fa;
+                --text: #333333;
+                --accent-gradient: linear-gradient(135deg, #607de3 0%, #8aa4f5 100%);
             }
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
+            html {
+                scroll-behavior: smooth;
             }
-        }
 
-        /* Footer */
-        footer {
-            background: var(--primary-dark);
-            color: white;
-            padding: 2rem 0;
-        }
+            body {
+                background-image: url('{{ asset('images/hero.jpg') }}');
+                /* Replace with your image */
+                background-size: cover;
+                background-position: center;
+                background-attachment: fixed;
+                position: relative;
+                font-family: 'Poppins', sans-serif;
+                color: white;
+            }
 
-        footer a {
-            color: white;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
+            body::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(135deg, rgba(96, 125, 227, 0.8) 0%, rgba(138, 164, 245, 0.8) 100%);
+                /* Accent overlay */
+                z-index: -1;
+                /* Place behind all content */
+            }
 
-        footer a:hover {
-            color: var(--primary-light);
-        }
+            /* Sticky Navbar */
+            header {
+                background: white;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                position: sticky;
+                top: 0;
+                z-index: 1000;
+                color: var(--text)
+            }
 
-        .social-icons a {
-            font-size: 1.5rem;
-            margin-right: 1rem;
-        }
-    </style>
-    <script>
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault(); // Prevent default anchor behavior
-                const targetId = this.getAttribute('href'); // Get the target section ID
-                const targetElement = document.querySelector(targetId); // Find the target element
-                if (targetElement) {
-                    // Scroll to the target element with smooth behavior
-                    targetElement.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start' // Aligns the top of the section with the top of the viewport
-                    });
+            .navbar-nav .nav-link {
+                color: var(--text) !important;
+                font-weight: 500;
+                margin: 0 0.75rem;
+                position: relative;
+                transition: color 0.3s ease;
+            }
+
+            .navbar-nav .nav-link::after {
+                content: '';
+                position: absolute;
+                width: 0;
+                height: 2px;
+                background: var(--primary);
+                bottom: -5px;
+                left: 0;
+                transition: width 0.3s ease;
+            }
+
+            .navbar-nav .nav-link:hover::after {
+                width: 100%;
+            }
+
+            .navbar-nav .nav-link:hover {
+                color: var(--primary) !important;
+            }
+
+            /* Custom Button Styles */
+            .custom-btn {
+                background: var(--accent-gradient);
+                color: white;
+                border: none;
+                border-radius: 10px;
+                padding: 0.75rem 2rem;
+                font-size: 1rem;
+                font-weight: 500;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+
+            .custom-btn:hover {
+                background: var(--primary-dark) !important;
+                transform: translateY(-3px);
+                box-shadow: 0 5px 20px rgba(96, 125, 227, 0.5);
+            }
+
+            .custom-btn:hover,
+            .custom-btn:active {
+                color: white !important;
+
+            }
+
+
+            /* Hamburger Menu for Mobile */
+            .navbar-toggler {
+                border: none;
+            }
+
+            .navbar-toggler:focus {
+                box-shadow: none;
+            }
+
+            /* Hero Section */
+            .hero-section {
+                padding: 200px 0;
+                /* Adjust padding as needed */
+                position: relative;
+                overflow: hidden;
+                color: white;
+                /* Ensure text is visible */
+            }
+
+
+            .hero-section h1 {
+                font-size: 3.5rem;
+                font-weight: 700;
+                line-height: 1.2;
+                position: relative;
+                z-index: 2;
+            }
+
+            .hero-section p {
+                font-size: 1.25rem;
+                margin-bottom: 2rem;
+                position: relative;
+                z-index: 2;
+            }
+
+            .hero-section .btn {
+                font-size: 1.25rem;
+                padding: 0.75rem 2rem;
+                position: relative;
+                z-index: 2;
+            }
+
+            .hero-section .custom-btn {
+                font-size: 1.25rem;
+                padding: 0.75rem 2rem;
+            }
+
+            /* Features Section */
+            .features-section {
+                color: var(--text);
+                background-color: white;
+                padding: 100px 0;
+            }
+
+            .feature-card {
+                background: white;
+                border-radius: 15px;
+                padding: 2rem;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+
+            .feature-card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 8px 20px rgba(96, 125, 227, 0.3);
+            }
+
+            .feature-icon {
+                font-size: 2.5rem;
+                background: var(--accent-gradient);
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent;
+                margin-bottom: 1rem;
+            }
+
+            /* Statistics Section */
+            .stats-section {
+                padding: 100px 0;
+            }
+
+            .stat-card {
+                text-align: center;
+                padding: 2rem;
+                color: white;
+            }
+
+            .stat-card h2 {
+                font-size: 3rem;
+                font-weight: 700;
+            }
+
+            .stat-card p {
+                font-size: 1.25rem;
+            }
+
+            /* Testimonials Section */
+            .testimonials-section {
+                padding: 100px 0;
+                background: white;
+                color: var(--text)
+            }
+
+            .testimonial-card {
+                background: white;
+                border-radius: 15px;
+                padding: 2rem;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+
+            .testimonial-card p {
+                font-size: 1rem;
+                color: var(--secondary);
+            }
+
+            .testimonial-card .user-info img {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                margin-right: 1rem;
+            }
+
+            /* CTA Banner */
+            .cta-banner {
+                padding: 100px 0;
+                /* Adjust padding as needed */
+                position: relative;
+                overflow: hidden;
+                color: white;
+                text-align: center;
+            }
+
+            .cta-banner h2 {
+                font-size: 2.5rem;
+                font-weight: 700;
+                margin-bottom: 1.5rem;
+                position: relative;
+                z-index: 2;
+                animation: fadeInUp 1s ease;
+            }
+
+            .cta-banner .btn {
+                font-size: 1.25rem;
+                padding: 0.75rem 2rem;
+                position: relative;
+                z-index: 2;
+            }
+
+
+            .cta-banner .custom-btn {
+                padding: 0.75rem 2rem;
+                font-size: 1rem;
+                font-weight: 500;
+            }
+
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
                 }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            /* Contact Section */
+            .contact-section {
+                padding: 100px 0;
+                background-color: var(--background);
+            }
+
+            .contact-section .card {
+                border: none;
+                border-radius: 15px;
+                overflow: hidden;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+
+
+            .contact-section .card-header {
+                background: var(--accent-gradient);
+                padding: 2rem;
+            }
+
+            .contact-section .card-title {
+                font-size: 2rem;
+                font-weight: 700;
+            }
+
+            .contact-section .card-body {
+                padding: 2rem;
+            }
+
+            .contact-section .form-control {
+                border: 1px solid #ddd;
+                border-radius: 10px;
+                padding: 0.75rem 1rem;
+                transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            }
+
+            .contact-section .form-control:focus {
+                border-color: var(--primary);
+                box-shadow: 0 0 10px rgba(96, 125, 227, 0.3);
+            }
+
+            .contact-section .custom-btn {
+                padding: 0.75rem 2rem;
+                font-size: 1rem;
+                font-weight: 500;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+
+
+            /* Footer */
+            footer {
+                background: var(--primary-dark);
+                color: white;
+                padding: 2rem 0;
+            }
+
+            footer a {
+                color: white;
+                text-decoration: none;
+                transition: color 0.3s ease;
+            }
+
+            footer a:hover {
+                color: var(--primary-light);
+            }
+
+            .social-icons a {
+                font-size: 1.5rem;
+                margin-right: 1rem;
+            }
+        </style>
+        <script>
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
             });
-        });
-    </script>
+        </script>
 </body>
 
 </html>
