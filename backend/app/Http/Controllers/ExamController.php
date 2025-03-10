@@ -125,10 +125,17 @@ class ExamController extends Controller
     public function edit(Exam $exam)
     {
         // Retrieve all questions for filtering
-        $questions = Question::with('subject')->get();
+        $user = Auth::user();
 
-        // Retrieve departments (if needed for the dropdown)
-        $departments = Department::all();
+        if ($user->role === 'admin') {
+            $departments = Department::all();
+            $questions = Question::with('subject')->get(); // Eager load subject
+        } else {
+            $departments = Department::where('id', $user->department_id)->get();
+            $questions = Question::whereHas('subject', function ($query) use ($user) {
+                $query->where('department_id', $user->department_id);
+            })->with('subject')->get(); // Eager load subject
+        }
 
         // Retrieve the IDs of questions already attached to the exam
         $selectedQuestions = $exam->questions->pluck('id')->toArray();
@@ -192,11 +199,14 @@ class ExamController extends Controller
      */
     public function destroy(Exam $exam)
     {
-        // Delete the PDF file if it exists
-        if ($exam->pdf_path && file_exists($exam->pdf_path)) {
-            unlink($exam->pdf_path);
+        // Delete the PDF file if it exists in storage
+        if ($exam->pdf_path && Storage::disk('public')->exists($exam->pdf_path)) {
+            Storage::disk('public')->delete($exam->pdf_path);
         }
+
+        // Delete the exam record
         $exam->delete();
-        return redirect('/dashboard/exams')->with('success', 'Exam deleted successfully.');
+
+        return redirect()->route('dashboard.exams')->with('success', 'Exam deleted successfully.');
     }
 }

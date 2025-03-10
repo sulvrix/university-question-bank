@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'default' => env('MAIL_MAILER', 'log'),
+    'default' => env('MAIL_MAILER', 'mailtrap'),
 
     /*
     |--------------------------------------------------------------------------
@@ -46,6 +46,12 @@ return [
             'password' => env('MAIL_PASSWORD'),
             'timeout' => null,
             'local_domain' => env('MAIL_EHLO_DOMAIN'),
+        ],
+
+        'mailtrap' => [
+            'transport' => 'mailtrap',
+            'api_token' => env('MAILTRAP_API_TOKEN'),
+            'inbox_id' => env('MAILTRAP_INBOX_ID'),
         ],
 
         'ses' => [

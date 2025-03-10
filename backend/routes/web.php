@@ -11,6 +11,7 @@ use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ContactController;
 
 // Public routes
 Route::get('/', function () {
@@ -20,6 +21,8 @@ Route::get('/', function () {
 Route::get('/home', function () {
     return view('home');
 });
+
+Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 
 // Authentication routes (disable registration)
 Auth::routes(['register' => false]);

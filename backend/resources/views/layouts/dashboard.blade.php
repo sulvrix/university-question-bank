@@ -8,15 +8,19 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'Laravel') }}- Dashboard</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <!-- Scripts -->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.bootstrap5.css" />
+
+
+    <!-- Scripts -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 
 <body>
@@ -100,6 +104,65 @@
             @yield('content')
         </main>
     </div>
+    <style>
+        .form-control {
+            height: 44px;
+            background-color: #05060f0a;
+            border-radius: .5rem;
+            padding: 0 1rem;
+            border: 2px solid transparent;
+            font-size: 1rem;
+            transition: border-color .3s cubic-bezier(.25, .01, .25, 1) 0s, color .3s cubic-bezier(.25, .01, .25, 1) 0s, background .2s cubic-bezier(.25, .01, .25, 1) 0s;
+        }
+
+        select {
+            padding: 5px;
+            font-size: 16px;
+            line-height: 1;
+            border: 0;
+            border-radius: 5px;
+            height: 34px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16"> <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" /> </svg>') no-repeat right #ddd;
+            -webkit-appearance: none;
+            background-position-x: 98%;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: .3rem;
+            font-size: .9rem;
+            font-weight: bold;
+            color: #05060f99;
+            transition: color .3s cubic-bezier(.25, .01, .25, 1) 0s;
+        }
+
+        .form-control:hover,
+        .form-control:focus,
+        .form-control-group:hover .form-control {
+            outline: none;
+            border-color: #05060f;
+        }
+
+        .input-group:hover .label,
+        .form-control:focus {
+            color: #05060fc2;
+        }
+
+        .page-link.active,
+        .active>.page-link {
+            background-color: #607de3;
+        }
+
+        div.dt-length select {
+            font-size: 16px;
+            line-height: 1;
+            border: 0;
+            border-radius: 5px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16"> <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" /> </svg>') no-repeat right #05060f0a;
+            -webkit-appearance: none;
+            background-position-x: 90%;
+        }
+    </style>
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.2.2/js/dataTables.bootstrap5.js"></script>
@@ -109,7 +172,10 @@
                 layout: {
                     topStart: {
                         pageLength: {
-                            menu: [10, 25, 50, 100],
+                            menu: [10, 25, 50, {
+                                label: 'All',
+                                value: -1
+                            }],
                         }
                     },
                     topEnd: {

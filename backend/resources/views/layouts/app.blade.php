@@ -12,10 +12,10 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.bootstrap5.css" />
-
 
     <!-- Scripts -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -30,6 +30,88 @@
             </div>
         </main>
     </div>
+    <style>
+        :root {
+            --primary: #607de3;
+            --primary-light: #8aa4f5;
+            --primary-dark: #4a6cd4;
+            --secondary: #4a4a4a;
+            --background: #f8f9fa;
+            --text: #333333;
+            --accent-gradient: linear-gradient(135deg, #607de3 0%, #8aa4f5 100%);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* form Section */
+        .form-section {
+            background-color: var(--background);
+            padding: 100px 0;
+        }
+
+        .form-section .card {
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+
+        .form-section .card-header {
+            background: var(--accent-gradient);
+            padding: 2rem;
+        }
+
+        .form-section .card-title {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .form-section .card-body {
+            padding: 2rem;
+        }
+
+        .form-section .form-control {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-section .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(96, 125, 227, 0.3);
+        }
+
+        .form-section .btn-gradient-primary {
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem 2rem;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-section .btn-gradient-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(96, 125, 227, 0.5);
+        }
+
+        .form-section .btn-link {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .form-section .btn-link:hover {
+            color: var(--primary-dark);
+        }
+    </style>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

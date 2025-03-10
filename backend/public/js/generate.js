@@ -1,44 +1,51 @@
 let page = 1; // Track the current page of questions
 let isLoading = false; // Prevent multiple simultaneous requests
 let loadMoreButton = null; // Reference to the "Load More" button
-let pdfText = ''; // Store the extracted PDF text
+let extractedText = null; // Store the extracted text for pagination
 
+// Function to show loading overlay
 function showLoadingOverlay() {
-    const loadingOverlay = document.getElementById('loading-overlay');
-    loadingOverlay.style.display = 'flex'; // Show the overlay
+    document.getElementById('loading-overlay').style.display = 'flex';
 }
 
-// Function to hide the loading overlay
+// Function to hide loading overlay
 function hideLoadingOverlay() {
-    const loadingOverlay = document.getElementById('loading-overlay');
-    loadingOverlay.style.display = 'none'; // Hide the overlay
+    document.getElementById('loading-overlay').style.display = 'none';
+}
+
+// Function to disable the "Load More" button
+function disableLoadMoreButton(disabled, text = "Load More") {
+    if (loadMoreButton) {
+        loadMoreButton.disabled = disabled;
+        loadMoreButton.textContent = disabled ? "Loading..." : text;
+    }
 }
 
 // Function to load more questions
 function loadMoreQuestions() {
-    if (isLoading) return; // Prevent multiple requests
+    if (isLoading || !extractedText) return;
     isLoading = true;
 
+    disableLoadMoreButton(true);
     showLoadingOverlay();
-    console.log('Fetching more questions for page:', page); // Log the current page
+    console.log('Fetching more questions for page:', page);
 
-    fetch(`/api/generate?page=${page}&pdfText=${encodeURIComponent(pdfText)}`, {
+    fetch(`/api/generate?text=${encodeURIComponent(extractedText)}&page=${page}`, {
         method: 'GET',
         headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Accept': 'application/json', // Ensure the response is JSON
         }
     })
         .then(response => {
             if (!response.ok) {
-                return response.text().then(errorText => {
-                    console.error('Server response error:', errorText); // Log the error response
-                    throw new Error('Something went wrong. Please check the console for details.');
+                return response.json().then(errorData => {
+                    throw new Error(errorData.error || 'Failed to load more questions');
                 });
             }
             return response.json();
         })
         .then(data => {
-            console.log('API response data:', data); // Log the API response
             if (data.questions && Array.isArray(data.questions)) {
                 const questionList = document.getElementById('question-list');
 
@@ -46,43 +53,31 @@ function loadMoreQuestions() {
                     const questionDiv = document.createElement('div');
                     questionDiv.className = 'd-flex justify-content-between align-items-center p-3 mb-3 border rounded bg-light';
                     questionDiv.innerHTML = `
-                        <div class="flex-grow-1 me-3">
-                            <strong>Question:</strong> ${question.question}
-                            <br>
-                            <strong>Correct Answer:</strong> ${question.correct_answer}
-                        </div>
-                        <div>
-                            <a href="/dashboard/questions/create?question=${encodeURIComponent(question.question)}&answers=${encodeURIComponent(JSON.stringify(question.choices))}&correct_answer=${encodeURIComponent(question.correct_answer)}" class="btn btn-sm btn-success">Create</a>
-                        </div>
-                    `;
+                    <div class="flex-grow-1 me-3">
+                        <strong>Question:</strong> ${question.question}
+                        <br>
+                        <strong>Correct Answer:</strong> ${question.correct_answer}
+                    </div>
+                    <div>
+                        <a href="/dashboard/questions/create?question=${encodeURIComponent(question.question)}&answers=${encodeURIComponent(JSON.stringify(question.choices))}&correct_answer=${encodeURIComponent(question.correct_answer)}" class="btn btn-sm btn-success">Create</a>
+                    </div>
+                `;
                     questionList.appendChild(questionDiv);
                 });
 
-                page++; // Increment the page for the next request
-                console.log('Loaded more questions. Current page:', page); // Log the updated page
-
-                // Add the "Load More" button if it doesn't exist
-                if (!loadMoreButton) {
-                    loadMoreButton = document.createElement('button');
-                    loadMoreButton.className = 'btn btn-primary mt-3';
-                    loadMoreButton.textContent = 'Load More';
-                    loadMoreButton.addEventListener('click', loadMoreQuestions);
-
-                    // Append the "Load More" button to the page
-                    document.getElementById('question-list').insertAdjacentElement('afterend', loadMoreButton);
-                }
+                page++; // Increment page for next request
             } else {
-                throw new Error('No more questions found');
+                disableLoadMoreButton(true, "No More Questions");
             }
         })
         .catch(error => {
-            console.error('Error loading more questions:', error); // Log the error
-            alert(error.message); // Show an alert with the error message
+            console.error('Error loading more questions:', error);
+            alert(error.message || "Failed to load more questions. Please try again.");
         })
         .finally(() => {
-            isLoading = false; // Reset the loading state
+            isLoading = false;
             hideLoadingOverlay();
-            console.log('Loading complete.'); // Log when loading is complete
+            disableLoadMoreButton(false);
         });
 }
 
@@ -100,6 +95,7 @@ document.getElementById('pdf-upload').addEventListener('change', function (event
     }
 
     showLoadingOverlay();
+    page = 1; // Reset pagination on new upload
 
     const formData = new FormData();
     formData.append('pdf', file);
@@ -113,57 +109,53 @@ document.getElementById('pdf-upload').addEventListener('change', function (event
     })
         .then(response => {
             if (!response.ok) {
-                return response.text().then(errorText => {
-                    console.error('Server response:', errorText);
-                    throw new Error('Something went wrong. Please check the console for details.');
+                return response.json().then(errorData => {
+                    throw new Error(errorData.error || 'Failed to process the PDF');
                 });
             }
             return response.json();
         })
         .then(data => {
-            console.log('Server response data:', data); // Log the response data
-            if (data.questions && Array.isArray(data.questions)) {
-                const questionList = document.getElementById('question-list');
-                questionList.innerHTML = ''; // Clear previous content
+            const questionList = document.getElementById('question-list');
+            questionList.innerHTML = ''; // Clear previous content
 
+            if (data.questions && Array.isArray(data.questions)) {
                 data.questions.forEach((question) => {
                     const questionDiv = document.createElement('div');
                     questionDiv.className = 'd-flex justify-content-between align-items-center p-3 mb-3 border rounded bg-light';
                     questionDiv.innerHTML = `
-                        <div class="flex-grow-1 me-3">
-                            <strong>Question:</strong> ${question.question}
-                            <br>
-                            <strong>Correct Answer:</strong> ${question.correct_answer}
-                        </div>
-                        <div>
-                            <a href="/dashboard/questions/create?question=${encodeURIComponent(question.question)}&answers=${encodeURIComponent(JSON.stringify(question.choices))}&correct_answer=${encodeURIComponent(question.correct_answer)}" class="btn btn-sm btn-success">Create</a>
-                        </div>
-                    `;
+                    <div class="flex-grow-1 me-3">
+                        <strong>Question:</strong> ${question.question}
+                        <br>
+                        <strong>Correct Answer:</strong> ${question.correct_answer}
+                    </div>
+                    <div>
+                        <a href="/dashboard/questions/create?question=${encodeURIComponent(question.question)}&answers=${encodeURIComponent(JSON.stringify(question.choices))}&correct_answer=${encodeURIComponent(question.correct_answer)}" class="btn btn-sm btn-success">Create</a>
+                    </div>
+                `;
                     questionList.appendChild(questionDiv);
                 });
 
-                // Store the extracted PDF text for future requests
-                pdfText = data.pdfText;
+                extractedText = data.text; // Store the extracted text for pagination
 
-                // Add the "Load More" button after the first set of questions is loaded
                 if (!loadMoreButton) {
                     loadMoreButton = document.createElement('button');
                     loadMoreButton.className = 'btn btn-primary mt-3';
                     loadMoreButton.textContent = 'Load More';
                     loadMoreButton.addEventListener('click', loadMoreQuestions);
-
-                    // Append the "Load More" button to the page
                     document.getElementById('question-list').insertAdjacentElement('afterend', loadMoreButton);
+                } else {
+                    disableLoadMoreButton(false);
                 }
             } else {
-                throw new Error('No questions found in response');
+                alert('No questions found in the PDF.');
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert(error.message); // Show an alert with the error message
+            alert(error.message || 'Failed to process the PDF. Please try again.');
         })
         .finally(() => {
-            hideLoadingOverlay(); // Hide the loading overlay
+            hideLoadingOverlay();
         });
 });

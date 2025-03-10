@@ -1,86 +1,91 @@
 function showLoadingOverlay() {
-    const loadingOverlay = document.getElementById('loading-overlay');
-    loadingOverlay.style.display = 'flex'; // Show the overlay
+    document.getElementById('loading-overlay').style.display = 'flex';
 }
 
-// Function to hide the loading overlay
 function hideLoadingOverlay() {
-    const loadingOverlay = document.getElementById('loading-overlay');
-    loadingOverlay.style.display = 'none'; // Hide the overlay
+    document.getElementById('loading-overlay').style.display = 'none';
 }
 
-document.getElementById('rephraseButton').addEventListener('click',
-    function () {
-        const questionText = document.getElementById('text').value;
-        if (!questionText) {
-            alert('Please enter a question to rephrase');
-            return;
-        }
-        showLoadingOverlay();
-        fetch('/api/rephrase', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
-                    'content')
-            },
-            body: JSON.stringify({
-                question: questionText
-            })
+document.getElementById('rephraseButton').addEventListener('click', function () {
+    const questionText = document.getElementById('text').value.trim();
+
+    if (!questionText) {
+        alert('Please enter a question to rephrase');
+        return;
+    }
+
+    showLoadingOverlay();
+
+    const rephraseButton = document.getElementById('rephraseButton');
+    rephraseButton.disabled = true;
+    rephraseButton.textContent = 'Rephrasing...';
+
+    fetch('/api/rephrase', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ question: questionText })
+    })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(errorData => {
+                    throw new Error(errorData.error || 'Something went wrong');
+                });
+            }
+            return response.json();
         })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(errorData => {
-                        throw new Error(errorData.error || 'Something went wrong');
-                    });
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.rephrases) {
-                    // Check if any rephrase contains the word "wrong"
-                    if (data.rephrases.some(rephrase => rephrase.toLowerCase() === 'wrong')) {
-                        alert('The question is invalid, please try a different question.');
-                        return; // Exit the function if the response is "wrong"
-                    }
-                    const originalQuestion = document.getElementById('originalQuestion');
-                    const rephraseList = document.getElementById('rephraseList');
+        .then(data => {
+            if (!data.rephrases || !Array.isArray(data.rephrases) || data.rephrases.length === 0) {
+                throw new Error('No rephrases found in response');
+            }
 
-                    // Display the original question
-                    originalQuestion.textContent = `Original: ${questionText}`;
+            // Filter out empty or null rephrases on the client side (optional)
+            data.rephrases = data.rephrases.filter(rephrase => rephrase && rephrase.trim() !== '');
 
-                    // Clear previous rephrased questions
-                    rephraseList.innerHTML = '';
+            // Handle invalid question response
+            if (data.rephrases.length === 1 && data.rephrases[0].trim().toLowerCase() === 'wrong') {
+                alert('The question is invalid, please try a different question.');
+                return;
+            }
 
-                    // Ensure that each rephrase is added individually
-                    data.rephrases.forEach(rephrase => {
-                        const rephrasedQuestion = document.createElement('div');
-                        rephrasedQuestion.className = 'rephrased-question';
-                        rephrasedQuestion.textContent = rephrase;
+            const originalQuestion = document.getElementById('originalQuestion');
+            const rephraseList = document.getElementById('rephraseList');
 
-                        // Add click event to replace textarea content
-                        rephrasedQuestion.addEventListener('click', function () {
-                            document.getElementById('text').value = rephrase;
-                            const modal = bootstrap.Modal.getInstance(document
-                                .getElementById('rephraseModal'));
-                            modal.hide();
-                        });
+            // Display the original question
+            originalQuestion.textContent = `${questionText}`;
 
-                        rephraseList.appendChild(rephrasedQuestion);
-                    });
+            // Clear previous rephrased questions
+            rephraseList.innerHTML = '';
 
-                    // Show the modal
-                    const modal = new bootstrap.Modal(document.getElementById('rephraseModal'));
-                    modal.show();
-                } else {
-                    throw new Error('No rephrases found in response');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert(error.message); // Show an alert with the error message
-            })
-            .finally(() => {
-                hideLoadingOverlay();
+            // Add each rephrased question as a new row
+            data.rephrases.forEach(rephrase => {
+                const rephrasedQuestion = document.createElement('div');
+                rephrasedQuestion.className = 'rephrased-question p-3 text-primary-emphasis border border-secondary-subtle rounded-3';
+                rephrasedQuestion.textContent = rephrase;
+
+                // Click event to replace textarea content
+                rephrasedQuestion.addEventListener('click', function () {
+                    document.getElementById('text').value = rephrase;
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('rephraseModal'));
+                    modal.hide();
+                });
+
+                rephraseList.appendChild(rephrasedQuestion);
             });
-    });
+
+            // Show the modal
+            const modal = new bootstrap.Modal(document.getElementById('rephraseModal'));
+            modal.show();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert(error.message || 'Failed to rephrase. Please try again.');
+        })
+        .finally(() => {
+            hideLoadingOverlay();
+            rephraseButton.disabled = false;
+            rephraseButton.textContent = 'Rephrase';
+        });
+});
