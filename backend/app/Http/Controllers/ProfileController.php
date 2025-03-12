@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 class ProfileController extends Controller
 {
@@ -34,38 +35,34 @@ class ProfileController extends Controller
         $rules = [
             'name' => 'required|string|max:255',
             'email' => "required|string|email|max:255|unique:users,email,{$user->id}",
-            'old_password' => 'nullable|string|min:6',
-            'password' => 'nullable|string|min:6|confirmed',
         ];
-
-        // Add conditional rule for old_password
-        if ($request->filled('password')) {
-            $rules['old_password'] = 'required|string|min:6';
-        }
 
         // Validate the request
         $validatedData = $request->validate($rules);
 
-        // Check if the old password is provided and matches the current password
-        if ($request->filled('old_password')) {
-            if (!Hash::check($validatedData['old_password'], $user->password)) {
-                throw ValidationException::withMessages([
-                    'old_password' => ['The old password is incorrect.'],
-                ]);
-            }
-        }
+        // Check if the email is being updated
+        $emailChanged = $user->email !== $validatedData['email'];
 
         // Update user details
         $user->name = $validatedData['name'];
         $user->email = $validatedData['email'];
 
-        // Update password if provided
-        if (!empty($validatedData['password'])) {
-            $user->password = Hash::make($validatedData['password']);
+        // If the email was changed, mark the email as unverified
+        if ($emailChanged && $user instanceof MustVerifyEmail) {
+            $user->email_verified_at = null;
+            $user->save();
+
+            // Trigger the email verification notification
+            $user->sendEmailVerificationNotification();
+
+            // Redirect with a message informing the user that a verification email has been sent
+            return redirect()->route('profile.edit')->with('status', 'A verification email has been sent to your new email address. Please verify it to complete the update.');
         }
 
+        // If the email was not changed, just save the user model
         $user->save();
 
-        return redirect()->route('profile.edit')->with('success', 'Profile updated successfully.');
+        // Redirect with a success message
+        return redirect()->route('profile.edit')->with('status', 'Profile updated successfully.');
     }
 }

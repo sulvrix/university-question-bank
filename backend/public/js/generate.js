@@ -21,6 +21,31 @@ function disableLoadMoreButton(disabled, text = "Load More") {
     }
 }
 
+// Function to show an alert
+function showAlert(message, type = 'warning', duration = 5000) {
+    const alertPlaceholder = document.getElementById('alertPlaceholder');
+    if (!alertPlaceholder) {
+        console.error('Alert placeholder not found!');
+        return;
+    }
+
+    // Create the alert HTML
+    const alertHTML = `
+        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    `;
+
+    // Append the alert to the placeholder
+    alertPlaceholder.innerHTML = alertHTML;
+
+    // Automatically remove the alert after the specified duration
+    setTimeout(() => {
+        alertPlaceholder.innerHTML = ''; // Clear the alert
+    }, duration);
+}
+
 // Function to load more questions
 function loadMoreQuestions() {
     if (isLoading || !extractedText) return;
@@ -28,7 +53,6 @@ function loadMoreQuestions() {
 
     disableLoadMoreButton(true);
     showLoadingOverlay();
-    console.log('Fetching more questions for page:', page);
 
     fetch(`/api/generate?text=${encodeURIComponent(extractedText)}&page=${page}`, {
         method: 'GET',
@@ -51,17 +75,17 @@ function loadMoreQuestions() {
 
                 data.questions.forEach((question) => {
                     const questionDiv = document.createElement('div');
-                    questionDiv.className = 'd-flex justify-content-between align-items-center p-3 mb-3 border rounded bg-light';
+                    questionDiv.className = 'question-item';
                     questionDiv.innerHTML = `
-                    <div class="flex-grow-1 me-3">
-                        <strong>Question:</strong> ${question.question}
-                        <br>
-                        <strong>Correct Answer:</strong> ${question.correct_answer}
-                    </div>
-                    <div>
-                        <a href="/dashboard/questions/create?question=${encodeURIComponent(question.question)}&answers=${encodeURIComponent(JSON.stringify(question.choices))}&correct_answer=${encodeURIComponent(question.correct_answer)}" class="btn btn-sm btn-success">Create</a>
-                    </div>
-                `;
+                        <div class="question-details">
+                            <strong>Question:</strong> ${question.question}
+                            <br>
+                            <strong>Correct Answer:</strong> ${question.correct_answer}
+                        </div>
+                        <div>
+                            <a href="/dashboard/questions/create?question=${encodeURIComponent(question.question)}&answers=${encodeURIComponent(JSON.stringify(question.choices))}&correct_answer=${encodeURIComponent(question.correct_answer)}" class="btn btn-sm btn-primary">Create</a>
+                        </div>
+                    `;
                     questionList.appendChild(questionDiv);
                 });
 
@@ -72,7 +96,7 @@ function loadMoreQuestions() {
         })
         .catch(error => {
             console.error('Error loading more questions:', error);
-            alert(error.message || "Failed to load more questions. Please try again.");
+            showAlert('Failed to load more questions. Please try again.');
         })
         .finally(() => {
             isLoading = false;
@@ -90,7 +114,7 @@ document.getElementById('pdf-upload').addEventListener('change', function (event
     const file = event.target.files[0];
 
     if (!file || file.type !== 'application/pdf') {
-        alert('Please upload a valid PDF file.');
+        showAlert('Please upload a valid PDF file.');
         return;
     }
 
@@ -122,17 +146,17 @@ document.getElementById('pdf-upload').addEventListener('change', function (event
             if (data.questions && Array.isArray(data.questions)) {
                 data.questions.forEach((question) => {
                     const questionDiv = document.createElement('div');
-                    questionDiv.className = 'd-flex justify-content-between align-items-center p-3 mb-3 border rounded bg-light';
+                    questionDiv.className = 'question-item';
                     questionDiv.innerHTML = `
-                    <div class="flex-grow-1 me-3">
-                        <strong>Question:</strong> ${question.question}
-                        <br>
-                        <strong>Correct Answer:</strong> ${question.correct_answer}
-                    </div>
-                    <div>
-                        <a href="/dashboard/questions/create?question=${encodeURIComponent(question.question)}&answers=${encodeURIComponent(JSON.stringify(question.choices))}&correct_answer=${encodeURIComponent(question.correct_answer)}" class="btn btn-sm btn-success">Create</a>
-                    </div>
-                `;
+                        <div class="question-details">
+                            <strong>Question:</strong> ${question.question}
+                            <br>
+                            <strong>Correct Answer:</strong> ${question.correct_answer}
+                        </div>
+                        <div>
+                            <a href="/dashboard/questions/create?question=${encodeURIComponent(question.question)}&answers=${encodeURIComponent(JSON.stringify(question.choices))}&correct_answer=${encodeURIComponent(question.correct_answer)}" class="btn btn-sm btn-primary">Create</a>
+                        </div>
+                    `;
                     questionList.appendChild(questionDiv);
                 });
 
@@ -143,17 +167,17 @@ document.getElementById('pdf-upload').addEventListener('change', function (event
                     loadMoreButton.className = 'btn btn-primary mt-3';
                     loadMoreButton.textContent = 'Load More';
                     loadMoreButton.addEventListener('click', loadMoreQuestions);
-                    document.getElementById('question-list').insertAdjacentElement('afterend', loadMoreButton);
+                    document.getElementById('loadmore-div').appendChild(loadMoreButton);
                 } else {
                     disableLoadMoreButton(false);
                 }
             } else {
-                alert('No questions found in the PDF.');
+                showAlert('No questions found in the PDF.');
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert(error.message || 'Failed to process the PDF. Please try again.');
+            showAlert('Failed to process the PDF. Please try again.');
         })
         .finally(() => {
             hideLoadingOverlay();

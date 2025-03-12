@@ -1,3 +1,8 @@
+@php
+    use App\Models\User;
+    use App\Models\Question;
+    use App\Models\Exam;
+@endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -29,7 +34,9 @@
                     <!-- Left Part: Logo -->
                     <div class="d-flex align-items-center">
                         <div class="logo-icon me-3"></div>
-                        <span class="fs-4 fw-medium">University Question Bank</span>
+                        <a class="fs-4 fw-medium ink-offset-2 link-underline link-underline-opacity-0 link-dark"
+                            href="{{ url('/') }}">University
+                            Question Bank</a>
                     </div>
                     <!-- Middle Part: Nav Links -->
                     <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
@@ -129,19 +136,19 @@
             <div class="row g-4">
                 <div class="col-md-4">
                     <div class="stat-card">
-                        <h2>10,000+</h2>
+                        <h2>{{ Question::count() . '+' }}</h2>
                         <p>Questions Stored</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="stat-card">
-                        <h2>500+</h2>
+                        <h2>{{ Exam::count() . '+' }}</h2>
                         <p>Exams Created</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="stat-card">
-                        <h2>1,000+</h2>
+                        <h2>{{ User::count() . '+' }}</h2>
                         <p>Happy Staff Members</p>
                     </div>
                 </div>
@@ -215,8 +222,8 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-6">
-                        <h3>University Exam Solutions</h3>
-                        <p>© 2023 University Exam Solutions. All rights reserved.</p>
+                        <h3>University Question Bank</h3>
+                        <p>© 2023 University Question Bank. All rights reserved.</p>
                     </div>
                     <div class="col-md-6 text-end">
                         <div class="social-icons">
@@ -277,6 +284,23 @@
                 top: 0;
                 z-index: 1000;
                 color: var(--text)
+            }
+
+            .logo-icon {
+                width: 28px;
+                height: 28px;
+                background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(96, 125, 227, 0.5) 31%, #607de3 100%);
+                border-radius: 50%;
+                position: relative;
+            }
+
+            .logo-icon::after {
+                content: '';
+                position: absolute;
+                width: 80%;
+                height: 80%;
+                background: linear-gradient(270deg, #607de3 0%, rgba(96, 125, 227, 0.56) 59%, rgba(0, 0, 0, 0) 100%);
+                transform: rotate(-50deg);
             }
 
             .navbar-nav .nav-link {
@@ -527,15 +551,28 @@
             }
 
             .contact-section .form-control {
-                border: 1px solid #ddd;
-                border-radius: 10px;
-                padding: 0.75rem 1rem;
-                transition: border-color 0.3s ease, box-shadow 0.3s ease;
+                height: 44px;
+                background-color: #05060f0a;
+                border-radius: .5rem;
+                padding: 0 1rem;
+                border: 2px solid transparent;
+                font-size: 1rem !important;
+                transition: border-color .3s cubic-bezier(.25, .01, .25, 1) 0s, color .3s cubic-bezier(.25, .01, .25, 1) 0s, background .2s cubic-bezier(.25, .01, .25, 1) 0s;
             }
 
+            .contact-section .form-control:hover,
             .contact-section .form-control:focus {
-                border-color: var(--primary);
-                box-shadow: 0 0 10px rgba(96, 125, 227, 0.3);
+                outline: none;
+                border-color: #05060f;
+            }
+
+            .contact-section .form-label {
+                display: block;
+                margin-bottom: .3rem;
+                font-size: .9rem;
+                font-weight: bold;
+                color: #05060f99;
+                transition: color .3s cubic-bezier(.25, .01, .25, 1) 0s;
             }
 
             .contact-section .custom-btn {

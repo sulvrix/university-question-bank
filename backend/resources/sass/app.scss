@@ -89,3 +89,34 @@ $danger: #de5464;
     --bs-table-hover-bg: #bc354a;
     --bs-table-active-bg: #9b0c31;
 }
+
+//backgrounds
+.bg-primary {
+    --bs-bg-opacity: 1;
+    background-color: #{$primary} !important;
+}
+
+.bg-secondary {
+    --bs-bg-opacity: 1;
+    background-color: #{$secondary} !important;
+}
+
+.bg-success {
+    --bs-bg-opacity: 1;
+    background-color: #{$success} !important;
+}
+
+.bg-info {
+    --bs-bg-opacity: 1;
+    background-color: #{$info} !important;
+}
+
+.bg-warning {
+    --bs-bg-opacity: 1;
+    background-color: #{$warning} !important;
+}
+
+.bg-danger {
+    --bs-bg-opacity: 1;
+    background-color: #{$danger} !important;
+}

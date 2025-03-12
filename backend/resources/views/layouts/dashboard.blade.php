@@ -11,110 +11,178 @@
     <title>{{ config('app.name', 'Laravel') }}- Dashboard</title>
 
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Scripts -->
     <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.bootstrap5.css" />
 
 
     <!-- Scripts -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 
 <body>
-    <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm py-2">
+    <!-- Header -->
+    <header class="container-fluid py-3">
+        <div id="app">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto">
-                        @if (Auth::check() && (Auth::user()->role == 'admin' || Auth::user()->role == 'staff'))
-                            <li class="nav-item">
-                                <a class="nav-link"
-                                    href="{{ route('dashboard.administration') }}">{{ __('Administration') }}</a>
-                            </li>
-                        @endif
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('dashboard.questions') }}">{{ __('Questions') }}</a>
-                        </li>
-                        @if (Auth::check() &&
-                                (Auth::user()->role == 'admin' || Auth::user()->role == 'staff' || Auth::user()->role == 'commissioner'))
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('dashboard.exams') }}">{{ __('Exams') }}</a>
-                            </li>
-                        @endif
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ms-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            @if (Route::has('login'))
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <div class="container-fluid">
+                        <!-- Left Part: Logo -->
+                        <div class="d-flex align-items-center">
+                            <div class="logo-icon me-3"></div>
+                            <a class="fs-4 fw-medium ink-offset-2 link-underline link-underline-opacity-0 link-dark"
+                                href="{{ url('/') }}">University
+                                Question Bank</a>
+                        </div>
+                        <!-- Middle Part: Nav Links -->
+                        <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                            <ul class="navbar-nav">
+                                @if (Auth::check() && (Auth::user()->role == 'admin' || Auth::user()->role == 'staff'))
+                                    <li class="nav-item">
+                                        <a class="nav-link"
+                                            href="{{ route('dashboard.administration') }}">{{ __('Administration') }}</a>
+                                    </li>
+                                @endif
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                    <a class="nav-link"
+                                        href="{{ route('dashboard.questions') }}">{{ __('Questions') }}</a>
                                 </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('profile.edit') }}">
-                                        {{ __('Profile') }}
+                                @if (Auth::check() &&
+                                        (Auth::user()->role == 'admin' || Auth::user()->role == 'staff' || Auth::user()->role == 'commissioner'))
+                                    <li class="nav-item">
+                                        <a class="nav-link"
+                                            href="{{ route('dashboard.exams') }}">{{ __('Exams') }}</a>
+                                    </li>
+                                @endif
+                            </ul>
+                        </div>
+                        <!-- Right Part -->
+                        <ul class="navbar-nav">
+                            <!-- Authentication Links -->
+                            @guest
+                                @if (Route::has('login'))
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                    </li>
+                                @endif
+                            @else
+                                <li class="nav-item dropdown">
+                                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                        {{ Auth::user()->name }}
                                     </a>
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                        onclick="event.preventDefault();
-                                        document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
+                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="{{ route('profile.edit') }}">
+                                            <i class="fas fa-user-circle me-2"></i>{{ __('Profile') }}
+                                        </a>
+                                        <a class="dropdown-item" href="{{ route('logout') }}"
+                                            onclick="event.preventDefault();
+                                            document.getElementById('logout-form').submit();">
+                                            <i class="fas fa-sign-out-alt me-2"></i>{{ __('Logout') }}
+                                        </a>
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                            class="d-none">
+                                            @csrf
+                                        </form>
+                                    </div>
+                                </li>
+                            @endguest
+                        </ul>
+                        <!-- Hamburger Button for Mobile -->
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+                            aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                    </div>
+                </nav>
+                @if (session('status'))
+                    <div class="alert alert-success" role="alert">
+                        {{ session('status') }}
+                    </div>
+                @endif
             </div>
-        </nav>
-        @if (session('status'))
-            <div class="alert alert-success" role="alert">
-                {{ session('status') }}
-            </div>
-        @endif
+    </header>
 
-        {{-- Dashboard Content --}}
-        <main class="py-4">
-            @yield('content')
-        </main>
-    </div>
+    {{-- Dashboard Content --}}
+    <main class="py-4">
+        @yield('content')
+    </main>
     <style>
+        :root {
+            --primary: #607de3;
+            --primary-light: #8aa4f5;
+            --primary-dark: #4a6cd4;
+            --secondary: #4a4a4a;
+            --background: #f8f9fa;
+            --text: #333333;
+            --accent-gradient: linear-gradient(135deg, #607de3 0%, #8aa4f5 100%);
+        }
+
+        /* Sticky Navbar */
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            color: var(--text)
+        }
+
+
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .logo-icon {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(96, 125, 227, 0.5) 31%, #607de3 100%);
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .logo-icon::after {
+            content: '';
+            position: absolute;
+            width: 80%;
+            height: 80%;
+            background: linear-gradient(270deg, #607de3 0%, rgba(96, 125, 227, 0.56) 59%, rgba(0, 0, 0, 0) 100%);
+            transform: rotate(-50deg);
+        }
+
+        /* form Section */
+        /* Custom Form Controls */
+
         .form-control {
             height: 44px;
             background-color: #05060f0a;
             border-radius: .5rem;
             padding: 0 1rem;
             border: 2px solid transparent;
-            font-size: 1rem;
+            font-size: 1rem !important;
             transition: border-color .3s cubic-bezier(.25, .01, .25, 1) 0s, color .3s cubic-bezier(.25, .01, .25, 1) 0s, background .2s cubic-bezier(.25, .01, .25, 1) 0s;
         }
 
+        .form-control:hover,
+        .form-control:focus {
+            outline: none;
+            border-color: #05060f;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: .3rem;
+            font-size: .9rem;
+            font-weight: bold;
+            color: #05060f99;
+            transition: color .3s cubic-bezier(.25, .01, .25, 1) 0s;
+        }
+
+        /* Custom Select Dropdown */
         select {
             padding: 5px;
             font-size: 16px;
@@ -127,21 +195,213 @@
             background-position-x: 98%;
         }
 
-        .form-label {
-            display: block;
-            margin-bottom: .3rem;
-            font-size: .9rem;
-            font-weight: bold;
-            color: #05060f99;
-            transition: color .3s cubic-bezier(.25, .01, .25, 1) 0s;
+        /* Custom Buttons */
+        .btn-primary {
+            background-color: #607de3;
+            border-color: #607de3;
         }
 
-        .form-control:hover,
-        .form-control:focus,
-        .form-control-group:hover .form-control {
-            outline: none;
-            border-color: #05060f;
+        .btn-primary:hover {
+            background-color: #4a6ed9;
+            border-color: #4a6ed9;
         }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+            border-color: #d39e00;
+        }
+
+        /* Card Layout */
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 0.5rem;
+            background-color: #fff;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+
+        .card-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #ddd;
+            padding: 1rem;
+            font-weight: bold;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        /* Error Messages */
+        .text-danger {
+            font-size: 0.875rem;
+            color: #dc3545;
+        }
+
+        /* Loading Overlay */
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
+
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+
+        .form-section {
+            background-color: var(--background);
+            padding: 25px 0;
+        }
+
+        .form-section .card {
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+
+        .form-section .card-header {
+            background: var(--accent-gradient);
+            padding: 2rem;
+        }
+
+        .form-section .card-title {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .form-section .card-body {
+            padding: 2rem;
+        }
+
+        .form-section .form-control {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-section .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(96, 125, 227, 0.3);
+        }
+
+        .form-section .btn-gradient-primary {
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem 2rem;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-section .btn-gradient-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(96, 125, 227, 0.5);
+        }
+
+        .form-section .btn-link {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .form-section .btn-link:hover {
+            color: var(--primary-dark);
+        }
+
+        .navbar-nav .nav-link {
+            color: var(--text) !important;
+            font-weight: 500;
+            margin: 0 0.75rem;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-nav .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            bottom: -5px;
+            left: 0;
+            transition: width 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: var(--primary) !important;
+        }
+
+        /* Dropdown Menu */
+        .navbar-nav .dropdown-menu {
+            background: white;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 10px;
+            padding: 0.5rem 0;
+        }
+
+        .navbar-nav .dropdown-item {
+            color: var(--text);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .navbar-nav .dropdown-item:hover {
+            background-color: var(--primary-light);
+            color: var(--text);
+        }
+
+        .navbar-nav .dropdown-item i {
+            width: 20px;
+            text-align: center;
+            margin-right: 0.5rem;
+        }
+
+        /* Dropdown Toggle */
+        .navbar-nav .dropdown-toggle::after {
+            display: none;
+            /* Hide default dropdown arrow */
+        }
+
+        .navbar-nav .dropdown-toggle:hover {
+            color: var(--primary);
+        }
+
 
         .input-group:hover .label,
         .form-control:focus {
@@ -166,9 +426,11 @@
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.2.2/js/dataTables.bootstrap5.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
         $(document).ready(function() {
-            var tables = $('table').DataTable({
+            var tables = $('table').not('#questionsTable').DataTable({
                 layout: {
                     topStart: {
                         pageLength: {
@@ -218,6 +480,32 @@
                         targets: '_all'
                     },
                 ],
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteButtons = document.querySelectorAll('.delete-btn');
+
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    const form = this.closest('.delete-form');
+
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#607de3',
+                        cancelButtonColor: '#de5464',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                });
             });
         });
     </script>

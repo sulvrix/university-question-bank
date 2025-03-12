@@ -87,7 +87,7 @@
 
         .form-section .btn-gradient-primary {
             background: var(--accent-gradient);
-            color: white;
+            color: white !important;
             border: none;
             border-radius: 10px;
             padding: 0.75rem 2rem;
