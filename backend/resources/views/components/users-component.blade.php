@@ -32,12 +32,13 @@
                                             <a href="{{ route('users.edit', ['user' => $user->id]) }}" role="button"><i
                                                     class="bi bi-pencil-square"></i></a>
                                             <form action="{{ route('users.destroy', $user) }}" method="POST"
-                                                style="display:inline;">
+                                                style="display:inline-flex;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit"
-                                                    style="border:none; background:none; color:red;"><i
-                                                        class="bi bi-trash3"></i></button>
+                                                <button type="button" class="btn btn-link text-danger delete-btn"
+                                                    style="border:none; background:none; padding: 0; font-size: large; margin-left: 10px;">
+                                                    <i class="bi bi-trash3"></i>
+                                                </button>
                                             </form>
                                         </td>
                                     </tr>
