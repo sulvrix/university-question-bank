@@ -347,10 +347,10 @@
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.2.2/js/dataTables.bootstrap5.js"></script>
-    {{-- <script type="module" src="{{ asset('js/rephrase.js') }}"></script> --}}
+
     <script>
         $(document).ready(function() {
-            var tables = $('table').DataTable({
+            var tables = $('table').not('#questionsTable').DataTable({
                 layout: {
                     topStart: {
                         pageLength: {

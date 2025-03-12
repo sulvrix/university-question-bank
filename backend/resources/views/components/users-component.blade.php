@@ -22,7 +22,7 @@
                             <tbody>
                                 @foreach ($userData as $user)
                                     <tr>
-                                        <td>{{ $user->id }}</td>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>{{ $user->name }}</td>
                                         <td>{{ $user->email }}</td>
                                         <td>{{ $user->role }}</td>
@@ -45,7 +45,8 @@
                             </tbody>
                         </table>
                         <div class="d-flex align-items-center justify-content-center">
-                            <a class="btn btn-primary custom-btn btn-lg" href="{{ route('users.create') }}" role="button">Add</a>
+                            <a class="btn btn-primary custom-btn btn-lg" href="{{ route('users.create') }}"
+                                role="button">Add</a>
                         </div>
                     </div>
                 </div>

@@ -1,4 +1,4 @@
-$(document).ready(function () {
+document.addEventListener('DOMContentLoaded', function () {
     let dataTable;
 
     // Function to create and populate the table
@@ -10,7 +10,7 @@ $(document).ready(function () {
         const table = `
             <table class="table table-bordered table-hover" id="questionsTable">
                 <thead class="table-light">
-                    <tr>
+                    <tr class="user-select-none">
                         <th>Select</th>
                         <th>Question</th>
                         <th>Difficulty</th>
@@ -20,7 +20,7 @@ $(document).ready(function () {
                 </thead>
                 <tbody>
                     ${questions.map(question => `
-                                    <tr>
+                                    <tr class="user-select-none" role="button">
                                         <td><input type="checkbox" name="questions[]" value="${question.id}" class="form-check-input"></td>
                                         <td>${question.text}</td>
                                         <td>${question.difficulty}</td>
@@ -34,6 +34,11 @@ $(document).ready(function () {
 
         // Append the table to the container
         $('#questions-table-container').html(table);
+
+        // Destroy existing DataTable instance if it exists
+        if (dataTable) {
+            dataTable.destroy();
+        }
 
         // Initialize DataTable
         dataTable = $('#questionsTable').DataTable({

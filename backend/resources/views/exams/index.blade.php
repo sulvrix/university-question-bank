@@ -25,7 +25,7 @@
                                 <tbody>
                                     @foreach ($exams as $exam)
                                         <tr>
-                                            <td>{{ $exam->id }}</td>
+                                            <td>{{ $loop->iteration }}</td>
                                             <td>{{ $exam->name }}</td>
                                             <td>{{ $exam->block }}</td>
                                             <td>{{ $exam->level }}</td>

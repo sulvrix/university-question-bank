@@ -20,7 +20,7 @@
                             <tbody>
                                 @foreach ($subjectData as $subject)
                                     <tr>
-                                        <td>{{ $subject->id }}</td>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>{{ $subject->name }}</td>
                                         <td>{{ $subject->level }}</td>
                                         <td>{{ $subject->department->name }}</td>

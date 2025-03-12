@@ -26,7 +26,7 @@
                                 <tbody>
                                     @foreach ($questions as $question)
                                         <tr>
-                                            <td>{{ $question->id }}</td>
+                                            <td>{{ $loop->iteration }}</td>
                                             <td>{{ $question->text }}</td>
                                             <td>{{ $question->correct_answer }}</td>
                                             <td>{{ $question->difficulty }}</td>

@@ -18,7 +18,7 @@
                             <tbody>
                                 @foreach ($universityData as $university)
                                     <tr>
-                                        <td>{{ $university->id }}</td>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>{{ $university->name }}</td>
                                         <td>
                                             <a href="{{ route('universities.edit', ['university' => $university->id]) }}"

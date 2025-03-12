@@ -1,4 +1,8 @@
 // import 'bootstrap/dist/js/bootstrap.bundle.min.js'; // Import Bootstrap JS
+
+import * as bootstrap from 'bootstrap'; // Import Bootstrap JS as a module
+window.bootstrap = bootstrap; // Attach Bootstrap to the window object
+
 document.addEventListener('DOMContentLoaded', function () {
 
     function showLoadingOverlay() {
@@ -9,11 +13,35 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('loading-overlay').style.display = 'none';
     }
 
+    function showAlert(message, type = 'warning', duration = 5000) {
+        const alertPlaceholder = document.getElementById('alertPlaceholder');
+        if (!alertPlaceholder) {
+            console.error('Alert placeholder not found!');
+            return;
+        }
+
+        // Create the alert HTML
+        const alertHTML = `
+            <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        `;
+
+        // Append the alert to the placeholder
+        alertPlaceholder.innerHTML = alertHTML;
+
+        // Automatically remove the alert after the specified duration
+        setTimeout(() => {
+            alertPlaceholder.innerHTML = ''; // Clear the alert
+        }, duration);
+    }
+
     document.getElementById('rephraseButton').addEventListener('click', function () {
         const questionText = document.getElementById('text').value.trim();
 
         if (!questionText) {
-            alert('Please enter a question to rephrase');
+            showAlert('Please enter a question to rephrase');
             return;
         }
 
@@ -49,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Handle invalid question response
                 if (data.rephrases.length === 1 && data.rephrases[0].trim().toLowerCase() === 'wrong') {
-                    alert('The question is invalid, please try a different question.');
+                    showAlert('The question is invalid, please try a different question.');
                     return;
                 }
 
@@ -65,7 +93,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Add each rephrased question as a new row
                 data.rephrases.forEach(rephrase => {
                     const rephrasedQuestion = document.createElement('div');
-                    rephrasedQuestion.className = 'rephrased-question p-3 text-primary-emphasis border border-secondary-subtle rounded-3';
+                    rephrasedQuestion.className = 'rephrased-question user-select-none mb-2 p-3 text-primary-emphasis border border-secondary-subtle rounded-3';
+                    rephrasedQuestion.setAttribute('role', 'button');
+                    rephrasedQuestion.addEventListener('mouseover', function () {
+                        rephrasedQuestion.classList.add('shadow');
+                        rephrasedQuestion.classList.add('bg-primary-subtle');
+                    });
+                    rephrasedQuestion.addEventListener('mouseout', function () {
+                        rephrasedQuestion.classList.remove('shadow');
+                        rephrasedQuestion.classList.remove('bg-primary-subtle');
+                    });
                     rephrasedQuestion.textContent = rephrase;
 
                     // Click event to replace textarea content
@@ -84,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert(error.message || 'Failed to rephrase. Please try again.');
+                showAlert('Failed to rephrase. Please try again.');
             })
             .finally(() => {
                 hideLoadingOverlay();

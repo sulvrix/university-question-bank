@@ -1,3 +1,8 @@
+@php
+    use App\Models\User;
+    use App\Models\Question;
+    use App\Models\Exam;
+@endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -131,19 +136,19 @@
             <div class="row g-4">
                 <div class="col-md-4">
                     <div class="stat-card">
-                        <h2>10,000+</h2>
+                        <h2>{{ Question::count() . '+' }}</h2>
                         <p>Questions Stored</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="stat-card">
-                        <h2>500+</h2>
+                        <h2>{{ Exam::count() . '+' }}</h2>
                         <p>Exams Created</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="stat-card">
-                        <h2>1,000+</h2>
+                        <h2>{{ User::count() . '+' }}</h2>
                         <p>Happy Staff Members</p>
                     </div>
                 </div>
