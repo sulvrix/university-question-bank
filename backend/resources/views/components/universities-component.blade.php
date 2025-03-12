@@ -38,7 +38,7 @@
                         </table>
                         <div class="d-flex align-items-center justify-content-center">
                             <a class="btn btn-primary custom-btn btn-lg" href="{{ route('universities.create') }}"
-                                role="button">Add</a>
+                                role="button">Add University</a>
                         </div>
                     </div>
                 </div>

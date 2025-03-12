@@ -551,15 +551,28 @@
             }
 
             .contact-section .form-control {
-                border: 1px solid #ddd;
-                border-radius: 10px;
-                padding: 0.75rem 1rem;
-                transition: border-color 0.3s ease, box-shadow 0.3s ease;
+                height: 44px;
+                background-color: #05060f0a;
+                border-radius: .5rem;
+                padding: 0 1rem;
+                border: 2px solid transparent;
+                font-size: 1rem !important;
+                transition: border-color .3s cubic-bezier(.25, .01, .25, 1) 0s, color .3s cubic-bezier(.25, .01, .25, 1) 0s, background .2s cubic-bezier(.25, .01, .25, 1) 0s;
             }
 
+            .contact-section .form-control:hover,
             .contact-section .form-control:focus {
-                border-color: var(--primary);
-                box-shadow: 0 0 10px rgba(96, 125, 227, 0.3);
+                outline: none;
+                border-color: #05060f;
+            }
+
+            .contact-section .form-label {
+                display: block;
+                margin-bottom: .3rem;
+                font-size: .9rem;
+                font-weight: bold;
+                color: #05060f99;
+                transition: color .3s cubic-bezier(.25, .01, .25, 1) 0s;
             }
 
             .contact-section .custom-btn {

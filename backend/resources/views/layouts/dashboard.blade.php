@@ -155,6 +155,122 @@
         }
 
         /* form Section */
+        /* Custom Form Controls */
+
+        .form-control {
+            height: 44px;
+            background-color: #05060f0a;
+            border-radius: .5rem;
+            padding: 0 1rem;
+            border: 2px solid transparent;
+            font-size: 1rem !important;
+            transition: border-color .3s cubic-bezier(.25, .01, .25, 1) 0s, color .3s cubic-bezier(.25, .01, .25, 1) 0s, background .2s cubic-bezier(.25, .01, .25, 1) 0s;
+        }
+
+        .form-control:hover,
+        .form-control:focus {
+            outline: none;
+            border-color: #05060f;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: .3rem;
+            font-size: .9rem;
+            font-weight: bold;
+            color: #05060f99;
+            transition: color .3s cubic-bezier(.25, .01, .25, 1) 0s;
+        }
+
+        /* Custom Select Dropdown */
+        select {
+            padding: 5px;
+            font-size: 16px;
+            line-height: 1;
+            border: 0;
+            border-radius: 5px;
+            height: 34px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16"> <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" /> </svg>') no-repeat right #ddd;
+            -webkit-appearance: none;
+            background-position-x: 98%;
+        }
+
+        /* Custom Buttons */
+        .btn-primary {
+            background-color: #607de3;
+            border-color: #607de3;
+        }
+
+        .btn-primary:hover {
+            background-color: #4a6ed9;
+            border-color: #4a6ed9;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+            border-color: #d39e00;
+        }
+
+        /* Card Layout */
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 0.5rem;
+            background-color: #fff;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+
+        .card-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #ddd;
+            padding: 1rem;
+            font-weight: bold;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        /* Error Messages */
+        .text-danger {
+            font-size: 0.875rem;
+            color: #dc3545;
+        }
+
+        /* Loading Overlay */
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
+
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+
         .form-section {
             background-color: var(--background);
             padding: 25px 0;
@@ -286,43 +402,6 @@
             color: var(--primary);
         }
 
-        .form-control {
-            height: 44px;
-            background-color: #05060f0a;
-            border-radius: .5rem;
-            padding: 0 1rem;
-            border: 2px solid transparent;
-            font-size: 1rem;
-            transition: border-color .3s cubic-bezier(.25, .01, .25, 1) 0s, color .3s cubic-bezier(.25, .01, .25, 1) 0s, background .2s cubic-bezier(.25, .01, .25, 1) 0s;
-        }
-
-        select {
-            padding: 5px;
-            font-size: 16px;
-            line-height: 1;
-            border: 0;
-            border-radius: 5px;
-            height: 34px;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16"> <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" /> </svg>') no-repeat right #ddd;
-            -webkit-appearance: none;
-            background-position-x: 98%;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: .3rem;
-            font-size: .9rem;
-            font-weight: bold;
-            color: #05060f99;
-            transition: color .3s cubic-bezier(.25, .01, .25, 1) 0s;
-        }
-
-        .form-control:hover,
-        .form-control:focus,
-        .form-control-group:hover .form-control {
-            outline: none;
-            border-color: #05060f;
-        }
 
         .input-group:hover .label,
         .form-control:focus {

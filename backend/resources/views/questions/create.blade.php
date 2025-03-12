@@ -176,37 +176,6 @@
             background-color: #607de3;
             border-color: #607de3;
         }
-
-        .form-control {
-            height: 44px;
-            background-color: #05060f0a;
-            border-radius: .5rem;
-            padding: 0 1rem;
-            border: 2px solid transparent;
-            font-size: 1rem;
-            transition: border-color .3s cubic-bezier(.25, .01, .25, 1) 0s, color .3s cubic-bezier(.25, .01, .25, 1) 0s, background .2s cubic-bezier(.25, .01, .25, 1) 0s;
-        }
-
-        /* Edit here!! */
-        .form-control textarea {
-            padding: 0;
-            line-height: 1em;
-        }
-
-        .form-control:hover,
-        .form-control:focus {
-            outline: none;
-            border-color: #05060f;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: .3rem;
-            font-size: .9rem;
-            font-weight: bold;
-            color: #05060f99;
-            transition: color .3s cubic-bezier(.25, .01, .25, 1) 0s;
-        }
     </style>
 
     <!-- Scripts -->
@@ -219,6 +188,44 @@
             tooltipTriggerList.map(function(tooltipTriggerEl) {
                 return new bootstrap.Tooltip(tooltipTriggerEl);
             });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Extract query parameters from the URL
+            const urlParams = new URLSearchParams(window.location.search);
+
+            // Get the question, answers, and correct answer from the URL
+            const question = urlParams.get('question');
+            const answers = JSON.parse(decodeURIComponent(urlParams.get('answers') || '[]'));
+            const correctAnswer = urlParams.get('correct_answer');
+
+            // Populate the question field
+            if (question) {
+                document.getElementById('text').value = question;
+            }
+
+            // Populate the answer fields
+            if (answers && answers.length > 0) {
+                answers.forEach((answer, index) => {
+                    const answerInput = document.querySelector(`input[name="answers[${index}][text]"]`);
+                    if (answerInput) {
+                        answerInput.value = answer;
+                    }
+                });
+            }
+
+            // Set the correct answer radio button
+            if (correctAnswer) {
+                const correctAnswerIndex = answers.indexOf(correctAnswer);
+                if (correctAnswerIndex !== -1) {
+                    const correctAnswerRadio = document.querySelector(
+                        `input[name="correct_answer"][value="${correctAnswerIndex}"]`);
+                    if (correctAnswerRadio) {
+                        correctAnswerRadio.checked = true;
+                    }
+                }
+            }
         });
     </script>
 @endsection

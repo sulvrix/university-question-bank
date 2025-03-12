@@ -40,7 +40,7 @@
                         </table>
                         <div class="d-flex align-items-center justify-content-center">
                             <a class="btn btn-primary custom-btn btn-lg" href="{{ route('departments.create') }}"
-                                role="button">Add</a>
+                                role="button">Add Department</a>
                         </div>
                     </div>
                 </div>
