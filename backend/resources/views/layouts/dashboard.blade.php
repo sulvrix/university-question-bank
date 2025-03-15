@@ -14,6 +14,7 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
     <!-- Scripts -->
     <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.bootstrap5.css" />
@@ -40,22 +41,21 @@
                         <!-- Middle Part: Nav Links -->
                         <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
                             <ul class="navbar-nav">
-                                @if (Auth::check() && (Auth::user()->role == 'admin' || Auth::user()->role == 'staff'))
-                                    <li class="nav-item">
-                                        <a class="nav-link"
-                                            href="{{ route('dashboard.administration') }}">{{ __('Administration') }}</a>
-                                    </li>
+                                @if (in_array(auth()->user()->role, ['admin', 'staff']))
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('dashboard.administration') }}">{{
+                                        __('Administration') }}</a>
+                                </li>
                                 @endif
                                 <li class="nav-item">
-                                    <a class="nav-link"
-                                        href="{{ route('dashboard.questions') }}">{{ __('Questions') }}</a>
+                                    <a class="nav-link" href="{{ route('dashboard.questions') }}">{{ __('Questions')
+                                        }}</a>
                                 </li>
-                                @if (Auth::check() &&
-                                        (Auth::user()->role == 'admin' || Auth::user()->role == 'staff' || Auth::user()->role == 'commissioner'))
-                                    <li class="nav-item">
-                                        <a class="nav-link"
-                                            href="{{ route('dashboard.exams') }}">{{ __('Exams') }}</a>
-                                    </li>
+                                @if (Auth::check() && in_array(auth()->user()->role, ['admin', 'staff',
+                                'commissioner']))
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('dashboard.exams') }}">{{ __('Exams') }}</a>
+                                </li>
                                 @endif
                             </ul>
                         </div>
@@ -63,32 +63,30 @@
                         <ul class="navbar-nav">
                             <!-- Authentication Links -->
                             @guest
-                                @if (Route::has('login'))
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                    </li>
-                                @endif
+                            @if (Route::has('login'))
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                            </li>
+                            @endif
                             @else
-                                <li class="nav-item dropdown">
-                                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                        {{ Auth::user()->name }}
+                            <li class="nav-item dropdown">
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    {{ Auth::user()->name }}
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{{ route('profile.edit') }}">
+                                        <i class="fas fa-user-circle me-2"></i>{{ __('Profile') }}
                                     </a>
-                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="{{ route('profile.edit') }}">
-                                            <i class="fas fa-user-circle me-2"></i>{{ __('Profile') }}
-                                        </a>
-                                        <a class="dropdown-item" href="{{ route('logout') }}"
-                                            onclick="event.preventDefault();
+                                    <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                                             document.getElementById('logout-form').submit();">
-                                            <i class="fas fa-sign-out-alt me-2"></i>{{ __('Logout') }}
-                                        </a>
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                            class="d-none">
-                                            @csrf
-                                        </form>
-                                    </div>
-                                </li>
+                                        <i class="fas fa-sign-out-alt me-2"></i>{{ __('Logout') }}
+                                    </a>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                        @csrf
+                                    </form>
+                                </div>
+                            </li>
                             @endguest
                         </ul>
                         <!-- Hamburger Button for Mobile -->
@@ -99,11 +97,6 @@
                         </button>
                     </div>
                 </nav>
-                @if (session('status'))
-                    <div class="alert alert-success" role="alert">
-                        {{ session('status') }}
-                    </div>
-                @endif
             </div>
     </header>
 
@@ -135,6 +128,17 @@
 
         body {
             font-family: 'Poppins', sans-serif;
+        }
+
+        textarea {
+            padding-top: 0.5rem !important;
+            min-height: 44px !important;
+            max-height: 260px !important;
+        }
+
+        .delete-btn {
+            z-index: 2000 !important;
+            pointer-events: auto;
         }
 
         .logo-icon {
@@ -430,7 +434,8 @@
 
     <script>
         $(document).ready(function() {
-            var tables = $('table').not('#questionsTable').DataTable({
+            var tables = $('table').DataTable({
+                autoWidth: false,
                 layout: {
                     topStart: {
                         pageLength: {
@@ -454,6 +459,22 @@
                 columnDefs: [
                     // targets may be classes
                     {
+                        targets: '_all', // Target all columns
+                        render: function(data, type, row, meta) {
+                            // Exclude the last column
+                            if (meta.col === meta.settings.aoColumns.length - 1) {
+                                return data; // Return the original data for the last column
+                            }
+
+                            // Truncate the text if it exceeds 20 characters
+                            if (type === 'display' && data.length > 20) {
+                                return '<span class="truncate-text" title="' + data + '">' + data
+                                    .substr(0, 18) + '...</span>';
+                            }
+                            return '<span class="truncate-text">' + data + '</span>';
+                        }
+                    },
+                    {
                         targets: -1,
                         orderable: false,
                         searchable: false,
@@ -466,30 +487,23 @@
                         className: 'dt-center',
                     },
                     {
-                        targets: 1,
-                        data: 'name',
-                        render: function(data, type, row, meta) {
-                            return type === 'display' && data.length > 40 ?
-                                '<span title="' + data + '">' + data.substr(0, 38) +
-                                '...</span>' :
-                                data;
-                        }
-                    },
-                    {
                         className: 'dt-left',
                         targets: '_all'
                     },
                 ],
             });
+            attachDeleteButtonListeners();
         });
     </script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        function attachDeleteButtonListeners() {
             const deleteButtons = document.querySelectorAll('.delete-btn');
+            console.log('Number of delete buttons:', deleteButtons.length); // Add this line
 
             deleteButtons.forEach(button => {
                 button.addEventListener('click', function(event) {
                     event.preventDefault();
+                    console.log('Delete button clicked'); // Add this line
                     const form = this.closest('.delete-form');
 
                     Swal.fire({
@@ -502,13 +516,48 @@
                         confirmButtonText: 'Yes, delete it!'
                     }).then((result) => {
                         if (result.isConfirmed) {
+                            console.log('Form submitted'); // Add this line
                             form.submit();
                         }
                     });
                 });
             });
-        });
+        }
     </script>
+    <style>
+        /* CSS to enforce text truncation */
+        .truncate-text {
+            white-space: nowrap;
+            /* Prevent text from wrapping to the next line */
+            overflow: hidden;
+            /* Hide overflowed text */
+            text-overflow: ellipsis;
+            /* Add ellipsis (...) for truncated text */
+            display: inline-block;
+            /* Ensure the span behaves like a block element */
+            max-width: 100%;
+            /* Ensure the text doesn't exceed the cell width */
+        }
+
+        /* Ensure columns shrink to fit their content */
+        table.dataTable td {
+            white-space: nowrap;
+            /* Prevent text from wrapping */
+            max-width: 200px;
+            /* Set a maximum width to prevent columns from becoming too wide */
+            overflow: hidden;
+            /* Hide overflow */
+            text-overflow: ellipsis;
+            /* Add ellipsis for truncated text */
+        }
+
+        /* Optional: Set a minimum width for columns if needed */
+        table.dataTable th,
+        table.dataTable td {
+            min-width: 50px;
+            /* Adjust as needed */
+        }
+    </style>
 </body>
 
 </html>

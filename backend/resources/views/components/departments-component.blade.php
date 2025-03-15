@@ -26,7 +26,7 @@
                                             <a href="{{ route('departments.edit', ['department' => $department->id]) }}"
                                                 role="button"><i class="bi bi-pencil-square"></i></a>
                                             <form action="{{ route('departments.destroy', $department) }}"
-                                                method="POST" style="display:inline-flex;">
+                                                method="POST" style="display:inline-flex;" class="delete-form">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="button" class="btn btn-link text-danger delete-btn"

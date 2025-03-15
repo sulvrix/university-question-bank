@@ -10,7 +10,8 @@
                 <!-- Exam Details Section -->
                 <div class="col-md-12">
                     <div class="card p-4 mb-4">
-                        <h3 class="mb-3">Exam Details</h3>
+                        <h3>Exam Details</h3>
+                        <hr class="mb-4 mt-0 border border-primary-subtle border-3 opacity-50">
 
                         <!-- Name Field -->
                         <div class="mb-3">
@@ -72,8 +73,8 @@
             <div class="row mb-4">
                 <div class="col-md-12">
                     <div class="card p-4">
-                        <h3 class="mb-3">Questions</h3>
-
+                        <h3>Questions</h3>
+                        <hr class="mb-4 mt-0 border border-primary-subtle border-3 opacity-50">
                         <!-- Questions Table -->
                         <div class="mb-3">
                             <div class="table" id="questions-table-container">

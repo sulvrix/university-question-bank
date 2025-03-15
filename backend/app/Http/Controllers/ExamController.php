@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class ExamController extends Controller
 {
@@ -19,13 +20,54 @@ class ExamController extends Controller
     {
         $user = Auth::user();
 
+        // Fetch exams based on user role
         if ($user->role === 'admin') {
-            // Admins can see all questions
+            // Admins can see all exams
             $exams = Exam::all();
         } else {
-            // Non-admins can only see questions from their department
+            // Non-admins can only see exams from their department
             $exams = Exam::where('department_id', $user->department_id)->get();
         }
+
+        // Fetch all PDF files from the exams folder
+        $pdfFiles = Storage::disk('public')->files('exams');
+
+        // Check for orphaned files (files without a corresponding exam record)
+        foreach ($pdfFiles as $pdfFile) {
+            $examId = pathinfo($pdfFile, PATHINFO_FILENAME); // Extract exam ID from filename
+            $examExists = Exam::where('id', $examId)->exists();
+
+            if (!$examExists) {
+                // Create a new exam record for the orphaned file
+                Exam::create([
+                    'id' => $examId,
+                    'name' => 'Orphaned Exam ' . $examId,
+                    'level' => 1, // Default value
+                    'block' => 1, // Default value
+                    'department_id' => 1, // Assign to the current user's department
+                    'pdf_path' => $pdfFile,
+                ]);
+            }
+        }
+
+        // Fetch exams again (including newly created ones)
+        if ($user->role === 'admin') {
+            $exams = Exam::all();
+        } else {
+            $exams = Exam::where('department_id', $user->department_id)->get();
+        }
+
+        // Fetch the PDF files from storage and generate URLs
+        foreach ($exams as $exam) {
+            if ($exam->pdf_path && Storage::disk('public')->exists($exam->pdf_path)) {
+                // Generate a URL for the PDF file
+                $exam->pdf_url = Storage::disk('public')->url($exam->pdf_path);
+            } else {
+                // If the PDF file doesn't exist, set the URL to null
+                $exam->pdf_url = null;
+            }
+        }
+
         return view('exams.index', compact('exams'));
     }
 
@@ -99,24 +141,17 @@ class ExamController extends Controller
         return redirect()->route('dashboard.exams')->with('success', 'Exam created successfully!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-
-
     public function show(Exam $exam)
     {
-        // Check if the PDF file exists in storage
-        if ($exam->pdf_path && Storage::disk('public')->exists($exam->pdf_path)) {
-            // Generate the URL to the PDF file
-            $pdfUrl = asset('storage/' . $exam->pdf_path);
+        // Get the exam and its questions
+        $questions = $exam->questions;
+        $answers = $exam->questions->pluck('pivot.answer', 'id');
 
-            // Redirect to the PDF URL (will open in a new window/tab)
-            return redirect($pdfUrl);
-        }
+        // Generate the PDF using the DomPDF library
+        $pdf = PDF::loadView('exams.pdf', compact('exam', 'questions', 'answers'));
 
-        // If the PDF file does not exist, return a 404 response
-        abort(404, 'PDF file not found.');
+        // Stream the PDF to the browser with inline headers
+        return $pdf->stream('exam_' . $exam->id . '.pdf');
     }
 
     /**

@@ -63,6 +63,7 @@ function loadMoreQuestions() {
     })
         .then(response => {
             if (!response.ok) {
+                showAlert('Failed to process the PDF. Please try again.');
                 return response.json().then(errorData => {
                     throw new Error(errorData.error || 'Failed to load more questions');
                 });
@@ -83,7 +84,7 @@ function loadMoreQuestions() {
                             <strong>Correct Answer:</strong> ${question.correct_answer}
                         </div>
                         <div>
-                            <a href="/dashboard/questions/create?question=${encodeURIComponent(question.question)}&answers=${encodeURIComponent(JSON.stringify(question.choices))}&correct_answer=${encodeURIComponent(question.correct_answer)}" class="btn btn-sm btn-primary">Create</a>
+                            <a href="/dashboard/questions/create?question=${encodeURIComponent(question.question)}&answers=${encodeURIComponent(JSON.stringify(question.choices))}&correct_answer=${encodeURIComponent(question.correct_answer)}" class="btn btn-sm btn-primary" target="_blank">Create</a>
                         </div>
                     `;
                     questionList.appendChild(questionDiv);
@@ -95,8 +96,8 @@ function loadMoreQuestions() {
             }
         })
         .catch(error => {
-            console.error('Error loading more questions:', error);
             showAlert('Failed to load more questions. Please try again.');
+            console.error('Error loading more questions:', error);
         })
         .finally(() => {
             isLoading = false;
@@ -133,6 +134,7 @@ document.getElementById('pdf-upload').addEventListener('change', function (event
     })
         .then(response => {
             if (!response.ok) {
+                showAlert('Failed to process the PDF. Please try again.');
                 return response.json().then(errorData => {
                     throw new Error(errorData.error || 'Failed to process the PDF');
                 });
@@ -154,7 +156,7 @@ document.getElementById('pdf-upload').addEventListener('change', function (event
                             <strong>Correct Answer:</strong> ${question.correct_answer}
                         </div>
                         <div>
-                            <a href="/dashboard/questions/create?question=${encodeURIComponent(question.question)}&answers=${encodeURIComponent(JSON.stringify(question.choices))}&correct_answer=${encodeURIComponent(question.correct_answer)}" class="btn btn-sm btn-primary">Create</a>
+                            <a href="/dashboard/questions/create?question=${encodeURIComponent(question.question)}&answers=${encodeURIComponent(JSON.stringify(question.choices))}&correct_answer=${encodeURIComponent(question.correct_answer)}" class="btn btn-sm btn-primary" target="_blank">Create</a>
                         </div>
                     `;
                     questionList.appendChild(questionDiv);
@@ -164,13 +166,19 @@ document.getElementById('pdf-upload').addEventListener('change', function (event
 
                 if (!loadMoreButton) {
                     loadMoreButton = document.createElement('button');
-                    loadMoreButton.className = 'btn btn-primary mt-3';
-                    loadMoreButton.textContent = 'Load More';
+                    loadMoreButton.className = 'btn btn-primary mt-0';
+                    loadMoreButton.innerHTML = '<i class="bi bi-upload"></i> Load More';
                     loadMoreButton.addEventListener('click', loadMoreQuestions);
                     document.getElementById('loadmore-div').appendChild(loadMoreButton);
                 } else {
                     disableLoadMoreButton(false);
                 }
+
+                // Hide the "Upload PDF" button and show the "Reset" button
+                document.getElementById('generateButton').style.display = 'none';
+                document.getElementById('backButton1').style.display = 'none';
+                document.getElementById('resetButton').style.display = 'block';
+                document.getElementById('backButton2').style.display = 'block';
             } else {
                 showAlert('No questions found in the PDF.');
             }
@@ -182,4 +190,10 @@ document.getElementById('pdf-upload').addEventListener('change', function (event
         .finally(() => {
             hideLoadingOverlay();
         });
+});
+
+// Handle Reset button click
+document.getElementById('resetButton').addEventListener('click', function () {
+    // Reset the page
+    window.location.reload();
 });

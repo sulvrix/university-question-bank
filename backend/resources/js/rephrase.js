@@ -2,8 +2,14 @@
 
 import * as bootstrap from 'bootstrap'; // Import Bootstrap JS as a module
 window.bootstrap = bootstrap; // Attach Bootstrap to the window object
-
 document.addEventListener('DOMContentLoaded', function () {
+    var inputs = document.querySelectorAll('input');
+
+
+    function clearForm() {
+        document.getElementById('questionForm').reset();
+        inputs.forEach(input => input.value = '');
+    }
 
     function showLoadingOverlay() {
         document.getElementById('loading-overlay').style.display = 'flex';
@@ -36,6 +42,10 @@ document.addEventListener('DOMContentLoaded', function () {
             alertPlaceholder.innerHTML = ''; // Clear the alert
         }, duration);
     }
+
+    document.getElementById('clearBtn').addEventListener('click', function () {
+        clearForm();
+    });
 
     document.getElementById('rephraseButton').addEventListener('click', function () {
         const questionText = document.getElementById('text').value.trim();

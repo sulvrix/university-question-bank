@@ -25,7 +25,7 @@ class FacultiesTableSeeder extends Seeder
             [
                 'name' => 'Faculty of Engineering',
                 'university_id' => '2',
-            ]
+            ],
 
         ]);
     }

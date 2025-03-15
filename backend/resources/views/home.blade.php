@@ -26,6 +26,14 @@
 </head>
 
 <body>
+    @if (session('success'))
+        <div class="position-fixed start-50 translate-middle-x z-3 p-2" style="z-index: 1500 !important; top: 15%;">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    @endif
     <!-- Header -->
     <header class="container-fluid py-3">
         <div class="container">
@@ -81,12 +89,15 @@
     <!-- Hero Section -->
     <section class="hero-section" id="home">
         <div class="container">
+
             <div class="row align-items-center justify-content-center">
                 <div class="col-lg-8 text-center">
                     <h1 class="animate__animated animate__fadeInLeft">Empowering University Staff with Smart Exam
                         Solutions</h1>
-                    <p class="animate__animated animate__fadeInLeft animate__delay-1s">Streamline exam creation, store
-                        questions securely, and leverage AI tools to enhance efficiency for commissioners and teachers.
+                    <p class="animate__animated animate__fadeInLeft animate__delay-1s">Streamline exam creation,
+                        store
+                        questions securely, and leverage AI tools to enhance efficiency for commissioners and
+                        teachers.
                     </p>
                     @if (Route::has('login'))
                         @auth
@@ -163,7 +174,8 @@
             <div class="row g-4">
                 <div class="col-md-4">
                     <div class="testimonial-card">
-                        <p>"This platform has revolutionized how we create and manage exams. Highly recommended!"</p>
+                        <p>"This platform has revolutionized how we create and manage exams. Highly
+                            recommended!"</p>
                         <div class="user-info">
                             <img src="user1.jpg" alt="User 1">
                             <div>
@@ -254,7 +266,6 @@
 
             body {
                 background-image: url('{{ asset('images/hero.jpg') }}');
-                /* Replace with your image */
                 background-size: cover;
                 background-position: center;
                 background-attachment: fixed;
@@ -558,6 +569,11 @@
                 border: 2px solid transparent;
                 font-size: 1rem !important;
                 transition: border-color .3s cubic-bezier(.25, .01, .25, 1) 0s, color .3s cubic-bezier(.25, .01, .25, 1) 0s, background .2s cubic-bezier(.25, .01, .25, 1) 0s;
+            }
+
+            textarea {
+                padding-top: 0.5rem !important;
+                height: auto !important;
             }
 
             .contact-section .form-control:hover,

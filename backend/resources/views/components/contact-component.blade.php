@@ -8,11 +8,6 @@
                         <p class="mt-2">Have questions or need support? Reach out to us!</p>
                     </div>
                     <div class="card-body p-4">
-                        @if (session('success'))
-                            <div class="alert alert-success animate__animated animate__fadeIn">
-                                {{ session('success') }}
-                            </div>
-                        @endif
                         <form action="{{ route('contact.submit') }}" method="POST">
                             @csrf
                             <div class="mb-4">

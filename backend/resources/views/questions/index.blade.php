@@ -33,19 +33,31 @@
                                             <td>{{ $question->points }}</td>
                                             <td>{{ $question->subject->name }}</td>
                                             <td>{{ $question->created_at }}</td>
-                                            <td>
-                                                <a href="{{ route('questions.edit', $question) }}" role="button"><i
-                                                        class="bi bi-pencil-square"></i></a>
-                                                <form action="{{ route('questions.destroy', $question) }}" method="POST"
-                                                    style="display:inline-flex;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="button" class="btn btn-link text-danger delete-btn"
-                                                        style="border:none; background:none; padding: 0; font-size: large; margin-left: 10px;">
-                                                        <i class="bi bi-trash3"></i>
-                                                    </button>
-                                                </form>
-                                            </td>
+                                            @if (Auth::check() && in_array(auth()->user()->role, ['admin', 'staff', 'commissioner']))
+                                                <td>
+                                                    <a href="{{ route('questions.edit', $question) }}" role="button"><i
+                                                            class="bi bi-pencil-square"
+                                                            style="display: inline-flex;padding: 5px"></i></a>
+                                                    <a href="{{ route('questions.show', $question) }}" role="button"><i
+                                                            class="bi bi-eye-fill"
+                                                            style="display: inline-flex; color:green;padding: 5px"></i></a>
+                                                    <form action="{{ route('questions.destroy', $question) }}"
+                                                        method="POST" style="display: inline-flex" class="delete-form">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="button" class="btn btn-link text-danger delete-btn"
+                                                            style="border:none; background:none; padding: 0; font-size: large; margin-left: 5px;">
+                                                            <i class="bi bi-trash3"></i>
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            @else
+                                                <td>
+                                                    <a href="{{ route('questions.show', $question) }}" role="button"><i
+                                                            class="bi bi-eye-fill"
+                                                            style="display: inline-flex; color:green;padding: 5px"></i></a>
+                                                </td>
+                                            @endif
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -60,4 +72,10 @@
                 </div>
             </div>
     </main>
+    <style>
+        i.bi.bi-trash3::before {
+            margin-right: 5px !important;
+            margin-bottom: 5px !important;
+        }
+    </style>
 @endsection

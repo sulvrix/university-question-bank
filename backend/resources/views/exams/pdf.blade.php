@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exam PDF</title>
+    <title>{{ $exam->name }}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -16,11 +16,16 @@
         }
 
         .question {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .question-text {
             font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .answer {
+            margin-left: 20px;
         }
     </style>
 </head>
@@ -34,7 +39,15 @@
     @foreach ($questions as $question)
         <div class="question">
             <div class="question-text">{{ $loop->iteration }}. {{ $question->text }}</div>
-            <div>Difficulty: {{ $question->difficulty }} | Points: {{ $question->points }}</div>
+            @foreach ($question->answers as $index => $answer)
+                <div class="answer">
+                    {{ chr(65 + $index) }}. {{ $answer['text'] }}
+                </div>
+            @endforeach
+            {{-- <div style="margin-top: 10px;">
+                <strong>Difficulty:</strong> {{ $question->difficulty }} | <strong>Points:</strong>
+                {{ $question->points }}
+            </div> --}}
         </div>
     @endforeach
 </body>

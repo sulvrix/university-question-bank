@@ -1,15 +1,24 @@
 @extends('layouts.dashboard')
 
 @section('content')
-    <div class="container mt-5">
-        <h1 class="text-center">Generate Questions from PDF</h1>
+    <div class="position-fixed top-0 start-50 translate-middle-x z-3 p-2" id="alertPlaceholder"
+        style="z-index: 1500 !important;"></div>
+    <div class="container mt-4">
+        <h1 class="text-center">Generate Questions</h1>
+        <hr class="mb-5 mt-0 border border-primary-subtle border-3 opacity-50">
 
         <!-- File Upload Input -->
-        <div class="text-center">
-            <input type="file" id="pdf-upload" accept=".pdf" style="display: none;">
-            <button id="generateButton" class="btn btn-primary btn-lg">
-                <i class="bi bi-upload"></i> Upload PDF
-            </button>
+        <div class="d-flex align-items-center justify-content-center mt-3 gap-3">
+            <div id="backButton1">
+                <a href="{{ route('questions.create') }}" class="btn btn-secondary btn-lg"> <i class="bi bi-arrow-left"></i>
+                    Back</a>
+            </div>
+            <div class="text-center">
+                <input type="file" id="pdf-upload" accept=".pdf" style="display: none;">
+                <button id="generateButton" class="btn btn-primary btn-lg">
+                    <i class="bi bi-upload"></i> Upload PDF
+                </button>
+            </div>
         </div>
 
         <!-- Generated Questions List -->
@@ -17,9 +26,18 @@
             <!-- Questions will be dynamically added here -->
         </div>
 
-        <!-- Load More Button -->
-        <div class="d-flex align-items-center justify-content-center mt-3" id="loadmore-div">
-            <!-- "Load More" button will be inserted here by JavaScript -->
+        <!-- Load More and Cancel Buttons -->
+        <div class="d-flex align-items-center justify-content-center mt-3 gap-3">
+            <div id="backButton2" style="display: none;">
+                <a href="{{ route('questions.create') }}" class="btn btn-secondary"> <i class="bi bi-arrow-left"></i>
+                    Back</a>
+            </div>
+            <div id="loadmore-div">
+                <!-- "Load More" button will be inserted here by JavaScript -->
+            </div>
+            <div id="resetButton" style="display: none;">
+                <button class="btn btn-danger"><i class="bi bi-arrow-clockwise"></i> Reset</button>
+            </div>
         </div>
     </div>
 
