@@ -116,24 +116,60 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-
-    // Function to filter questions by level
-    function filterQuestions(level) {
+    // Function to filter questions by level and department
+    function filterQuestions(level, departmentId) {
         const filteredQuestions = allQuestions.filter(question => {
-            return question.subject && question.subject.level == level;
+            const levelMatch = question.subject && question.subject.level == level;
+            const departmentMatch = departmentId === null || question.subject.department_id == departmentId;
+            return levelMatch && departmentMatch;
         });
 
         // Create and populate the table with filtered questions
         createAndPopulateTable(filteredQuestions);
     }
 
-    // Load questions on page load (default level from the exam)
-    const defaultLevel = $('#level').val(); // Get the selected level from the dropdown
-    filterQuestions(defaultLevel);
+    // Determine the default level and department based on the selected questions
+    let defaultLevel;
+    let defaultDepartmentId;
+
+    if (selectedQuestions.length > 0) {
+        // Find the first selected question to get its subject's level and department
+        const firstSelectedQuestion = allQuestions.find(question => selectedQuestions.includes(question.id));
+        if (firstSelectedQuestion && firstSelectedQuestion.subject) {
+            defaultLevel = firstSelectedQuestion.subject.level;
+            defaultDepartmentId = firstSelectedQuestion.subject.department_id;
+        }
+    }
+
+    // If no selected questions, fall back to the dropdown values
+    if (!defaultLevel) {
+        defaultLevel = $('#level').val(); // Get the selected level from the dropdown
+    }
+    if (!defaultDepartmentId) {
+        defaultDepartmentId = $('#department_id').length > 0 ? $('#department_id').val() : userDepartmentId;
+    }
+
+    // Load questions on page load (default level and department)
+    filterQuestions(defaultLevel, defaultDepartmentId);
 
     // Load questions when level changes
     $('#level').change(function () {
         const level = $(this).val();
-        filterQuestions(level);
+        const departmentId = $('#department_id').length > 0 ? $('#department_id').val() : defaultDepartmentId;
+        filterQuestions(level, departmentId);
     });
+
+    // Load questions when department changes (only for admins)
+    if ($('#department_id').length > 0) {
+        $('#department_id').change(function () {
+            const level = $('#level').val();
+            const departmentId = $(this).val();
+            // Exclude 'Administration' department from filtering
+            if ($('#department_id option:selected').text() === 'Administration') {
+                filterQuestions(level, null);
+            } else {
+                filterQuestions(level, departmentId);
+            }
+        });
+    }
 });

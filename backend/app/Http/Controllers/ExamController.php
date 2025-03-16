@@ -117,9 +117,20 @@ class ExamController extends Controller
         // Attach selected questions to the exam
         $exam->questions()->attach($request->questions);
 
+        $HadhramutUniversityLogo = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('images/universities/hu.png')));
+        $engFacLogo = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('images/faculties/hu-engfac.png')));
+        $medFacLogo = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('images/faculties/hu-medfac.png')));
+
+        $data = [
+            'HadhramutUniversityLogo' => $HadhramutUniversityLogo,
+            'engFacLogo' =>  $engFacLogo,
+            'medFacLogo' => $medFacLogo,
+            // Other data...
+        ];
+
         // Generate PDF
         $questions = Question::whereIn('id', $request->questions)->get();
-        $pdf = PDF::loadView('exams.pdf', compact('exam', 'questions'));
+        $pdf = PDF::loadView('exams.pdf', $data, compact('exam', 'questions'));
 
         // Define the PDF path
         $pdfDirectory = 'exams'; // Relative directory inside storage/app/public
@@ -147,12 +158,14 @@ class ExamController extends Controller
         $questions = $exam->questions;
         $answers = $exam->questions->pluck('pivot.answer', 'id');
 
-        $universityLogo = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('images/universities/hu.png')));
-        $facultyLogo = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('images/faculties/hu-engfac.png')));
+        $HadhramutUniversityLogo = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('images/universities/hu.png')));
+        $engFacLogo = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('images/faculties/hu-engfac.png')));
+        $medFacLogo = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('images/faculties/hu-medfac.png')));
 
         $data = [
-            'universityLogo' => $universityLogo,
-            'facultyLogo' => $facultyLogo,
+            'HadhramutUniversityLogo' => $HadhramutUniversityLogo,
+            'engFacLogo' =>  $engFacLogo,
+            'medFacLogo' => $medFacLogo,
             // Other data...
         ];
 
@@ -210,12 +223,24 @@ class ExamController extends Controller
             'department_id' => $request->department_id,
         ]);
 
+
+        $HadhramutUniversityLogo = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('images/universities/hu.png')));
+        $engFacLogo = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('images/faculties/hu-engfac.png')));
+        $medFacLogo = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('images/faculties/hu-medfac.png')));
+
+        $data = [
+            'HadhramutUniversityLogo' => $HadhramutUniversityLogo,
+            'engFacLogo' =>  $engFacLogo,
+            'medFacLogo' => $medFacLogo,
+            // Other data...
+        ];
+
         // Sync the selected questions with the exam
         $exam->questions()->sync($request->questions);
 
         // Regenerate the PDF
         $questions = Question::whereIn('id', $request->questions)->get();
-        $pdf = PDF::loadView('exams.pdf', compact('exam', 'questions'));
+        $pdf = PDF::loadView('exams.pdf', $data, compact('exam', 'questions'));
 
         // Define the PDF path
         $pdfDirectory = 'exams'; // Relative directory inside storage/app/public

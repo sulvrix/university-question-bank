@@ -138,13 +138,7 @@
             max-height: 260px !important;
         }
 
-        .delete-btn {
-            z-index: 2000 !important;
-            pointer-events: auto;
-        }
-
         /* form Section */
-        /* Custom Form Controls */
 
         .form-control {
             height: 44px;
@@ -483,12 +477,10 @@
     <script>
         function attachDeleteButtonListeners() {
             const deleteButtons = document.querySelectorAll('.delete-btn');
-            console.log('Number of delete buttons:', deleteButtons.length); // Add this line
 
             deleteButtons.forEach(button => {
                 button.addEventListener('click', function(event) {
                     event.preventDefault();
-                    console.log('Delete button clicked'); // Add this line
                     const form = this.closest('.delete-form');
 
                     Swal.fire({

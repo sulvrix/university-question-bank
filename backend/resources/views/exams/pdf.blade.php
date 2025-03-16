@@ -51,18 +51,18 @@
             text-align: center;
         }
 
-
         .separator {
             border-top: 1px solid black;
-            margin: 20px 0;
+            margin-top: 20px;
         }
 
         .question {
-            margin-bottom: 20px;
+            page-break-inside: avoid;
         }
 
         .question-text {
             font-weight: bold;
+            margin-top: 20px;
             margin-bottom: 10px;
         }
 
@@ -78,7 +78,7 @@
         <tr>
             <!-- Left Column: University Logo -->
             <td style="width: 20%;">
-                <img src="{{ $universityLogo }}" alt="University Logo" class="university-logo">
+                <img src="{{ $HadhramutUniversityLogo }}" alt="University Logo" class="university-logo">
             </td>
 
             <!-- Middle Column: University and Faculty Names -->
@@ -89,7 +89,13 @@
 
             <!-- Right Column: Faculty Logo -->
             <td style="width: 20%; text-align: right;">
-                <img src="{{ $facultyLogo }}" alt="Faculty Logo" class="faculty-logo">
+                @if ($exam->department->faculty->name === 'Faculty of Engineering')
+                    <img src="{{ $engFacLogo }}" alt="Faculty Logo" class="faculty-logo">
+                @elseif($exam->department->faculty->name === 'Faculty of Medicine')
+                    <img src="{{ $medFacLogo }}" alt="Faculty Logo" class="faculty-logo">
+                @else
+                    <img src="{{ $engFacLogo }}" alt="Faculty Logo" class="faculty-logo">
+                @endif
             </td>
         </tr>
     </table>
@@ -100,17 +106,21 @@
             <!-- Left Column: Department, Academic Year, Exam Semester, Examiner -->
             <td style="width: 50%;">
                 <div><strong>Department:</strong> {{ $exam->department->name }}</div>
-                <div><strong>Academic Year:</strong></div>
-                <div><strong>Exam Semester:</strong></div>
-                <div><strong>Examiner:</strong></div>
+                <div><strong>Academic Year:</strong> {{ date('Y') }} - {{ date('Y', strtotime('+1 year')) }}</div>
+                @if ($exam->department->faculty->name === 'Faculty of Engineering')
+                    <div><strong>Exam Semester:</strong></div>
+                    <div><strong>Examiner:</strong></div>
+                @endif
             </td>
 
             <!-- Right Column: Date, Subject, Level, Time Allowed -->
             <td style="width: 50%; text-align: right;">
-                <div><strong>Date:</strong></div>
-                <div><strong>Subject:</strong> {{ $exam->name }}</div>
+                <div><strong>Date:</strong> {{ date('n/j/Y') }}</div>
+                @if ($exam->department->faculty->name === 'Faculty of Engineering')
+                    <div><strong>Subject:</strong> {{ $exam->name }}</div>
+                @endif
                 <div><strong>Level:</strong> {{ $exam->level }}</div>
-                <div><strong>Time Allowed:</strong></div>
+                <div><strong>Time Allowed:</strong> 2 Hours</div>
             </td>
         </tr>
     </table>

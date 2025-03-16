@@ -113,23 +113,40 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Function to filter questions by level
-    function filterQuestions(level) {
+
+    // Function to filter questions by level and department
+    function filterQuestions(level, departmentId) {
         const filteredQuestions = allQuestions.filter(question => {
-            return question.subject && question.subject.level == level;
+            const levelMatch = question.subject && question.subject.level == level;
+            const departmentMatch = departmentId === null || question.subject.department_id == departmentId;
+            return levelMatch && departmentMatch;
         });
 
         // Create and populate the table with filtered questions
         createAndPopulateTable(filteredQuestions);
     }
 
-    // Load questions on page load (default level 1)
-    const defaultLevel = 1;
-    filterQuestions(defaultLevel);
+    // Load questions on page load (default level)
+    const defaultLevel = $('#level').val(); // Get the selected level from the dropdown
+    filterQuestions(defaultLevel, null); // No department filtering by default
 
     // Load questions when level changes
     $('#level').change(function () {
         const level = $(this).val();
-        filterQuestions(level);
+        filterQuestions(level, null); // No department filtering by default
     });
+
+    // Load questions when department changes (only for admins)
+    if ($('#department_id').length > 0) {
+        $('#department_id').change(function () {
+            const level = $('#level').val();
+            const departmentId = $(this).val();
+            // Exclude 'Administration' department from filtering
+            if ($('#department_id option:selected').text() === 'Administration') {
+                filterQuestions(level, null);
+            } else {
+                filterQuestions(level, departmentId);
+            }
+        });
+    }
 });
