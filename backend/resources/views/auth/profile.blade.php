@@ -2,6 +2,19 @@
 
 @section('content')
     <div class="container mt-5">
+        @if (!$user->hasVerifiedEmail())
+            <div class="alert alert-warning mt-3">
+                Your email address is not verified. Please check your inbox for a verification email.
+                If you didn't receive the email, <a href="{{ route('verification.resend') }}"
+                    onclick="event.preventDefault(); document.getElementById('resend-verification-form').submit();">click
+                    here to resend it</a>.
+            </div>
+
+            <!-- Hidden form to resend the verification email -->
+            <form id="resend-verification-form" action="{{ route('verification.resend') }}" method="POST" class="d-none">
+                @csrf
+            </form>
+        @endif
         <div class="card p-4">
             <h2 class="mb-4">Edit Profile</h2>
             <form action="{{ route('profile.update') }}" method="POST">
@@ -31,8 +44,21 @@
 
                 <div class="mb-3">
                     <label for="email" class="form-label">Email:</label>
-                    <input type="email" class="form-control" id="email" name="email" value="{{ $user->email }}"
-                        required>
+                    <div class="input-group">
+                        <input type="email" class="form-control" id="email" name="email" value="{{ $user->email }}"
+                            required>
+                        @if (!$user->hasVerifiedEmail())
+                            <span class="input-group-text text-danger" data-bs-toggle="tooltip"
+                                title="This email is not verified">
+                                <i class="bi bi-exclamation-circle-fill"></i> <!-- Bootstrap Icons -->
+                            </span>
+                        @else
+                            <span class="input-group-text text-success" data-bs-toggle="tooltip"
+                                title="This email is verified">
+                                <i class="bi bi-check-circle-fill"></i> <!-- Bootstrap Icons -->
+                            </span>
+                        @endif
+                    </div>
                     @if ($errors->has('email'))
                         <div class="text-danger">{{ $errors->first('email') }}</div>
                     @endif

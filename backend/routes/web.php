@@ -29,7 +29,6 @@ Auth::routes(['register' => false, 'verify' => true]);
 
 // Authenticated routes
 Route::middleware('auth')->group(function () {
-
     // Profile routes
     Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');

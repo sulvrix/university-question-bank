@@ -147,8 +147,17 @@ class ExamController extends Controller
         $questions = $exam->questions;
         $answers = $exam->questions->pluck('pivot.answer', 'id');
 
+        $universityLogo = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('images/universities/hu.png')));
+        $facultyLogo = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('images/faculties/hu-engfac.png')));
+
+        $data = [
+            'universityLogo' => $universityLogo,
+            'facultyLogo' => $facultyLogo,
+            // Other data...
+        ];
+
         // Generate the PDF using the DomPDF library
-        $pdf = PDF::loadView('exams.pdf', compact('exam', 'questions', 'answers'));
+        $pdf = PDF::loadView('exams.pdf', $data, compact('exam', 'questions', 'answers'));
 
         // Stream the PDF to the browser with inline headers
         return $pdf->stream('exam_' . $exam->id . '.pdf');

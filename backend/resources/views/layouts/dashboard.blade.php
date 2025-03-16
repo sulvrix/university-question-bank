@@ -9,6 +9,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Laravel') }}- Dashboard</title>
+    <link rel="icon" href="{{ asset('images/logo16.png') }}" type="image/png" sizes="16x16">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -18,9 +19,6 @@
 
     <!-- Scripts -->
     <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.bootstrap5.css" />
-
-
-    <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 
@@ -33,7 +31,9 @@
                     <div class="container-fluid">
                         <!-- Left Part: Logo -->
                         <div class="d-flex align-items-center">
-                            <div class="logo-icon me-3"></div>
+                            <div>
+                                <img class="me-3" src="{{ asset('images/logo40.png') }}" alt="">
+                            </div>
                             <a class="fs-4 fw-medium ink-offset-2 link-underline link-underline-opacity-0 link-dark"
                                 href="{{ url('/') }}">University
                                 Question Bank</a>
@@ -42,20 +42,20 @@
                         <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
                             <ul class="navbar-nav">
                                 @if (in_array(auth()->user()->role, ['admin', 'staff']))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('dashboard.administration') }}">{{
-                                        __('Administration') }}</a>
-                                </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link"
+                                            href="{{ route('dashboard.administration') }}">{{ __('Administration') }}</a>
+                                    </li>
                                 @endif
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('dashboard.questions') }}">{{ __('Questions')
-                                        }}</a>
+                                    <a class="nav-link"
+                                        href="{{ route('dashboard.questions') }}">{{ __('Questions') }}</a>
                                 </li>
-                                @if (Auth::check() && in_array(auth()->user()->role, ['admin', 'staff',
-                                'commissioner']))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('dashboard.exams') }}">{{ __('Exams') }}</a>
-                                </li>
+                                @if (Auth::check() && in_array(auth()->user()->role, ['admin', 'staff', 'commissioner']))
+                                    <li class="nav-item">
+                                        <a class="nav-link"
+                                            href="{{ route('dashboard.exams') }}">{{ __('Exams') }}</a>
+                                    </li>
                                 @endif
                             </ul>
                         </div>
@@ -63,30 +63,32 @@
                         <ul class="navbar-nav">
                             <!-- Authentication Links -->
                             @guest
-                            @if (Route::has('login'))
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                            </li>
-                            @endif
+                                @if (Route::has('login'))
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                    </li>
+                                @endif
                             @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('profile.edit') }}">
-                                        <i class="fas fa-user-circle me-2"></i>{{ __('Profile') }}
+                                <li class="nav-item dropdown">
+                                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                        {{ Auth::user()->name }}
                                     </a>
-                                    <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
+                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="{{ route('profile.edit') }}">
+                                            <i class="fas fa-user-circle me-2"></i>{{ __('Profile') }}
+                                        </a>
+                                        <a class="dropdown-item" href="{{ route('logout') }}"
+                                            onclick="event.preventDefault();
                                             document.getElementById('logout-form').submit();">
-                                        <i class="fas fa-sign-out-alt me-2"></i>{{ __('Logout') }}
-                                    </a>
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
+                                            <i class="fas fa-sign-out-alt me-2"></i>{{ __('Logout') }}
+                                        </a>
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                            class="d-none">
+                                            @csrf
+                                        </form>
+                                    </div>
+                                </li>
                             @endguest
                         </ul>
                         <!-- Hamburger Button for Mobile -->
@@ -139,23 +141,6 @@
         .delete-btn {
             z-index: 2000 !important;
             pointer-events: auto;
-        }
-
-        .logo-icon {
-            width: 28px;
-            height: 28px;
-            background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(96, 125, 227, 0.5) 31%, #607de3 100%);
-            border-radius: 50%;
-            position: relative;
-        }
-
-        .logo-icon::after {
-            content: '';
-            position: absolute;
-            width: 80%;
-            height: 80%;
-            background: linear-gradient(270deg, #607de3 0%, rgba(96, 125, 227, 0.56) 59%, rgba(0, 0, 0, 0) 100%);
-            transform: rotate(-50deg);
         }
 
         /* form Section */
@@ -434,7 +419,7 @@
 
     <script>
         $(document).ready(function() {
-            var tables = $('table').DataTable({
+            var tables = $('table').not('#questionsTable').DataTable({
                 autoWidth: false,
                 layout: {
                     topStart: {

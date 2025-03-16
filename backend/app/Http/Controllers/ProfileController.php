@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -66,6 +65,5 @@ class ProfileController extends Controller
 
         // Redirect with a success message
         return redirect()->route('profile.edit')->with('status', 'Profile updated successfully.');
-        // return redirect()->route('profile.edit');
     }
 }
