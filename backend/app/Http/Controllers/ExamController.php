@@ -117,6 +117,7 @@ class ExamController extends Controller
         // Attach selected questions to the exam
         $exam->questions()->attach($request->questions);
 
+        $logo = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('images/logo16.png')));
         $HadhramutUniversityLogo = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('images/universities/hu.png')));
         $engFacLogo = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('images/faculties/hu-engfac.png')));
         $medFacLogo = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('images/faculties/hu-medfac.png')));
@@ -125,6 +126,7 @@ class ExamController extends Controller
             'HadhramutUniversityLogo' => $HadhramutUniversityLogo,
             'engFacLogo' =>  $engFacLogo,
             'medFacLogo' => $medFacLogo,
+            'logo' => $logo,
             // Other data...
         ];
 
@@ -158,6 +160,7 @@ class ExamController extends Controller
         $questions = $exam->questions;
         $answers = $exam->questions->pluck('pivot.answer', 'id');
 
+        $logo = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('images/logo16.png')));
         $HadhramutUniversityLogo = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('images/universities/hu.png')));
         $engFacLogo = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('images/faculties/hu-engfac.png')));
         $medFacLogo = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('images/faculties/hu-medfac.png')));
@@ -166,7 +169,7 @@ class ExamController extends Controller
             'HadhramutUniversityLogo' => $HadhramutUniversityLogo,
             'engFacLogo' =>  $engFacLogo,
             'medFacLogo' => $medFacLogo,
-            // Other data...
+            'logo' => $logo,
         ];
 
         // Generate the PDF using the DomPDF library
@@ -223,7 +226,7 @@ class ExamController extends Controller
             'department_id' => $request->department_id,
         ]);
 
-
+        $logo = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('images/logo16.png')));
         $HadhramutUniversityLogo = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('images/universities/hu.png')));
         $engFacLogo = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('images/faculties/hu-engfac.png')));
         $medFacLogo = 'data:image/png;base64,' . base64_encode(file_get_contents(public_path('images/faculties/hu-medfac.png')));
@@ -232,7 +235,7 @@ class ExamController extends Controller
             'HadhramutUniversityLogo' => $HadhramutUniversityLogo,
             'engFacLogo' =>  $engFacLogo,
             'medFacLogo' => $medFacLogo,
-            // Other data...
+            'logo' => $logo,
         ];
 
         // Sync the selected questions with the exam

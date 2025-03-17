@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $exam->name }}</title>
-    <link rel="icon" href="{{ asset('images/logo16.png') }}" type="image/png" sizes="16x16">
     <style>
         body {
             font-family: Arial, sans-serif;
