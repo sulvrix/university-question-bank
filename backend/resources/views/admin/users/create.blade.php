@@ -20,7 +20,7 @@
                         <div class="mb-3">
                             <label for="username" class="form-label">Username:</label>
                             <input type="text" class="form-control" name="username" value="{{ old('username') }}"
-                                required>
+                                required autocomplete="username">
                             @error('username')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
@@ -28,7 +28,8 @@
 
                         <div class="mb-3">
                             <label for="email" class="form-label">Email:</label>
-                            <input type="email" class="form-control" name="email" value="{{ old('email') }}" required>
+                            <input type="email" class="form-control" name="email" value="{{ old('email') }}" required
+                                autocomplete="email">
                             @error('email')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
@@ -94,17 +95,27 @@
                             @enderror
                         </div>
 
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password:</label>
-                            <input type="password" class="form-control" name="password">
+                        <label for="password" class="form-label">Password:</label>
+                        <div class="mb-3 input-group">
+                            <input type="password" class="form-control" name="password" required autocomplete="new-password"
+                                id="password">
+                            <span class="input-group-text" id="inputGroup-sizing-default addon-wrapping">
+                                <i class="bi bi-eye-fill password-eye"></i>
+                                <i class="bi bi-eye-slash-fill password-eye-closed"></i>
+                            </span>
                             @error('password')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
 
-                        <div class="mb-3">
-                            <label for="password_confirmation" class="form-label">Confirm Password:</label>
-                            <input type="password" class="form-control" name="password_confirmation">
+                        <label for="password_confirmation" class="form-label">Confirm Password:</label>
+                        <div class="mb-3 input-group">
+                            <input type="password" class="form-control" name="password_confirmation" required
+                                autocomplete="new-password" id="password_confirmation">
+                            <span class="input-group-text" id="inputGroup-sizing-default addon-wrapping">
+                                <i class="bi bi-eye-fill password-confirm-eye"></i>
+                                <i class="bi bi-eye-slash-fill password-confirm-eye-closed"></i>
+                            </span>
                             @error('password_confirmation')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
@@ -123,7 +134,63 @@
             </form>
         </div>
     </div>
+    <style>
+        .bi-eye-fill {
+            display: block;
+        }
 
+        .bi-eye-slash-fill {
+            display: none;
+        }
+
+        .bi-eye-fill,
+        .bi-eye-slash-fill {
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: white;
+        }
+
+        .input-group-text {
+            padding: .375rem 1.5em !important;
+            background: var(--accent-gradient)
+        }
+    </style>
+    <script>
+        const password1 = document.getElementById('password');
+        const password2 = document.getElementById('password_confirmation');
+        const eye1 = document.querySelector('.password-eye');
+        const eyeSlash1 = document.querySelector('.password-eye-closed');
+        const eye2 = document.querySelector('.password-confirm-eye');
+        const eyeSlash2 = document.querySelector('.password-confirm-eye-closed');
+
+
+        eye1.addEventListener('click', () => {
+            eye1.style.display = 'none';
+            eyeSlash1.style.display = 'block';
+            password1.setAttribute('type', 'text');
+        });
+
+        eyeSlash1.addEventListener('click', () => {
+            eyeSlash1.style.display = 'none';
+            eye1.style.display = 'block';
+            password1.setAttribute('type', 'password');
+        });
+
+        eye2.addEventListener('click', () => {
+            eye2.style.display = 'none';
+            eyeSlash2.style.display = 'block';
+            password2.setAttribute('type', 'text');
+        });
+
+        eyeSlash2.addEventListener('click', () => {
+            eyeSlash2.style.display = 'none';
+            eye2.style.display = 'block';
+            password2.setAttribute('type', 'password');
+        });
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const roleDropdown = document.getElementById('role');
@@ -167,6 +234,7 @@
                 subjectSelect.setAttribute('required', 'required'); // Add required attribute
                 filterSubjects(departmentDropdown.value);
             }
+
         });
     </script>
 @endsection

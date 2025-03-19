@@ -28,11 +28,15 @@
                                 </div>
 
                                 <!-- Password Field -->
-                                <div class="mb-4">
-                                    <label for="password" class="form-label">{{ __('Password') }}</label>
+                                <label for="password" class="form-label">{{ __('Password') }}</label>
+                                <div class="mb-4 input-group">
                                     <input id="password" type="password"
                                         class="form-control @error('password') is-invalid @enderror" name="password"
                                         required autocomplete="new-password">
+                                    <span class="input-group-text" id="inputGroup-sizing-default addon-wrapping">
+                                        <i class="bi bi-eye-fill password-eye"></i>
+                                        <i class="bi bi-eye-slash-fill password-eye-closed"></i>
+                                    </span>
                                     @error('password')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -40,10 +44,14 @@
                                     @enderror
                                 </div>
                                 <!-- Confirm Password Field -->
-                                <div class="mb-4">
-                                    <label for="password-confirm" class="form-label">{{ __('Confirm Password') }}</label>
+                                <label for="password-confirm" class="form-label">{{ __('Confirm Password') }}</label>
+                                <div class="mb-4 input-group">
                                     <input id="password-confirm" type="password" class="form-control"
                                         name="password_confirmation" required autocomplete="new-password">
+                                    <span class="input-group-text" id="inputGroup-sizing-default addon-wrapping">
+                                        <i class="bi bi-eye-fill password-confirm-eye"></i>
+                                        <i class="bi bi-eye-slash-fill password-confirm-eye-closed"></i>
+                                    </span>
                                 </div>
                                 <!-- Submit Button -->
                                 <div class="d-grid">
@@ -58,4 +66,61 @@
             </div>
         </div>
     </div>
+    <style>
+        .bi-eye-fill {
+            display: block;
+        }
+
+        .bi-eye-slash-fill {
+            display: none;
+        }
+
+        .bi-eye-fill,
+        .bi-eye-slash-fill {
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: white;
+        }
+
+        .input-group-text {
+            padding: .375rem 1.5em !important;
+            background: var(--accent-gradient)
+        }
+    </style>
+    <script>
+        const password1 = document.getElementById('password');
+        const password2 = document.getElementById('password-confirm');
+        const eye1 = document.querySelector('.password-eye');
+        const eyeSlash1 = document.querySelector('.password-eye-closed');
+        const eye2 = document.querySelector('.password-confirm-eye');
+        const eyeSlash2 = document.querySelector('.password-confirm-eye-closed');
+
+
+        eye1.addEventListener('click', () => {
+            eye1.style.display = 'none';
+            eyeSlash1.style.display = 'block';
+            password1.setAttribute('type', 'text');
+        });
+
+        eyeSlash1.addEventListener('click', () => {
+            eyeSlash1.style.display = 'none';
+            eye1.style.display = 'block';
+            password1.setAttribute('type', 'password');
+        });
+
+        eye2.addEventListener('click', () => {
+            eye2.style.display = 'none';
+            eyeSlash2.style.display = 'block';
+            password2.setAttribute('type', 'text');
+        });
+
+        eyeSlash2.addEventListener('click', () => {
+            eyeSlash2.style.display = 'none';
+            eye2.style.display = 'block';
+            password2.setAttribute('type', 'password');
+        });
+    </script>
 @endsection

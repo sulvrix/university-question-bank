@@ -15,11 +15,11 @@ use App\Http\Controllers\ContactController;
 
 // Public routes
 Route::get('/', function () {
-    return view('home');
+    return view('index');
 });
 
 Route::get('/home', function () {
-    return view('home');
+    return view('index');
 });
 
 Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
