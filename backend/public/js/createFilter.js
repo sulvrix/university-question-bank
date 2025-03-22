@@ -62,20 +62,32 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 },
             },
-            columnDefs: [{
-                targets: 0, // First column (Select)
-                width: '50px',
-                className: 'dt-center',
-                orderable: false, // Disable sorting for this column
-            },
-            {
-                targets: 1, // Second column (Question)
-                className: 'dt-left',
-            },
-            {
-                targets: [2, 3, 4], // Difficulty, Points, Subject columns
-                className: 'dt-left',
-            },
+            columnDefs: [
+                {
+                    targets: '_all', // Target all columns
+                    render: function (data, type, row, meta) {
+                        if (meta.col === 0 || meta.col === meta.settings.aoColumns.length - 1) {
+                            return '<span>' + data + '</span>';
+                        }
+                        // Default truncation for text
+                        return '<span" title="' + data + '">' + data +
+                            '</span>';
+                    }
+                },
+                {
+                    targets: 0, // First column (Select)
+                    width: '50px',
+                    className: 'dt-center',
+                    orderable: false, // Disable sorting for this column
+                },
+                {
+                    targets: 1, // Second column (Question)
+                    className: 'dt-left',
+                },
+                {
+                    targets: [2, 3, 4], // Difficulty, Points, Subject columns
+                    className: 'dt-left',
+                },
             ],
         });
         // Handle row clicks to toggle checkboxes
@@ -113,23 +125,55 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Function to filter questions by level
-    function filterQuestions(level) {
-        const filteredQuestions = allQuestions.filter(question => {
-            return question.subject && question.subject.level == level;
-        });
+    // Function to filter questions based on department ID
+    function filterQuestions() {
+
+        const level = $('#level').val();
+        const subjectId = $('#subject_id').val();
+
+        let filteredQuestions;
+
+        if (departmentId == 2) {
+            // For department ID 2, filter by level
+            filteredQuestions = allQuestions.filter(question => {
+                return question.subject && question.subject.level == level;
+            });
+        } else {
+            // For other departments, filter by subject
+            if (subjectId) {
+                filteredQuestions = allQuestions.filter(question => {
+                    return question.subject && question.subject.id == subjectId;
+                });
+            } else {
+                // If no subject is selected, show no questions
+                filteredQuestions = [];
+            }
+        }
 
         // Create and populate the table with filtered questions
         createAndPopulateTable(filteredQuestions);
     }
 
-    // Load questions on page load (default level 1)
-    const defaultLevel = 1;
-    filterQuestions(defaultLevel);
+    // Load questions on page load (default level or subject)
+    filterQuestions();
 
-    // Load questions when level changes
+    // Load questions when level changes (only for department ID 2)
     $('#level').change(function () {
-        const level = $(this).val();
-        filterQuestions(level);
+
+        if (departmentId == 2) {
+            filterQuestions();
+        }
+        else {
+            $('#subject_id').val('');
+            filterQuestions();
+        }
+    });
+
+    // Load questions when subject changes (for other departments)
+    $('#subject_id').change(function () {
+
+        if (departmentId != 2) {
+            filterQuestions();
+        }
     });
 });

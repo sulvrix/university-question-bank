@@ -16,16 +16,16 @@ class FacultiesTableSeeder extends Seeder
         DB::table('faculties')->insert([
             [
                 'name' => 'Administration',
-                'university_id' => '1',
+                'university_id' => 1,
             ],
             [
                 'name' => 'Faculty of Medicine',
-                'university_id' => '2',
+                'university_id' => 2,
             ],
             [
                 'name' => 'Faculty of Engineering',
-                'university_id' => '2',
-            ]
+                'university_id' => 2,
+            ],
 
         ]);
     }

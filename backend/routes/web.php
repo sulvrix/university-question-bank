@@ -15,11 +15,11 @@ use App\Http\Controllers\ContactController;
 
 // Public routes
 Route::get('/', function () {
-    return view('home');
+    return view('index');
 });
 
 Route::get('/home', function () {
-    return view('home');
+    return view('index');
 });
 
 Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
@@ -29,7 +29,6 @@ Auth::routes(['register' => false, 'verify' => true]);
 
 // Authenticated routes
 Route::middleware('auth')->group(function () {
-
     // Profile routes
     Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -46,7 +45,6 @@ Route::middleware('auth')->group(function () {
 
         // Routes accessible only to admin
         Route::middleware('role:admin')->group(function () {
-            Route::resource('users', UserController::class);
             Route::resource('departments', DepartmentController::class);
             Route::resource('faculties', FacultyController::class);
             Route::resource('universities', UniversityController::class);
@@ -54,6 +52,7 @@ Route::middleware('auth')->group(function () {
 
         // Routes accessible to both admin and staff
         Route::middleware('role:admin,staff')->group(function () {
+            Route::resource('users', UserController::class);
             Route::resource('subjects', SubjectController::class);
         });
     });
@@ -61,7 +60,7 @@ Route::middleware('auth')->group(function () {
     // Questions and Exams routes
     Route::prefix('dashboard')->group(function () {
         // Questions routes
-        Route::middleware('role:teacher,commissioner,staff,admin')->group(function () {
+        Route::middleware('role:teacher,commissioner,staff')->group(function () {
             Route::get('questions/generate', [QuestionController::class, 'generate'])->name('questions.generate');
             Route::resource('questions', QuestionController::class)->names([
                 'index' => 'dashboard.questions', // Customize the route name
@@ -69,7 +68,7 @@ Route::middleware('auth')->group(function () {
         });
 
         // Exams routes
-        Route::middleware('role:commissioner,staff,admin')->group(function () {
+        Route::middleware('role:commissioner,staff')->group(function () {
             Route::resource('exams', ExamController::class)->names([
                 'index' => 'dashboard.exams', // Customize the route name
             ]);

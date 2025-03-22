@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Subject extends Model
 {
@@ -15,8 +15,8 @@ class Subject extends Model
         return $this->belongsTo(Department::class, 'department_id');
     }
 
-    public function subjects(): HasMany
+    public function users(): BelongsToMany
     {
-        return $this->hasMany(Subject::class);
+        return $this->belongsToMany(User::class, 'user_subject');
     }
 }

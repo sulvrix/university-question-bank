@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -34,6 +33,7 @@ class ProfileController extends Controller
         // Validation rules
         $rules = [
             'name' => 'required|string|max:255',
+            'username' => "required|string|min:4|max:10|unique:users,username,{$user->id}",
             'email' => "required|string|email|max:255|unique:users,email,{$user->id}",
         ];
 
@@ -45,6 +45,7 @@ class ProfileController extends Controller
 
         // Update user details
         $user->name = $validatedData['name'];
+        $user->username = $validatedData['username'];
         $user->email = $validatedData['email'];
 
         // If the email was changed, mark the email as unverified

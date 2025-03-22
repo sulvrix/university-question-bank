@@ -10,6 +10,7 @@
 
 
     <title>{{ config('app.name', 'Laravel') }}</title>
+    <link rel="icon" href="{{ asset('images/logo16.png') }}" type="image/png" sizes="16x16">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">

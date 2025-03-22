@@ -3,7 +3,8 @@
 @section('content')
     <div class="container mt-5">
         <div class="card p-4">
-            <h2 class="mb-4">Edit University</h2>
+            <h1>Edit University</h1>
+            <hr class="mb-5 mt-0 border border-primary-subtle border-3 opacity-50">
             <form method="POST" action="{{ route('universities.update', $university->id) }}">
                 @csrf
                 @method('PUT')

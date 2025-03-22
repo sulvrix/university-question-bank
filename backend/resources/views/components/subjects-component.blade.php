@@ -28,7 +28,7 @@
                                             <a href="{{ route('subjects.edit', ['subject' => $subject->id]) }}"
                                                 role="button"><i class="bi bi-pencil-square"></i></a>
                                             <form action="{{ route('subjects.destroy', $subject) }}" method="POST"
-                                                style="display:inline-flex;">
+                                                style="display:inline-flex;" class="delete-form">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="button" class="btn btn-link text-danger delete-btn"

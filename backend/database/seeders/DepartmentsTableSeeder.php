@@ -34,6 +34,22 @@ class DepartmentsTableSeeder extends Seeder
                 'name' => 'Electrical Engineering',
                 'faculty_id' => 3
             ],
+            [
+                'name' => 'Civil Engineering',
+                'faculty_id' => 3
+            ],
+            [
+                'name' => 'Architectural Engineering',
+                'faculty_id' => 3
+            ],
+            [
+                'name' => 'Chemical Engineering',
+                'faculty_id' => 3
+            ],
+            [
+                'name' => 'Petroleum Engineering',
+                'faculty_id' => 3
+            ],
 
         ]);
     }

@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
-            $table->text('text');
+            $table->string('text');
+            $table->unique(['text', 'subject_id']);
             $table->json('answers');
             $table->enum('difficulty', ['easy', 'medium', 'hard'])->nullable();
             $table->smallInteger('points')->nullable();

@@ -9,17 +9,16 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Laravel') }}- Dashboard</title>
+    <link rel="icon" href="{{ asset('images/logo16.png') }}" type="image/png" sizes="16x16">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
     <!-- Scripts -->
     <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.bootstrap5.css" />
-
-
-    <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 
@@ -32,7 +31,9 @@
                     <div class="container-fluid">
                         <!-- Left Part: Logo -->
                         <div class="d-flex align-items-center">
-                            <div class="logo-icon me-3"></div>
+                            <div>
+                                <img class="me-3" src="{{ asset('images/logo40.png') }}" alt="">
+                            </div>
                             <a class="fs-4 fw-medium ink-offset-2 link-underline link-underline-opacity-0 link-dark"
                                 href="{{ url('/') }}">University
                                 Question Bank</a>
@@ -40,18 +41,19 @@
                         <!-- Middle Part: Nav Links -->
                         <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
                             <ul class="navbar-nav">
-                                @if (Auth::check() && (Auth::user()->role == 'admin' || Auth::user()->role == 'staff'))
+                                @if (in_array(auth()->user()->role, ['admin', 'staff']))
                                     <li class="nav-item">
                                         <a class="nav-link"
                                             href="{{ route('dashboard.administration') }}">{{ __('Administration') }}</a>
                                     </li>
                                 @endif
-                                <li class="nav-item">
-                                    <a class="nav-link"
-                                        href="{{ route('dashboard.questions') }}">{{ __('Questions') }}</a>
-                                </li>
-                                @if (Auth::check() &&
-                                        (Auth::user()->role == 'admin' || Auth::user()->role == 'staff' || Auth::user()->role == 'commissioner'))
+                                @if (Auth::check() && in_array(auth()->user()->role, ['staff', 'commissioner', 'teacher']))
+                                    <li class="nav-item">
+                                        <a class="nav-link"
+                                            href="{{ route('dashboard.questions') }}">{{ __('Questions') }}</a>
+                                    </li>
+                                @endif
+                                @if (Auth::check() && in_array(auth()->user()->role, ['staff', 'commissioner']))
                                     <li class="nav-item">
                                         <a class="nav-link"
                                             href="{{ route('dashboard.exams') }}">{{ __('Exams') }}</a>
@@ -99,11 +101,6 @@
                         </button>
                     </div>
                 </nav>
-                @if (session('status'))
-                    <div class="alert alert-success" role="alert">
-                        {{ session('status') }}
-                    </div>
-                @endif
             </div>
     </header>
 
@@ -137,25 +134,13 @@
             font-family: 'Poppins', sans-serif;
         }
 
-        .logo-icon {
-            width: 28px;
-            height: 28px;
-            background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(96, 125, 227, 0.5) 31%, #607de3 100%);
-            border-radius: 50%;
-            position: relative;
-        }
-
-        .logo-icon::after {
-            content: '';
-            position: absolute;
-            width: 80%;
-            height: 80%;
-            background: linear-gradient(270deg, #607de3 0%, rgba(96, 125, 227, 0.56) 59%, rgba(0, 0, 0, 0) 100%);
-            transform: rotate(-50deg);
+        textarea {
+            padding-top: 0.5rem !important;
+            min-height: 44px !important;
+            max-height: 260px !important;
         }
 
         /* form Section */
-        /* Custom Form Controls */
 
         .form-control {
             height: 44px;
@@ -422,6 +407,31 @@
             -webkit-appearance: none;
             background-position-x: 90%;
         }
+
+        .truncate-text-date {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100px;
+            display: inline-block;
+        }
+
+
+        /* Apply truncation to all cells */
+        td {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+        }
+
+        td:first-child,
+        td:last-child {
+            white-space: normal;
+            overflow: visible;
+            text-overflow: clip;
+            max-width: 50px;
+        }
     </style>
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
@@ -431,6 +441,7 @@
     <script>
         $(document).ready(function() {
             var tables = $('table').not('#questionsTable').DataTable({
+                autoWidth: true,
                 layout: {
                     topStart: {
                         pageLength: {
@@ -454,10 +465,39 @@
                 columnDefs: [
                     // targets may be classes
                     {
+                        targets: '_all', // Target all columns
+                        render: function(data, type, row, meta) {
+                            // Exclude the first and last columns
+                            if (meta.col === 0 || meta.col === meta.settings.aoColumns.length - 1) {
+                                return '<span class="no-truncate">' + data + '</span>';
+                            }
+
+                            function formatDatetime(value) {
+                                const date = new Date(value);
+                                if (isNaN(date)) {
+                                    return value; // Return the original value if it's not a valid date
+                                }
+                                return date.toLocaleString(); // Format based on the user's locale
+                            }
+
+                            // Check if the cell contains a datetime in the format YYYY-MM-DD HH:mm:ss
+                            const datetimeRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
+                            if (datetimeRegex.test(data)) {
+                                const formattedDate = formatDatetime(data); // Format the datetime
+                                return '<span class="truncate-text-date" title="' + data + '">' +
+                                    formattedDate + '</span>';
+                            }
+
+                            // Default truncation for text
+                            return '<span class="truncate-text" title="' + data + '">' + data +
+                                '</span>';
+                        }
+                    },
+                    {
                         targets: -1,
                         orderable: false,
                         searchable: false,
-                        width: '120px',
+                        width: '50px',
                         className: 'dt-center',
                     },
                     {
@@ -466,25 +506,16 @@
                         className: 'dt-center',
                     },
                     {
-                        targets: 1,
-                        data: 'name',
-                        render: function(data, type, row, meta) {
-                            return type === 'display' && data.length > 40 ?
-                                '<span title="' + data + '">' + data.substr(0, 38) +
-                                '...</span>' :
-                                data;
-                        }
-                    },
-                    {
                         className: 'dt-left',
                         targets: '_all'
                     },
                 ],
             });
+            attachDeleteButtonListeners();
         });
     </script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        function attachDeleteButtonListeners() {
             const deleteButtons = document.querySelectorAll('.delete-btn');
 
             deleteButtons.forEach(button => {
@@ -502,13 +533,48 @@
                         confirmButtonText: 'Yes, delete it!'
                     }).then((result) => {
                         if (result.isConfirmed) {
+                            console.log('Form submitted'); // Add this line
                             form.submit();
                         }
                     });
                 });
             });
-        });
+        }
     </script>
+    <style>
+        /* CSS to enforce text truncation */
+        .truncate-text {
+            white-space: nowrap;
+            /* Prevent text from wrapping to the next line */
+            overflow: hidden;
+            /* Hide overflowed text */
+            text-overflow: ellipsis;
+            /* Add ellipsis (...) for truncated text */
+            display: inline-block;
+            /* Ensure the span behaves like a block element */
+            max-width: 100%;
+            /* Ensure the text doesn't exceed the cell width */
+        }
+
+        /* Ensure columns shrink to fit their content */
+        table.dataTable td {
+            white-space: nowrap;
+            /* Prevent text from wrapping */
+            max-width: 200px;
+            /* Set a maximum width to prevent columns from becoming too wide */
+            overflow: hidden;
+            /* Hide overflow */
+            text-overflow: ellipsis;
+            /* Add ellipsis for truncated text */
+        }
+
+        /* Optional: Set a minimum width for columns if needed */
+        table.dataTable th,
+        table.dataTable td {
+            min-width: 50px;
+            /* Adjust as needed */
+        }
+    </style>
 </body>
 
 </html>

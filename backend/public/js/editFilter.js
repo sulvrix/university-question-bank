@@ -65,20 +65,32 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 },
             },
-            columnDefs: [{
-                targets: 0, // First column (Select)
-                width: '50px',
-                className: 'dt-center',
-                orderable: false, // Disable sorting for this column
-            },
-            {
-                targets: 1, // Second column (Question)
-                className: 'dt-left',
-            },
-            {
-                targets: [2, 3, 4], // Difficulty, Points, Subject columns
-                className: 'dt-left',
-            },
+            columnDefs: [
+                {
+                    targets: '_all', // Target all columns
+                    render: function (data, type, row, meta) {
+                        if (meta.col === 0 || meta.col === meta.settings.aoColumns.length - 1) {
+                            return '<span>' + data + '</span>';
+                        }
+                        // Default truncation for text
+                        return '<span" title="' + data + '">' + data +
+                            '</span>';
+                    }
+                },
+                {
+                    targets: 0, // First column (Select)
+                    width: '50px',
+                    className: 'dt-center',
+                    orderable: false, // Disable sorting for this column
+                },
+                {
+                    targets: 1, // Second column (Question)
+                    className: 'dt-left',
+                },
+                {
+                    targets: [2, 3, 4], // Difficulty, Points, Subject columns
+                    className: 'dt-left',
+                },
             ],
         });
         // Handle row clicks to toggle checkboxes
@@ -116,24 +128,80 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // Function to filter questions based on department ID
+    function filterQuestions() {
+        const level = $('#level').val();
+        const subjectId = $('#subject_id').val();
 
-    // Function to filter questions by level
-    function filterQuestions(level) {
-        const filteredQuestions = allQuestions.filter(question => {
-            return question.subject && question.subject.level == level;
-        });
+        let filteredQuestions;
+
+        if (departmentId == 2) {
+            // For department ID 2, filter by level
+            filteredQuestions = allQuestions.filter(question => {
+                return question.subject && question.subject.level == level;
+            });
+        } else {
+            // For other departments, filter by subject
+            if (subjectId) {
+                filteredQuestions = allQuestions.filter(question => {
+                    return question.subject && question.subject.id == subjectId;
+                });
+            } else {
+                // If no subject is selected, show no questions
+                filteredQuestions = [];
+            }
+        }
 
         // Create and populate the table with filtered questions
         createAndPopulateTable(filteredQuestions);
     }
 
-    // Load questions on page load (default level from the exam)
-    const defaultLevel = $('#level').val(); // Get the selected level from the dropdown
-    filterQuestions(defaultLevel);
+    // Determine the default level and subject based on the selected questions
+    let defaultLevel;
+    let defaultSubjectId;
 
-    // Load questions when level changes
+    if (selectedQuestions.length > 0) {
+        // Find the first selected question to get its subject's level and subject ID
+        const firstSelectedQuestion = allQuestions.find(question => selectedQuestions.includes(question.id));
+        if (firstSelectedQuestion && firstSelectedQuestion.subject) {
+            defaultLevel = firstSelectedQuestion.subject.level;
+            defaultSubjectId = firstSelectedQuestion.subject.id;
+        }
+    }
+
+    // If no selected questions, fall back to the dropdown values
+    if (!defaultLevel) {
+        defaultLevel = $('#level').val(); // Get the selected level from the dropdown
+    }
+    if (!defaultSubjectId) {
+        defaultSubjectId = $('#subject_id').val(); // Get the selected subject from the dropdown
+    }
+
+    // Set the default values for level and subject dropdowns
+    $('#level').val(defaultLevel);
+    $('#subject_id').val(defaultSubjectId);
+
+    // Trigger the level change event to filter subjects based on the default level
+    $('#level').trigger('change');
+
+    // Load questions on page load (default level and subject)
+    filterQuestions();
+
+    // Load questions when level changes (only for department ID 2)
     $('#level').change(function () {
-        const level = $(this).val();
-        filterQuestions(level);
+        if (departmentId == 2) {
+            filterQuestions();
+        } else {
+            // Reset the subject dropdown to "Select a Subject"
+            $('#subject_id').val('');
+            filterQuestions(); // This will filter based on the new level and no subject
+        }
+    });
+
+    // Load questions when subject changes (for other departments)
+    $('#subject_id').change(function () {
+        if (departmentId != 2) {
+            filterQuestions();
+        }
     });
 });

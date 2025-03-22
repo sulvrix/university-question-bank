@@ -6,11 +6,12 @@
     <div class="container mt-5">
         <form action="{{ route('exams.store') }}" method="POST">
             @csrf
-            <div class="row mb-4">
-                <!-- Exam Details Section -->
-                <div class="col-md-12">
-                    <div class="card p-4 mb-4">
-                        <h3 class="mb-3">Exam Details</h3>
+            <div class="card p-4 mb-4">
+                <div class="row mb-4">
+                    <!-- Exam Details Section -->
+                    <h3>Exam Details</h3>
+                    <hr class="mb-4 mt-0 border border-primary-subtle border-3 opacity-50">
+                    <div class="col-md-6">
 
                         <!-- Name Field -->
                         <div class="mb-3">
@@ -27,9 +28,17 @@
                         <div class="mb-3">
                             <label for="level" class="form-label">Level</label>
                             <select name="level" id="level" class="form-control @error('level') is-invalid @enderror">
-                                <option value="1" selected>Level 1</option>
-                                <option value="2">Level 2</option>
-                                <option value="3">Level 3</option>
+                                @if (auth()->user()->department_id == '2')
+                                    <option value="1" selected>Level 1</option>
+                                    <option value="2">Level 2</option>
+                                    <option value="3">Level 3</option>
+                                @else
+                                    <option value="1" selected>Level 1</option>
+                                    <option value="2">Level 2</option>
+                                    <option value="3">Level 3</option>
+                                    <option value="4">Level 4</option>
+                                    <option value="5">Level 5</option>
+                                @endif
                             </select>
                             @error('level')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -37,43 +46,102 @@
                         </div>
 
                         <!-- Block Dropdown -->
+
+                        @if (auth()->user()->department_id == '2')
+                            <div class="mb-3">
+                                <label for="block" class="form-label">Block</label>
+                                <select name="block" id="block"
+                                    class="form-control @error('block') is-invalid @enderror" required>
+                                    @for ($i = 1; $i <= 6; $i++)
+                                        <option value="{{ $i }}">{{ 'Block ' . $i }}</option>
+                                    @endfor
+                                </select>
+                            </div>
+                        @else
+                            <input type="hidden" name="block" value="">
+                        @endif
+
+
+
+                        <input type="hidden" name="department_id" value="{{ auth()->user()->department_id }}">
+
+
+                        @if (auth()->user()->department_id == '2')
+                            <input type="hidden" name="examiner" value="">
+                        @else
+                            <div class="mb-3">
+                                <label for="examiner" class="form-label">Examiner</label>
+                                <select name="examiner" id="examiner"
+                                    class="form-control @error('examiner') is-invalid @enderror" required disabled>
+                                    <option value="">Select Examiner</option>
+                                    @foreach ($examiners as $examiner)
+                                        <option value="{{ $examiner->name }}"
+                                            data-subjects="{{ $examiner->subjects->pluck('id')->toJson() }}">
+                                            {{ $examiner->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('examiner')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        @endif
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <!-- Duration Input -->
                         <div class="mb-3">
-                            <label for="block" class="form-label">Block</label>
-                            <select name="block" id="block" class="form-control @error('block') is-invalid @enderror"
-                                required>
-                                @for ($i = 1; $i <= 6; $i++)
-                                    <option value="{{ $i }}">{{ 'Block ' . $i }}</option>
-                                @endfor
-                            </select>
-                            @error('block')
+                            <label for="duration" class="form-label">Duration (in Minutes)</label>
+                            <input type="number" name="duration" id="duration"
+                                class="form-control @error('duration') is-invalid @enderror" required
+                                placeholder="Enter exam duration..." min="1">
+                            @error('duration')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
-                        <!-- Department Dropdown -->
-                        @if (auth()->user()->role == 'admin')
+                        <!-- Date Input -->
+                        <div class="mb-3">
+                            <label for="date" class="form-label">Exam Date</label>
+                            <input type="date" name="date" id="date"
+                                class="form-control @error('date') is-invalid @enderror" required
+                                min="{{ now()->addDay()->format('Y-m-d') }}">
+                            @error('date')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <!-- Subject Dropdown -->
+                        @if (auth()->user()->department_id == '2')
+                            <input type="hidden" name="subject_id" value="">
+                        @else
                             <div class="mb-3">
-                                <label for="department_id" class="form-label">Department</label>
-                                <select name="department_id" id="department_id"
-                                    class="form-control @error('department_id') is-invalid @enderror" required>
-                                    @foreach ($departments as $department)
-                                        <option value="{{ $department->id }}">{{ $department->name }}</option>
+                                <label for="subject_id" class="form-label">Subject</label>
+                                <select name="subject_id" id="subject_id"
+                                    class="form-control @error('subject_id') is-invalid @enderror" required>
+                                    <option value="">Select Subject</option>
+                                    @foreach ($subjects as $subject)
+                                        <option value="{{ $subject->id }}" data-level="{{ $subject->level }}">
+                                            {{ $subject->name }}</option>
                                     @endforeach
                                 </select>
+                                @error('subject_id')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
-                        @else
-                            <input type="hidden" name="department_id" value="{{ auth()->user()->department_id }}">
                         @endif
                     </div>
                 </div>
             </div>
 
+
             <!-- Questions Section -->
             <div class="row mb-4">
                 <div class="col-md-12">
                     <div class="card p-4">
-                        <h3 class="mb-3">Questions</h3>
-
+                        <h3>Questions</h3>
+                        <hr class="mb-4 mt-0 border border-primary-subtle border-3 opacity-50">
                         <!-- Questions Table -->
                         <div class="mb-3">
                             <div class="table" id="questions-table-container">
@@ -108,6 +176,60 @@
                 </button>
             </div>
         </form>
+    </div>
+    <!-- Modal for Random Configuration -->
+    <div class="modal fade" id="randomConfigModal" tabindex="-1" aria-labelledby="randomConfigModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="randomConfigModalLabel">Random Exam Configuration</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Difficulty Slider -->
+                    <div class="mb-3">
+                        <label for="difficultySlider" class="form-label">Difficulty</label>
+                        <input type="range" class="form-range" id="difficultySlider" min="0" max="100"
+                            step="1" value="50">
+                        <div class="d-flex justify-content-between">
+                            <small>Easy</small>
+                            <small>Medium</small>
+                            <small>Hard</small>
+                        </div>
+                    </div>
+
+                    <!-- Points Slider -->
+                    <div class="mb-3">
+                        <label for="pointsSlider" class="form-label">Average Points</label>
+                        <input type="range" class="form-range" id="pointsSlider" min="1" max="10"
+                            step="1" value="5">
+                        <div class="d-flex justify-content-between">
+                            <small>1</small>
+                            <small>2</small>
+                            <small>3</small>
+                            <small>4</small>
+                            <small>5</small>
+                        </div>
+                    </div>
+
+                    <!-- Subject Distribution Checkbox -->
+                    <div class="mb-3">
+                        <label class="form-label">Subject Distribution</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="evenDistribution" checked>
+                            <label class="form-check-label" for="evenDistribution">
+                                Evenly distribute questions across subjects
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="applyRandomConfig">Apply</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Styles -->
@@ -231,33 +353,104 @@
     <script src="https://cdn.datatables.net/2.2.2/js/dataTables.bootstrap5.js"></script>
     <script>
         const allQuestions = @json($questions);
+        const departmentId = {{ auth()->user()->department_id }};
+    </script>
+    <script>
+        $(document).ready(function() {
+            // When the level dropdown changes
+            $('#level').change(function() {
+                const selectedLevel = $(this).val();
+
+                // Filter subjects based on the selected level
+                $('#subject_id option').each(function() {
+                    const subjectLevel = $(this).data('level');
+                    if (subjectLevel == selectedLevel) {
+                        $(this).show(); // Show subjects with matching level
+                    } else {
+                        $(this).hide(); // Hide subjects with non-matching level
+                    }
+                });
+
+                // Reset the selected value in the subject dropdown
+                $('#subject_id').val('');
+
+                // Disable the examiner dropdown if no subject is selected
+                $('#examiner').prop('disabled', true);
+                $('#examiner').val('');
+            });
+
+            // When the subject dropdown changes (to handle examiner filtering)
+            $('#subject_id').change(function() {
+                const selectedSubjectId = $(this).val();
+
+                if (selectedSubjectId) {
+                    // Enable the examiner dropdown
+                    $('#examiner').prop('disabled', false);
+
+                    // Filter examiners based on the selected subject
+                    $('#examiner option').each(function() {
+                        const subjectsData = $(this).data('subjects');
+                        if (subjectsData) {
+                            const examinerSubjects = Array.isArray(subjectsData) ? subjectsData :
+                                JSON.parse(subjectsData); // Ensure it's an array
+                            const hasSubject = examinerSubjects.includes(parseInt(
+                                selectedSubjectId
+                            )); // Check if the examiner teaches the selected subject
+
+                            if (hasSubject) {
+                                $(this).show(); // Show examiners who teach the selected subject
+                            } else {
+                                $(this)
+                                    .hide(); // Hide examiners who don't teach the selected subject
+                            }
+                        } else {
+                            $(this).hide(); // Hide examiners without subjects data
+                        }
+                    });
+
+                    // Reset the selected value in the examiner dropdown
+                    $('#examiner').val('');
+                } else {
+                    // If no subject is selected, disable the examiner dropdown
+                    $('#examiner').prop('disabled', true);
+                    $('#examiner').val('');
+                }
+            });
+
+            // Trigger the subject change event on page load to initialize the examiner dropdown
+            $('#subject_id').trigger('change');
+            $('#level').trigger('change');
+        });
     </script>
     <script src="{{ asset('js/createFilter.js') }}"></script>
     <script>
-        $(document).ready(function() {
-            function showAlert(message, type = 'warning', duration = 5000) {
-                const alertPlaceholder = document.getElementById('alertPlaceholder');
-                if (!alertPlaceholder) {
-                    console.error('Alert placeholder not found!');
-                    return;
-                }
-
-                // Create the alert HTML
-                const alertHTML = `
-        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
-            ${message}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    `;
-
-                // Append the alert to the placeholder
-                alertPlaceholder.innerHTML = alertHTML;
-
-                // Automatically remove the alert after the specified duration
-                setTimeout(() => {
-                    alertPlaceholder.innerHTML = ''; // Clear the alert
-                }, duration);
+        function showAlert(message, type = 'warning', duration = 5000) {
+            const alertPlaceholder = document.getElementById('alertPlaceholder');
+            if (!alertPlaceholder) {
+                console.error('Alert placeholder not found!');
+                return;
             }
+
+            // Create the alert HTML
+            const alertHTML = `
+<div class="alert alert-${type} alert-dismissible fade show" role="alert">
+    ${message}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+`;
+
+            // Append the alert to the placeholder
+            alertPlaceholder.innerHTML = alertHTML;
+
+            // Automatically remove the alert after the specified duration
+            setTimeout(() => {
+                alertPlaceholder.innerHTML = ''; // Clear the alert
+            }, duration);
+        }
+    </script>
+    <script>
+        $(document).ready(function() {
+
             // Select/Deselect All Checkbox
             $('#select-all-checkbox').on('change', function() {
                 const isChecked = $(this).prop('checked');
@@ -271,28 +464,6 @@
                 $('#select-all-checkbox').prop('checked', allChecked);
             });
 
-            // Generate Random Exam
-            $('#random-exam-btn').click(function() {
-                const questions = $('input[name="questions[]"]');
-                const totalQuestions = questions.length;
-                const requiredQuestions = 5; // Number of questions to select randomly
-
-                // Deselect all questions first
-                questions.prop('checked', false);
-
-                // Randomly select questions
-                const selectedIndices = new Set();
-                while (selectedIndices.size < requiredQuestions && selectedIndices.size < totalQuestions) {
-                    const randomIndex = Math.floor(Math.random() * totalQuestions);
-                    selectedIndices.add(randomIndex);
-                }
-
-                // Check the randomly selected questions
-                selectedIndices.forEach(index => {
-                    questions.eq(index).prop('checked', true);
-                });
-            });
-
             // Validate at least 5 questions are selected before form submission
             $('form').submit(function(event) {
                 const selectedQuestions = $('input[name="questions[]"]:checked').length;
@@ -301,6 +472,145 @@
                     event.preventDefault(); // Prevent form submission
                 }
             });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            // Open the modal when the random button is clicked
+            $('#random-exam-btn').click(function() {
+                $('#randomConfigModal').modal('show');
+            });
+
+            // Apply the random configuration
+            $('#applyRandomConfig').click(function() {
+                const difficultySliderValue = parseFloat($('#difficultySlider')
+                    .val()); // Get the slider value (0-100)
+                const points = parseFloat($('#pointsSlider').val()); // Get the selected points
+                const evenDistribution = $('#evenDistribution').prop(
+                    'checked'); // Check if even distribution is enabled
+                $('input[name="questions[]"]').prop('checked', false);
+
+                // Step 1: Set the total number of questions to select
+                const totalQuestionsToSelect = 10; // Change this to the desired number of questions
+
+                // Step 2: Calculate difficulty distribution based on slider position
+                let easyPercentage, mediumPercentage, hardPercentage;
+
+                if (difficultySliderValue <= 25) {
+                    // First quarter: Mostly easy and medium
+                    easyPercentage = 0.45;
+                    mediumPercentage = 0.45;
+                    hardPercentage = 0.10;
+                } else if (difficultySliderValue <= 50) {
+                    // Second quarter: More medium, less easy and hard
+                    easyPercentage = 0.20;
+                    mediumPercentage = 0.60;
+                    hardPercentage = 0.20;
+                } else if (difficultySliderValue <= 75) {
+                    // Third quarter: More medium and hard, less easy
+                    easyPercentage = 0.10;
+                    mediumPercentage = 0.45;
+                    hardPercentage = 0.45;
+                } else {
+                    // Last quarter: Mostly medium and hard
+                    easyPercentage = 0.05;
+                    mediumPercentage = 0.45;
+                    hardPercentage = 0.50;
+                }
+
+                // Step 3: Assign scores to questions based on constraints
+                const scoredQuestions = allQuestions.map(question => {
+                    let score = 0;
+
+                    // Points score: Higher score for questions closer to the target points
+                    const pointsDifference = Math.abs(question.points - points);
+                    score += 10 / (pointsDifference + 1); // +1 to avoid division by zero
+
+                    // Difficulty score: Higher score for questions that match the desired difficulty distribution
+                    if (question.difficulty === 'easy') {
+                        score += easyPercentage * 10;
+                    } else if (question.difficulty === 'medium') {
+                        score += mediumPercentage * 10;
+                    } else if (question.difficulty === 'hard') {
+                        score += hardPercentage * 10;
+                    }
+
+                    return {
+                        ...question,
+                        score
+                    };
+                });
+
+                // Step 4: Sort questions by score (highest score first)
+                const sortedQuestions = scoredQuestions.sort((a, b) => b.score - a.score);
+
+                // Step 5: Select questions based on score and constraints
+                let selectedQuestions = [];
+                let attempts = 0;
+
+                while (selectedQuestions.length < totalQuestionsToSelect && attempts < 10) {
+                    // Reset selected questions for each attempt
+                    selectedQuestions = [];
+
+                    // Select questions based on score
+                    for (const question of sortedQuestions) {
+                        if (selectedQuestions.length >= totalQuestionsToSelect) break;
+
+                        // Check if the question matches the constraints
+                        const pointsDifference = Math.abs(question.points - points);
+                        const pointsRange = 2 + attempts; // Gradually widen the range
+                        if (pointsDifference <= pointsRange) {
+                            selectedQuestions.push(question);
+                        }
+                    }
+
+                    attempts++;
+                }
+
+                // Step 6: If still not enough questions, fall back to top-scored questions
+                if (selectedQuestions.length < totalQuestionsToSelect) {
+                    selectedQuestions = sortedQuestions.slice(0, totalQuestionsToSelect);
+                }
+
+                // Step 7: If even distribution is enabled, ensure questions are spread across subjects
+                if (evenDistribution) {
+                    const groupedBySubject = groupBy(selectedQuestions, 'subject.name');
+                    const subjects = Object.keys(groupedBySubject);
+
+                    // If there are more subjects than questions, prioritize spreading across subjects
+                    if (subjects.length > totalQuestionsToSelect) {
+                        selectedQuestions.length = 0; // Reset selected questions
+                        for (const subject of subjects.slice(0, totalQuestionsToSelect)) {
+                            const questionsInSubject = groupedBySubject[subject];
+                            selectedQuestions.push(questionsInSubject[
+                                0]); // Select the top-scored question for each subject
+                        }
+                    }
+                }
+
+                // Step 8: Deselect all questions first
+                $('input[name="questions[]"]').prop('checked', false);
+
+                // Step 9: Check the selected questions in the table
+                selectedQuestions.forEach(question => {
+                    $(`input[name="questions[]"][value="${question.id}"]`).prop('checked', true);
+                });
+
+                // Step 10: Close the modal
+                $('#randomConfigModal').modal('hide');
+            });
+
+            // Helper function to group questions by a property (e.g., subject.name)
+            function groupBy(array, property) {
+                return array.reduce((acc, obj) => {
+                    const key = obj[property];
+                    if (!acc[key]) {
+                        acc[key] = [];
+                    }
+                    acc[key].push(obj);
+                    return acc;
+                }, {});
+            }
         });
     </script>
 @endsection

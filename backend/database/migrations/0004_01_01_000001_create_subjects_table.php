@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('subjects', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->enum('level', ['1', '2', '3']);
+            $table->string('semester')->nullable();
+            $table->enum('level', [1, 2, 3, 4, 5]);
             $table->foreignId('department_id')->constrained('departments')->onDelete('cascade');
             $table->timestamps();
         });

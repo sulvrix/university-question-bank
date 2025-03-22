@@ -4,27 +4,26 @@
     <div class="position-fixed top-0 start-50 translate-middle-x z-3 p-2" id="alertPlaceholder"
         style="z-index: 1500 !important;"></div>
     <div class="container mt-5">
-        <form action="{{ route('questions.store') }}" method="POST">
+        <form action="{{ route('questions.store') }}" method="POST" id="questionForm">
             @csrf
+            <!-- Question Section -->
             <div class="row mb-4">
-                <!-- Question Section -->
                 <div class="col-md-8">
                     <div class="card p-4 mb-4">
-                        <h3 class="mb-3">Question Details</h3>
+                        <h3>Question Details</h3>
+                        <hr class="mb-4 mt-0 border border-primary-subtle border-3 opacity-50">
                         <div class="mb-3">
                             <label for="text" class="form-label">Question:</label>
                             <div class="input-group">
-                                <input name="text" id="text"
-                                    class="form-control @error('text') is-invalid @enderror" rows="3"
-                                    placeholder="Enter your question here..." required>{{ old('text') }}</input>
+                                <textarea name="text" id="text" class="form-control" placeholder="Enter your question here..." required>{{ old('text') }}</textarea>
                                 <button type="button" id="rephraseButton" class="btn btn-secondary"
                                     data-bs-toggle="tooltip" title="Click to rephrase the question">
                                     <i class="bi bi-arrow-repeat"></i> Rephrase
                                 </button>
                             </div>
-                            @error('text')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            @if ($errors->has('text'))
+                                <div class="text-danger">{{ $errors->first('text') }}</div>
+                            @endif
                         </div>
 
                         <!-- Answers Section -->
@@ -58,11 +57,13 @@
                 <!-- Additional Settings Section -->
                 <div class="col-md-4">
                     <div class="card p-4">
-                        <h3 class="mb-3">Additional Settings</h3>
+                        <h3>Additional Settings</h3>
+                        <hr class="mb-4 mt-0 border border-primary-subtle border-3 opacity-50">
                         <div class="mb-3">
                             <label for="difficulty" class="form-label">Difficulty:</label>
                             <select name="difficulty" id="difficulty"
                                 class="form-control @error('difficulty') is-invalid @enderror">
+                                <option value="">Select a Difficulty</option>
                                 <option value="easy" {{ old('difficulty') == 'easy' ? 'selected' : '' }}>Easy</option>
                                 <option value="medium" {{ old('difficulty') == 'medium' ? 'selected' : '' }}>Medium
                                 </option>
@@ -90,14 +91,10 @@
                                 <option value="">Select a subject</option>
                                 @foreach ($subjects as $subject)
                                     <option value="{{ $subject->id }}"
-                                        {{ old('subject_id') == $subject->id ? 'selected' : '' }}>
-                                        {{ $subject->name }}
+                                        {{ old('subject_id') == $subject->id ? 'selected' : '' }}>{{ $subject->name }}
                                     </option>
                                 @endforeach
                             </select>
-                            @error('subject_id')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
                         </div>
                     </div>
                 </div>
@@ -108,7 +105,7 @@
                 <a href="{{ route('dashboard.questions') }}" class="btn btn-secondary">
                     <i class="bi bi-arrow-left"></i> Back
                 </a>
-                <button type="reset" class="btn btn-warning">
+                <button type="button" class="btn btn-warning" id="clearBtn">
                     <i class="bi bi-eraser"></i> Clear
                 </button>
                 <button type="submit" class="btn btn-primary">
@@ -182,7 +179,6 @@
     @vite(['resources/js/rephrase.js'])
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-
             // Initialize tooltips
             const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
             tooltipTriggerList.map(function(tooltipTriggerEl) {

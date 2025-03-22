@@ -3,7 +3,8 @@
 @section('content')
     <div class="container mt-5">
         <div class="card p-4">
-            <h2 class="mb-4">Create University</h2>
+            <h1>Add University</h1>
+            <hr class="mb-5 mt-0 border border-primary-subtle border-3 opacity-50">
             <form action="{{ route('universities.store') }}" method="POST">
                 @csrf
                 <div class="mb-3">

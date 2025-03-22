@@ -24,8 +24,8 @@ class ContactController extends Controller
         ];
 
         // Send email
-        Mail::mailer('mailtrap')
-            ->to('your_email@example.com')
+        Mail::mailer('smtp')
+            ->to('noreply.uqb@gmail.com')
             ->send(new ContactFormMail($data));
 
         return redirect('/')->with('success', 'Thank you for contacting us!');

@@ -4,28 +4,27 @@
     <div class="position-fixed top-0 start-50 translate-middle-x z-3 p-2" id="alertPlaceholder"
         style="z-index: 1500 !important;"></div>
     <div class="container mt-5">
-        <form action="{{ route('questions.update', $question) }}" method="POST">
+        <form action="{{ route('questions.update', $question) }}" method="POST" id="questionForm">
             @csrf
             @method('PUT')
+            <!-- Question Section -->
             <div class="row mb-4">
-                <!-- Question Section -->
                 <div class="col-md-8">
                     <div class="card p-4 mb-4">
                         <h3 class="mb-3">Question Details</h3>
                         <div class="mb-3">
                             <label for="text" class="form-label">Question:</label>
                             <div class="input-group">
-                                <input name="text" id="text"
-                                    class="form-control @error('text') is-invalid @enderror" rows="3"
-                                    placeholder="Enter your question here..." required value="{{ $question->text }}">
+                                <textarea name="text" id="text" class="form-control" rows="1" placeholder="Enter your question here..."
+                                    required>{{ $question->text }}</textarea>
                                 <button type="button" id="rephraseButton" class="btn btn-secondary"
                                     data-bs-toggle="tooltip" title="Click to rephrase the question">
                                     <i class="bi bi-arrow-repeat"></i> Rephrase
                                 </button>
                             </div>
-                            @error('text')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            @if ($errors->has('text'))
+                                <div class="text-danger">{{ $errors->first('text') }}</div>
+                            @endif
                         </div>
 
                         <!-- Answers Section -->
@@ -64,9 +63,11 @@
                             <label for="difficulty" class="form-label">Difficulty:</label>
                             <select name="difficulty" id="difficulty"
                                 class="form-control @error('difficulty') is-invalid @enderror">
+                                <option value="">Select a Difficulty</option>
                                 <option value="easy" {{ $question->difficulty == 'easy' ? 'selected' : '' }}>Easy
                                 </option>
-                                <option value="medium" {{ $question->difficulty == 'medium' ? 'selected' : '' }}>Medium
+                                <option value="medium" {{ $question->difficulty == 'medium' ? 'selected' : '' }}>
+                                    Medium
                                 </option>
                                 <option value="hard" {{ $question->difficulty == 'hard' ? 'selected' : '' }}>Hard
                                 </option>
@@ -85,7 +86,6 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-
                         <div class="mb-3">
                             <label for="subject_id" class="form-label">Subject:</label>
                             <select name="subject_id" id="subject_id"
@@ -98,9 +98,6 @@
                                     </option>
                                 @endforeach
                             </select>
-                            @error('subject_id')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
                         </div>
                     </div>
                 </div>
@@ -111,7 +108,7 @@
                 <a href="{{ route('dashboard.questions') }}" class="btn btn-secondary">
                     <i class="bi bi-arrow-left"></i> Back
                 </a>
-                <button type="reset" class="btn btn-warning">
+                <button id="clearBtn" type="button" class="btn btn-warning">
                     <i class="bi bi-eraser"></i> Clear
                 </button>
                 <button type="submit" class="btn btn-primary">

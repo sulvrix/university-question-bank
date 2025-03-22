@@ -15,7 +15,13 @@
                                     <tr>
                                         <th scope="col">#</th>
                                         <th scope="col">Name</th>
-                                        <th scope="col">Block</th>
+                                        @if (Auth::check() && auth()->user()->department_id == 2)
+                                            <th scope="col">Block</th>
+                                        @elseif(Auth::check() && auth()->user()->department_id != 2)
+                                            <th scope="col">Examiner</th>
+                                            <th scope="col">Subject</th>
+                                            <th scope="col">Semester</th>
+                                        @endif
                                         <th scope="col">Level</th>
                                         <th scope="col">Department</th>
                                         <th scope="col">Created At</th>
@@ -27,27 +33,41 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $exam->name }}</td>
-                                            <td>{{ $exam->block }}</td>
+                                            @if (Auth::check() && auth()->user()->department_id == 2)
+                                                <td>{{ $exam->block }}</td>
+                                            @elseif(Auth::check() && auth()->user()->department_id != 2)
+                                                <td>{{ $exam->examiner }}</td>
+                                                <td>{{ $exam->subjectName }}</td>
+                                                <td>{{ $exam->subjectSemester }}</td>
+                                            @endif
                                             <td>{{ $exam->level }}</td>
                                             <td>{{ $exam->department->name }}</td>
                                             <td>{{ $exam->created_at }}</td>
-                                            <td>
-                                                <a href="{{ route('exams.edit', $exam) }}" role="button"><i
-                                                        class="bi bi-pencil-square"
-                                                        style="display: inline-flex;padding: 5px"></i></a>
-                                                <a href="{{ route('exams.show', $exam) }}" target="_blank" role="button"><i
-                                                        class="bi bi-eye-fill"
-                                                        style="display: inline-flex; color:green;padding: 5px"></i></a>
-                                                <form action="{{ route('exams.destroy', $exam) }}" method="POST"
-                                                    style="display: inline-flex">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="button" class="btn btn-link text-danger delete-btn"
-                                                        style="border:none; background:none; padding: 0; font-size: large; margin-left: 10px;">
-                                                        <i class="bi bi-trash3"></i>
-                                                    </button>
-                                                </form>
-                                            </td>
+                                            @if (Auth::check() && auth()->user()->role == 'staff')
+                                                <td>
+                                                    <a href="{{ route('exams.edit', $exam) }}" role="button"><i
+                                                            class="bi bi-pencil-square"
+                                                            style="display: inline-flex;padding: 5px"></i></a>
+                                                    <a href="{{ route('exams.show', $exam) }}" target="_blank"
+                                                        role="button"><i class="bi bi-eye-fill"
+                                                            style="display: inline-flex; color:green;padding: 5px"></i></a>
+                                                    <form action="{{ route('exams.destroy', $exam) }}" method="POST"
+                                                        style="display: inline-flex;" class="delete-form">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="button" class="btn btn-link text-danger delete-btn"
+                                                            style="border:none; background:none; padding: 0; font-size: large; margin-left: 5px;">
+                                                            <i class="bi bi-trash3"></i>
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            @else
+                                                <td>
+                                                    <a href="{{ route('exams.show', $exam) }}" target="_blank"
+                                                        role="button"><i class="bi bi-eye-fill"
+                                                            style="display: inline-flex; color:green;padding: 5px"></i></a>
+                                                </td>
+                                            @endif
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -61,4 +81,9 @@
                 </div>
             </div>
     </main>
+    <style>
+        i.bi.bi-trash3::before {
+            margin-right: 5px !important;
+        }
+    </style>
 @endsection

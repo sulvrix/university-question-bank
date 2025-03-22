@@ -18,15 +18,19 @@ class QuestionController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->role === 'admin') {
-            // Admins can see all questions
-            $questions = Question::all();
+        if ($user->role === 'teacher') {
+            // Fetch subjects associated with the user
+            $subjectIds = $user->subjects->pluck('id')->toArray();
+
+            // Fetch questions for the user's subjects
+            $questions = Question::whereIn('subject_id', $subjectIds)->get();
         } else {
             // Non-admins can only see questions from their department
             $questions = Question::whereHas('subject', function ($query) use ($user) {
                 $query->where('department_id', $user->department_id);
             })->get();
         }
+
 
         // Add a computed property for the correct answer
         foreach ($questions as $question) {
@@ -48,12 +52,11 @@ class QuestionController extends Controller
     public function create()
     {
         $user = Auth::user();
-
-        if ($user->role === 'admin') {
-            // Admins can see all subjects
-            $subjects = Subject::all();
-        } else {
+        if ($user->role === 'teacher') {
             // Non-admins can only see subjects from their department
+            $subjects = $user->subjects;
+        } else {
+
             $subjects = Subject::where('department_id', $user->department_id)->get();
         }
 
@@ -64,13 +67,15 @@ class QuestionController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'text' => 'required|string',
+            'text' => 'required|string|unique:questions,text,NULL,id,subject_id,' . $request->input('subject_id'),
             'answers' => 'required|array|size:4',
             'answers.*.text' => 'required|string',
             'correct_answer' => 'required|integer|between:0,3',
             'difficulty' => 'nullable|in:easy,medium,hard',
             'points' => 'nullable|integer',
             'subject_id' => 'required|exists:subjects,id',
+        ], [
+            'text.unique' => 'The question already exists for this subject.',
         ]);
 
         $answers = $request->input('answers');
@@ -95,13 +100,15 @@ class QuestionController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->role === 'admin') {
-            // Admins can see all subjects
-            $subjects = Subject::all();
-        } else {
+        if ($user->role === 'teacher') {
             // Non-admins can only see subjects from their department
+            $subjects = $user->subjects;
+        } else {
+
             $subjects = Subject::where('department_id', $user->department_id)->get();
         }
+
+
 
         return view('questions.edit', compact('question', 'subjects'));
     }
@@ -110,13 +117,15 @@ class QuestionController extends Controller
     public function update(Request $request, Question $question)
     {
         $request->validate([
-            'text' => 'required|string',
+            'text' => 'required|string|unique:questions,text,' . $question->id . ',id,subject_id,' . $request->input('subject_id'),
             'answers' => 'required|array|size:4',
             'answers.*.text' => 'required|string',
             'correct_answer' => 'required|integer|between:0,3',
             'difficulty' => 'nullable|in:easy,medium,hard',
             'points' => 'nullable|integer',
             'subject_id' => 'required|exists:subjects,id',
+        ], [
+            'text.unique' => 'The question already exists for this subject.',
         ]);
 
         $answers = $request->input('answers');
@@ -138,7 +147,26 @@ class QuestionController extends Controller
 
     public function show(Question $question)
     {
-        return $this->edit($question);
+        // Decode the answers if they are stored as JSON
+        $answers = is_array($question->answers) ? $question->answers : json_decode($question->answers, true);
+
+        // Find the correct answer
+        $correctAnswer = 'N/A';
+        foreach ($answers as $answer) {
+            if (isset($answer['is_correct']) && $answer['is_correct']) {
+                $correctAnswer = $answer['text']; // Access 'text' as an array key
+                break;
+            }
+        }
+
+        // Add the correct answer as a computed property to the question
+        $question->correct_answer = $correctAnswer;
+
+        // Pass the question and answers to the view
+        return view('questions.show', [
+            'question' => $question,
+            'answers' => $answers, // Pass the decoded answers to the view
+        ]);
     }
     // Delete a question
     public function destroy(Question $question)

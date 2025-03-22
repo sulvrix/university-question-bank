@@ -11,11 +11,11 @@
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Name</th>
+                                    <th scope="col">Username</th>
                                     <th scope="col">Email</th>
                                     <th scope="col">Role</th>
-                                    <th scope="col">Status</th>
                                     <th scope="col">Department</th>
+                                    <th scope="col">Subjects</th>
                                     <th scope="col">Manage</th>
                                 </tr>
                             </thead>
@@ -23,16 +23,16 @@
                                 @foreach ($userData as $user)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $user->name }}</td>
+                                        <td>{{ $user->username }}</td>
                                         <td>{{ $user->email }}</td>
                                         <td>{{ $user->role }}</td>
-                                        <td>{{ $user->status }}</td>
                                         <td>{{ $user->department->name }}</td>
+                                        <td>{{ $user->subjects->first()->name ?? 'N/A' }}</td>
                                         <td>
                                             <a href="{{ route('users.edit', ['user' => $user->id]) }}" role="button"><i
                                                     class="bi bi-pencil-square"></i></a>
                                             <form action="{{ route('users.destroy', $user) }}" method="POST"
-                                                style="display:inline-flex;">
+                                                style="display:inline-flex;" class="delete-form">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="button" class="btn btn-link text-danger delete-btn"
