@@ -105,21 +105,33 @@
             <!-- Left Column: Department, Academic Year, Exam Semester, Examiner -->
             <td style="width: 50%;">
                 <div><strong>Department:</strong> {{ $exam->department->name }}</div>
-                <div><strong>Academic Year:</strong> {{ date('Y') }} - {{ date('Y', strtotime('+1 year')) }}</div>
-                @if ($exam->department->faculty->name === 'Faculty of Engineering')
-                    <div><strong>Exam Semester:</strong></div>
-                    <div><strong>Examiner:</strong></div>
+                <div><strong>Academic Year:</strong>
+                    @if (date('m', strtotime($exam->date)) < 6)
+                        {{ date('Y', strtotime($exam->date)) - 1 . ' - ' . date('Y', strtotime($exam->date)) }}
+                    @else
+                        {{ date('Y', strtotime($exam->date)) . ' - ' . (date('Y', strtotime($exam->date)) + 1) }}
+                    @endif
+                </div>
+                @if ($exam->department_id === 2)
+                    <div><strong>Block:</strong> {{ $exam->block }}</div>
+                @else
+                    <div><strong>Exam Semester: </strong>{{ $subjectSemester }}</div>
+                    <div><strong>Examiner: </strong>{{ $exam->examiner }}</div>
                 @endif
             </td>
 
             <!-- Right Column: Date, Subject, Level, Time Allowed -->
             <td style="width: 50%; text-align: right;">
-                <div><strong>Date:</strong> {{ date('n/j/Y') }}</div>
-                @if ($exam->department->faculty->name === 'Faculty of Engineering')
-                    <div><strong>Subject:</strong> {{ $exam->name }}</div>
-                @endif
+                <div><strong>Date:</strong> {{ date('m/d/Y', strtotime($exam->date)) }}</div>
                 <div><strong>Level:</strong> {{ $exam->level }}</div>
-                <div><strong>Time Allowed:</strong> 2 Hours</div>
+                <div><strong>Time Allowed:</strong> {{ floor($exam->duration / 60) }} Hours
+                    @if ($exam->duration % 60 > 0)
+                        {{ $exam->duration % 60 }} Minutes
+                    @endif
+                </div>
+                @if ($exam->department_id !== 2)
+                    <div><strong>Subject:</strong> {{ $subjectName }}</div>
+                @endif
             </td>
         </tr>
     </table>

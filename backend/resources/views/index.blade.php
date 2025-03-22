@@ -238,14 +238,14 @@
                 <div class="row">
                     <div class="col-md-6">
                         <h3>University Question Bank</h3>
-                        <p>© 2023 University Question Bank. All rights reserved.</p>
+                        <p>© 2025 University Question Bank. All rights reserved.</p>
                     </div>
                     <div class="col-md-6 text-end">
                         <div class="social-icons">
-                            <a href="#"><i class="fab fa-facebook"></i></a>
-                            <a href="#"><i class="fab fa-twitter"></i></a>
-                            <a href="#"><i class="fab fa-instagram"></i></a>
-                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                            <a href="#"><i class="bi bi-facebook"></i></a>
+                            <a href="#"><i class="bi bi-twitter-x"></i></a>
+                            <a href="#"><i class="bi bi-instagram"></i></a>
+                            <a href="#"><i class="bi bi-linkedin"></i></a>
                         </div>
                     </div>
                 </div>

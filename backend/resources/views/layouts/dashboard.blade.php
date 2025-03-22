@@ -47,11 +47,13 @@
                                             href="{{ route('dashboard.administration') }}">{{ __('Administration') }}</a>
                                     </li>
                                 @endif
-                                <li class="nav-item">
-                                    <a class="nav-link"
-                                        href="{{ route('dashboard.questions') }}">{{ __('Questions') }}</a>
-                                </li>
-                                @if (Auth::check() && in_array(auth()->user()->role, ['admin', 'staff', 'commissioner']))
+                                @if (Auth::check() && in_array(auth()->user()->role, ['staff', 'commissioner', 'teacher']))
+                                    <li class="nav-item">
+                                        <a class="nav-link"
+                                            href="{{ route('dashboard.questions') }}">{{ __('Questions') }}</a>
+                                    </li>
+                                @endif
+                                @if (Auth::check() && in_array(auth()->user()->role, ['staff', 'commissioner']))
                                     <li class="nav-item">
                                         <a class="nav-link"
                                             href="{{ route('dashboard.exams') }}">{{ __('Exams') }}</a>
@@ -405,6 +407,31 @@
             -webkit-appearance: none;
             background-position-x: 90%;
         }
+
+        .truncate-text-date {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100px;
+            display: inline-block;
+        }
+
+
+        /* Apply truncation to all cells */
+        td {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+        }
+
+        td:first-child,
+        td:last-child {
+            white-space: normal;
+            overflow: visible;
+            text-overflow: clip;
+            max-width: 50px;
+        }
     </style>
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
@@ -414,7 +441,7 @@
     <script>
         $(document).ready(function() {
             var tables = $('table').not('#questionsTable').DataTable({
-                autoWidth: false,
+                autoWidth: true,
                 layout: {
                     topStart: {
                         pageLength: {
@@ -440,24 +467,37 @@
                     {
                         targets: '_all', // Target all columns
                         render: function(data, type, row, meta) {
-                            // Exclude the last column
-                            if (meta.col === meta.settings.aoColumns.length - 1) {
-                                return data; // Return the original data for the last column
+                            // Exclude the first and last columns
+                            if (meta.col === 0 || meta.col === meta.settings.aoColumns.length - 1) {
+                                return '<span class="no-truncate">' + data + '</span>';
                             }
 
-                            // Truncate the text if it exceeds 20 characters
-                            if (type === 'display' && data.length > 20) {
-                                return '<span class="truncate-text" title="' + data + '">' + data
-                                    .substr(0, 18) + '...</span>';
+                            function formatDatetime(value) {
+                                const date = new Date(value);
+                                if (isNaN(date)) {
+                                    return value; // Return the original value if it's not a valid date
+                                }
+                                return date.toLocaleString(); // Format based on the user's locale
                             }
-                            return '<span class="truncate-text">' + data + '</span>';
+
+                            // Check if the cell contains a datetime in the format YYYY-MM-DD HH:mm:ss
+                            const datetimeRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
+                            if (datetimeRegex.test(data)) {
+                                const formattedDate = formatDatetime(data); // Format the datetime
+                                return '<span class="truncate-text-date" title="' + data + '">' +
+                                    formattedDate + '</span>';
+                            }
+
+                            // Default truncation for text
+                            return '<span class="truncate-text" title="' + data + '">' + data +
+                                '</span>';
                         }
                     },
                     {
                         targets: -1,
                         orderable: false,
                         searchable: false,
-                        width: '120px',
+                        width: '50px',
                         className: 'dt-center',
                     },
                     {

@@ -66,33 +66,44 @@
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
+                        @if (Auth::check() && auth()->user()->role == 'admin')
+                            <div class="mb-3">
+                                <label for="department_id" class="form-label">Department:</label>
+                                <select class="form-control" name="department_id" id="department_id">
+                                    @foreach ($departments as $department)
+                                        <option value="{{ $department['id'] }}"
+                                            {{ $user->department_id == $department['id'] ? 'selected' : '' }}>
+                                            {{ $department['name'] }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @else
+                            <input type="hidden" name="department_id" value="{{ auth()->user()->department_id }}"
+                                id="department_id">
+                        @endif
 
-                        <div class="mb-3">
-                            <label for="department_id" class="form-label">Department:</label>
-                            <select class="form-control" name="department_id" id="department_id">
-                                @foreach ($departments as $department)
-                                    <option value="{{ $department['id'] }}"
-                                        {{ $user->department_id == $department['id'] ? 'selected' : '' }}>
-                                        {{ $department['name'] }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('department_id')
-                                <div class="text-danger">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="mb-3" id="subject_dropdown" style="display: none;">
-                            <label for="subject_id" class="form-label">Subject:</label>
-                            <select class="form-control" name="subject_id" id="subject_id">
-                                @foreach ($subjects as $subject)
-                                    <option value="{{ $subject->id }}" data-department-id="{{ $subject->department_id }}"
-                                        {{ $user->subject_id == $subject->id ? 'selected' : '' }}>
-                                        {{ $subject->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('subject_id')
+                        <div class="mb-3" id="subject_dropdown">
+                            <label for="subject_ids" class="form-label">Subjects:</label>
+                            <div class="dropdown">
+                                <button class="form-control dropdown-toggle customDropDown-toggle" type="button"
+                                    id="subjectDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Select Subjects
+                                </button>
+                                <ul class="dropdown-menu customDropDown-menu" aria-labelledby="subjectDropdownButton">
+                                    @foreach ($subjects as $subject)
+                                        <li>
+                                            <label class="dropdown-item customDropDown-item">
+                                                <input type="checkbox" name="subject_ids[]" value="{{ $subject->id }}"
+                                                    data-department-id="{{ $subject->department_id }}"
+                                                    {{ in_array($subject->id, old('subject_ids', $user->subjects->pluck('id')->toArray())) ? 'checked' : '' }}>
+                                                {{ $subject->name }}
+                                            </label>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                            @error('subject_ids')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
@@ -109,49 +120,114 @@
             </form>
         </div>
     </div>
+    <style>
+        /* Custom Select Dropdown */
+        .customDropDown-toggle {
+            padding: 5px;
+            font-size: 16px;
+            line-height: 1;
+            border: 0;
+            border-radius: 5px;
+            height: 34px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16"> <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" /> </svg>') no-repeat right #ddd;
+            -webkit-appearance: none;
+            background-position-x: 98%;
+            text-align: left;
+        }
+
+        .customDropDown-toggle::after {
+            display: none !important;
+        }
+
+        .customDropDown-menu {
+            width: 100% !important;
+            max-height: 200px !important;
+            overflow-y: auto !important;
+        }
+
+        .customDropDown-item:hover {
+            background-color: var(--primary) !important;
+            color: #ddd;
+        }
+
+        .customDropDown-item {
+            padding: 0.5rem 1rem !important;
+        }
+
+
+        .customDropDown-item input[type="checkbox"] {
+            scale: 1.5 !important;
+            margin-right: 0.5rem !important;
+            accent-color: var(--secondary) !important;
+        }
+    </style>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const roleDropdown = document.getElementById('role');
             const departmentDropdown = document.getElementById('department_id');
             const subjectDropdown = document.getElementById('subject_dropdown');
-            const subjectSelect = document.getElementById('subject_id');
-            const allSubjects = Array.from(subjectSelect.options);
-
-            // Function to show/hide subject dropdown and set required attribute
-            function toggleSubjectDropdown() {
-                if (roleDropdown.value === 'teacher') {
-                    subjectDropdown.style.display = 'block';
-                    subjectSelect.setAttribute('required', 'required');
-                    filterSubjects(departmentDropdown.value);
-                } else {
-                    subjectDropdown.style.display = 'none';
-                    subjectSelect.removeAttribute('required');
-                }
-            }
+            const subjectCheckboxes = document.querySelectorAll('input[name="subject_ids[]"]');
+            const subjectDropdownButton = document.getElementById('subjectDropdownButton');
 
             // Function to filter subjects based on department
             function filterSubjects(departmentId) {
-                subjectSelect.innerHTML = '';
-                allSubjects.forEach(subject => {
-                    if (subject.getAttribute('data-department-id') == departmentId) {
-                        subjectSelect.appendChild(subject.cloneNode(true));
+                subjectCheckboxes.forEach(checkbox => {
+                    const subjectDepartmentId = checkbox.getAttribute('data-department-id');
+                    if (departmentId === null || subjectDepartmentId == departmentId) {
+                        checkbox.closest('li').style.display = 'block';
+                    } else {
+                        checkbox.closest('li').style.display = 'none';
                     }
                 });
             }
 
+            // Function to update the dropdown button text
+            function updateDropdownButtonText() {
+                const selectedSubjects = Array.from(subjectCheckboxes)
+                    .filter(checkbox => checkbox.checked)
+                    .map(checkbox => checkbox.nextSibling.textContent.trim());
+
+                if (selectedSubjects.length > 0) {
+                    // Show only the first subject and truncate if necessary
+                    subjectDropdownButton.textContent = selectedSubjects[0].length > 20 ?
+                        selectedSubjects[0].substring(0, 40) + '...' :
+                        selectedSubjects[0];
+                    if (selectedSubjects.length > 1) {
+                        subjectDropdownButton.textContent += ` (+${selectedSubjects.length - 1})`;
+                    }
+                } else {
+                    subjectDropdownButton.textContent = 'Select Subjects';
+                }
+            }
+
             // Event listeners
-            roleDropdown.addEventListener('change', toggleSubjectDropdown);
-            departmentDropdown.addEventListener('change', () => {
-                if (roleDropdown.value === 'teacher') {
+            roleDropdown.addEventListener('change', function() {
+                if (this.value === 'teacher') {
+                    subjectDropdownButton.disabled = false;
                     filterSubjects(departmentDropdown.value);
+                } else {
+                    subjectDropdownButton.disabled = true;
                 }
             });
 
+            departmentDropdown.addEventListener('change', function() {
+                if (roleDropdown.value === 'teacher') {
+                    filterSubjects(this.value);
+                }
+            });
+
+            subjectCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateDropdownButtonText);
+            });
+
             // Initial check
-            toggleSubjectDropdown();
             if (roleDropdown.value === 'teacher') {
+                subjectDropdownButton.disabled = false;
                 filterSubjects(departmentDropdown.value);
+            } else {
+                subjectDropdownButton.disabled = true;
             }
+            updateDropdownButtonText();
         });
     </script>
 @endsection

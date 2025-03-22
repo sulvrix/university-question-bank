@@ -27,7 +27,7 @@
                                         <td>{{ $user->email }}</td>
                                         <td>{{ $user->role }}</td>
                                         <td>{{ $user->department->name }}</td>
-                                        <td>{{ $user->subject->name }}</td>
+                                        <td>{{ $user->subjects->first()->name ?? 'N/A' }}</td>
                                         <td>
                                             <a href="{{ route('users.edit', ['user' => $user->id]) }}" role="button"><i
                                                     class="bi bi-pencil-square"></i></a>

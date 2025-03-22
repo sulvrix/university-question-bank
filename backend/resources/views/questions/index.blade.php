@@ -33,7 +33,7 @@
                                             <td>{{ $question->points }}</td>
                                             <td>{{ $question->subject->name }}</td>
                                             <td>{{ $question->created_at }}</td>
-                                            @if (Auth::check() && in_array(auth()->user()->role, ['admin', 'staff', 'commissioner']))
+                                            @if (Auth::check() && in_array(auth()->user()->role, ['staff', 'commissioner']))
                                                 <td>
                                                     <a href="{{ route('questions.edit', $question) }}" role="button"><i
                                                             class="bi bi-pencil-square"

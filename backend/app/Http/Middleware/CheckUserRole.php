@@ -23,8 +23,6 @@ class CheckUserRole
         }
 
         $user = Auth::user();
-        Log::info('User role: ' . $user->role); // Debugging statement
-        Log::info('Allowed roles: ' . implode(', ', $roles)); // Debugging statement
 
         if (in_array($user->role, $roles)) {
             return $next($request);

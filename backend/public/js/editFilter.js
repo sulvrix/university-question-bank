@@ -65,20 +65,32 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 },
             },
-            columnDefs: [{
-                targets: 0, // First column (Select)
-                width: '50px',
-                className: 'dt-center',
-                orderable: false, // Disable sorting for this column
-            },
-            {
-                targets: 1, // Second column (Question)
-                className: 'dt-left',
-            },
-            {
-                targets: [2, 3, 4], // Difficulty, Points, Subject columns
-                className: 'dt-left',
-            },
+            columnDefs: [
+                {
+                    targets: '_all', // Target all columns
+                    render: function (data, type, row, meta) {
+                        if (meta.col === 0 || meta.col === meta.settings.aoColumns.length - 1) {
+                            return '<span>' + data + '</span>';
+                        }
+                        // Default truncation for text
+                        return '<span" title="' + data + '">' + data +
+                            '</span>';
+                    }
+                },
+                {
+                    targets: 0, // First column (Select)
+                    width: '50px',
+                    className: 'dt-center',
+                    orderable: false, // Disable sorting for this column
+                },
+                {
+                    targets: 1, // Second column (Question)
+                    className: 'dt-left',
+                },
+                {
+                    targets: [2, 3, 4], // Difficulty, Points, Subject columns
+                    className: 'dt-left',
+                },
             ],
         });
         // Handle row clicks to toggle checkboxes
@@ -116,28 +128,44 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Function to filter questions by level and department
-    function filterQuestions(level, departmentId) {
-        const filteredQuestions = allQuestions.filter(question => {
-            const levelMatch = question.subject && question.subject.level == level;
-            const departmentMatch = departmentId === null || question.subject.department_id == departmentId;
-            return levelMatch && departmentMatch;
-        });
+    // Function to filter questions based on department ID
+    function filterQuestions() {
+        const level = $('#level').val();
+        const subjectId = $('#subject_id').val();
+
+        let filteredQuestions;
+
+        if (departmentId == 2) {
+            // For department ID 2, filter by level
+            filteredQuestions = allQuestions.filter(question => {
+                return question.subject && question.subject.level == level;
+            });
+        } else {
+            // For other departments, filter by subject
+            if (subjectId) {
+                filteredQuestions = allQuestions.filter(question => {
+                    return question.subject && question.subject.id == subjectId;
+                });
+            } else {
+                // If no subject is selected, show no questions
+                filteredQuestions = [];
+            }
+        }
 
         // Create and populate the table with filtered questions
         createAndPopulateTable(filteredQuestions);
     }
 
-    // Determine the default level and department based on the selected questions
+    // Determine the default level and subject based on the selected questions
     let defaultLevel;
-    let defaultDepartmentId;
+    let defaultSubjectId;
 
     if (selectedQuestions.length > 0) {
-        // Find the first selected question to get its subject's level and department
+        // Find the first selected question to get its subject's level and subject ID
         const firstSelectedQuestion = allQuestions.find(question => selectedQuestions.includes(question.id));
         if (firstSelectedQuestion && firstSelectedQuestion.subject) {
             defaultLevel = firstSelectedQuestion.subject.level;
-            defaultDepartmentId = firstSelectedQuestion.subject.department_id;
+            defaultSubjectId = firstSelectedQuestion.subject.id;
         }
     }
 
@@ -145,31 +173,35 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!defaultLevel) {
         defaultLevel = $('#level').val(); // Get the selected level from the dropdown
     }
-    if (!defaultDepartmentId) {
-        defaultDepartmentId = $('#department_id').length > 0 ? $('#department_id').val() : userDepartmentId;
+    if (!defaultSubjectId) {
+        defaultSubjectId = $('#subject_id').val(); // Get the selected subject from the dropdown
     }
 
-    // Load questions on page load (default level and department)
-    filterQuestions(defaultLevel, defaultDepartmentId);
+    // Set the default values for level and subject dropdowns
+    $('#level').val(defaultLevel);
+    $('#subject_id').val(defaultSubjectId);
 
-    // Load questions when level changes
+    // Trigger the level change event to filter subjects based on the default level
+    $('#level').trigger('change');
+
+    // Load questions on page load (default level and subject)
+    filterQuestions();
+
+    // Load questions when level changes (only for department ID 2)
     $('#level').change(function () {
-        const level = $(this).val();
-        const departmentId = $('#department_id').length > 0 ? $('#department_id').val() : defaultDepartmentId;
-        filterQuestions(level, departmentId);
+        if (departmentId == 2) {
+            filterQuestions();
+        } else {
+            // Reset the subject dropdown to "Select a Subject"
+            $('#subject_id').val('');
+            filterQuestions(); // This will filter based on the new level and no subject
+        }
     });
 
-    // Load questions when department changes (only for admins)
-    if ($('#department_id').length > 0) {
-        $('#department_id').change(function () {
-            const level = $('#level').val();
-            const departmentId = $(this).val();
-            // Exclude 'Administration' department from filtering
-            if ($('#department_id option:selected').text() === 'Administration') {
-                filterQuestions(level, null);
-            } else {
-                filterQuestions(level, departmentId);
-            }
-        });
-    }
+    // Load questions when subject changes (for other departments)
+    $('#subject_id').change(function () {
+        if (departmentId != 2) {
+            filterQuestions();
+        }
+    });
 });

@@ -6,12 +6,12 @@
     <div class="container mt-5">
         <form action="{{ route('exams.store') }}" method="POST">
             @csrf
-            <div class="row mb-4">
-                <!-- Exam Details Section -->
-                <div class="col-md-12">
-                    <div class="card p-4 mb-4">
-                        <h3>Exam Details</h3>
-                        <hr class="mb-4 mt-0 border border-primary-subtle border-3 opacity-50">
+            <div class="card p-4 mb-4">
+                <div class="row mb-4">
+                    <!-- Exam Details Section -->
+                    <h3>Exam Details</h3>
+                    <hr class="mb-4 mt-0 border border-primary-subtle border-3 opacity-50">
+                    <div class="col-md-6">
 
                         <!-- Name Field -->
                         <div class="mb-3">
@@ -28,9 +28,17 @@
                         <div class="mb-3">
                             <label for="level" class="form-label">Level</label>
                             <select name="level" id="level" class="form-control @error('level') is-invalid @enderror">
-                                <option value="1" selected>Level 1</option>
-                                <option value="2">Level 2</option>
-                                <option value="3">Level 3</option>
+                                @if (auth()->user()->department_id == '2')
+                                    <option value="1" selected>Level 1</option>
+                                    <option value="2">Level 2</option>
+                                    <option value="3">Level 3</option>
+                                @else
+                                    <option value="1" selected>Level 1</option>
+                                    <option value="2">Level 2</option>
+                                    <option value="3">Level 3</option>
+                                    <option value="4">Level 4</option>
+                                    <option value="5">Level 5</option>
+                                @endif
                             </select>
                             @error('level')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -38,36 +46,95 @@
                         </div>
 
                         <!-- Block Dropdown -->
+
+                        @if (auth()->user()->department_id == '2')
+                            <div class="mb-3">
+                                <label for="block" class="form-label">Block</label>
+                                <select name="block" id="block"
+                                    class="form-control @error('block') is-invalid @enderror" required>
+                                    @for ($i = 1; $i <= 6; $i++)
+                                        <option value="{{ $i }}">{{ 'Block ' . $i }}</option>
+                                    @endfor
+                                </select>
+                            </div>
+                        @else
+                            <input type="hidden" name="block" value="">
+                        @endif
+
+
+
+                        <input type="hidden" name="department_id" value="{{ auth()->user()->department_id }}">
+
+
+                        @if (auth()->user()->department_id == '2')
+                            <input type="hidden" name="examiner" value="">
+                        @else
+                            <div class="mb-3">
+                                <label for="examiner" class="form-label">Examiner</label>
+                                <select name="examiner" id="examiner"
+                                    class="form-control @error('examiner') is-invalid @enderror" required disabled>
+                                    <option value="">Select Examiner</option>
+                                    @foreach ($examiners as $examiner)
+                                        <option value="{{ $examiner->name }}"
+                                            data-subjects="{{ $examiner->subjects->pluck('id')->toJson() }}">
+                                            {{ $examiner->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('examiner')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        @endif
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <!-- Duration Input -->
                         <div class="mb-3">
-                            <label for="block" class="form-label">Block</label>
-                            <select name="block" id="block" class="form-control @error('block') is-invalid @enderror"
-                                required>
-                                @for ($i = 1; $i <= 6; $i++)
-                                    <option value="{{ $i }}">{{ 'Block ' . $i }}</option>
-                                @endfor
-                            </select>
-                            @error('block')
+                            <label for="duration" class="form-label">Duration (in Minutes)</label>
+                            <input type="number" name="duration" id="duration"
+                                class="form-control @error('duration') is-invalid @enderror" required
+                                placeholder="Enter exam duration..." min="1">
+                            @error('duration')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
-                        <!-- Department Dropdown -->
-                        @if (auth()->user()->role == 'admin')
+                        <!-- Date Input -->
+                        <div class="mb-3">
+                            <label for="date" class="form-label">Exam Date</label>
+                            <input type="date" name="date" id="date"
+                                class="form-control @error('date') is-invalid @enderror" required
+                                min="{{ now()->addDay()->format('Y-m-d') }}">
+                            @error('date')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <!-- Subject Dropdown -->
+                        @if (auth()->user()->department_id == '2')
+                            <input type="hidden" name="subject_id" value="">
+                        @else
                             <div class="mb-3">
-                                <label for="department_id" class="form-label">Department</label>
-                                <select name="department_id" id="department_id"
-                                    class="form-control @error('department_id') is-invalid @enderror" required>
-                                    @foreach ($departments as $department)
-                                        <option value="{{ $department->id }}">{{ $department->name }}</option>
+                                <label for="subject_id" class="form-label">Subject</label>
+                                <select name="subject_id" id="subject_id"
+                                    class="form-control @error('subject_id') is-invalid @enderror" required>
+                                    <option value="">Select Subject</option>
+                                    @foreach ($subjects as $subject)
+                                        <option value="{{ $subject->id }}" data-level="{{ $subject->level }}">
+                                            {{ $subject->name }}</option>
                                     @endforeach
                                 </select>
+                                @error('subject_id')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
-                        @else
-                            <input type="hidden" name="department_id" value="{{ auth()->user()->department_id }}">
                         @endif
                     </div>
                 </div>
             </div>
+
 
             <!-- Questions Section -->
             <div class="row mb-4">
@@ -286,6 +353,74 @@
     <script src="https://cdn.datatables.net/2.2.2/js/dataTables.bootstrap5.js"></script>
     <script>
         const allQuestions = @json($questions);
+        const departmentId = {{ auth()->user()->department_id }};
+    </script>
+    <script>
+        $(document).ready(function() {
+            // When the level dropdown changes
+            $('#level').change(function() {
+                const selectedLevel = $(this).val();
+
+                // Filter subjects based on the selected level
+                $('#subject_id option').each(function() {
+                    const subjectLevel = $(this).data('level');
+                    if (subjectLevel == selectedLevel) {
+                        $(this).show(); // Show subjects with matching level
+                    } else {
+                        $(this).hide(); // Hide subjects with non-matching level
+                    }
+                });
+
+                // Reset the selected value in the subject dropdown
+                $('#subject_id').val('');
+
+                // Disable the examiner dropdown if no subject is selected
+                $('#examiner').prop('disabled', true);
+                $('#examiner').val('');
+            });
+
+            // When the subject dropdown changes (to handle examiner filtering)
+            $('#subject_id').change(function() {
+                const selectedSubjectId = $(this).val();
+
+                if (selectedSubjectId) {
+                    // Enable the examiner dropdown
+                    $('#examiner').prop('disabled', false);
+
+                    // Filter examiners based on the selected subject
+                    $('#examiner option').each(function() {
+                        const subjectsData = $(this).data('subjects');
+                        if (subjectsData) {
+                            const examinerSubjects = Array.isArray(subjectsData) ? subjectsData :
+                                JSON.parse(subjectsData); // Ensure it's an array
+                            const hasSubject = examinerSubjects.includes(parseInt(
+                                selectedSubjectId
+                            )); // Check if the examiner teaches the selected subject
+
+                            if (hasSubject) {
+                                $(this).show(); // Show examiners who teach the selected subject
+                            } else {
+                                $(this)
+                                    .hide(); // Hide examiners who don't teach the selected subject
+                            }
+                        } else {
+                            $(this).hide(); // Hide examiners without subjects data
+                        }
+                    });
+
+                    // Reset the selected value in the examiner dropdown
+                    $('#examiner').val('');
+                } else {
+                    // If no subject is selected, disable the examiner dropdown
+                    $('#examiner').prop('disabled', true);
+                    $('#examiner').val('');
+                }
+            });
+
+            // Trigger the subject change event on page load to initialize the examiner dropdown
+            $('#subject_id').trigger('change');
+            $('#level').trigger('change');
+        });
     </script>
     <script src="{{ asset('js/createFilter.js') }}"></script>
     <script>

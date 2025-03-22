@@ -2,11 +2,11 @@
 
 @section('content')
     <div class="container text-center">
-        @if (Auth::check() && Auth::user()->role == 'admin')
-            <div class="row">
-                <x-users-component />
-            </div>
-        @endif
+
+        <div class="row">
+            <x-users-component />
+        </div>
+
         <div class="row">
             <x-subjects-component />
         </div>

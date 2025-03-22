@@ -18,18 +18,19 @@ class QuestionController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->role === 'admin') {
-            // Admins can see all questions
-            $questions = Question::all();
-        } elseif ($user->role === 'teacher') {
-            // Non-admins can only see questions from their department
-            $questions = Question::where('subject_id', $user->subject_id)->get();
+        if ($user->role === 'teacher') {
+            // Fetch subjects associated with the user
+            $subjectIds = $user->subjects->pluck('id')->toArray();
+
+            // Fetch questions for the user's subjects
+            $questions = Question::whereIn('subject_id', $subjectIds)->get();
         } else {
             // Non-admins can only see questions from their department
             $questions = Question::whereHas('subject', function ($query) use ($user) {
                 $query->where('department_id', $user->department_id);
             })->get();
         }
+
 
         // Add a computed property for the correct answer
         foreach ($questions as $question) {
@@ -51,12 +52,11 @@ class QuestionController extends Controller
     public function create()
     {
         $user = Auth::user();
-
-        if ($user->role === 'admin') {
-            // Admins can see all subjects
-            $subjects = Subject::all();
-        } else {
+        if ($user->role === 'teacher') {
             // Non-admins can only see subjects from their department
+            $subjects = $user->subjects;
+        } else {
+
             $subjects = Subject::where('department_id', $user->department_id)->get();
         }
 
@@ -100,13 +100,15 @@ class QuestionController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->role === 'admin') {
-            // Admins can see all subjects
-            $subjects = Subject::all();
-        } else {
+        if ($user->role === 'teacher') {
             // Non-admins can only see subjects from their department
+            $subjects = $user->subjects;
+        } else {
+
             $subjects = Subject::where('department_id', $user->department_id)->get();
         }
+
+
 
         return view('questions.edit', compact('question', 'subjects'));
     }

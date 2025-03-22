@@ -15,7 +15,13 @@
                                     <tr>
                                         <th scope="col">#</th>
                                         <th scope="col">Name</th>
-                                        <th scope="col">Block</th>
+                                        @if (Auth::check() && auth()->user()->department_id == 2)
+                                            <th scope="col">Block</th>
+                                        @elseif(Auth::check() && auth()->user()->department_id != 2)
+                                            <th scope="col">Examiner</th>
+                                            <th scope="col">Subject</th>
+                                            <th scope="col">Semester</th>
+                                        @endif
                                         <th scope="col">Level</th>
                                         <th scope="col">Department</th>
                                         <th scope="col">Created At</th>
@@ -27,11 +33,17 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $exam->name }}</td>
-                                            <td>{{ $exam->block }}</td>
+                                            @if (Auth::check() && auth()->user()->department_id == 2)
+                                                <td>{{ $exam->block }}</td>
+                                            @elseif(Auth::check() && auth()->user()->department_id != 2)
+                                                <td>{{ $exam->examiner }}</td>
+                                                <td>{{ $exam->subjectName }}</td>
+                                                <td>{{ $exam->subjectSemester }}</td>
+                                            @endif
                                             <td>{{ $exam->level }}</td>
                                             <td>{{ $exam->department->name }}</td>
                                             <td>{{ $exam->created_at }}</td>
-                                            @if (Auth::check() && in_array(auth()->user()->role, ['admin', 'staff']))
+                                            @if (Auth::check() && auth()->user()->role == 'staff')
                                                 <td>
                                                     <a href="{{ route('exams.edit', $exam) }}" role="button"><i
                                                             class="bi bi-pencil-square"

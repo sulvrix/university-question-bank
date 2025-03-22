@@ -63,8 +63,10 @@
                             <label for="difficulty" class="form-label">Difficulty:</label>
                             <select name="difficulty" id="difficulty"
                                 class="form-control @error('difficulty') is-invalid @enderror">
+                                <option value="">Select a Difficulty</option>
                                 <option value="easy" {{ old('difficulty') == 'easy' ? 'selected' : '' }}>Easy</option>
-                                <option value="medium" {{ old('difficulty') == 'medium' ? 'selected' : '' }}>Medium</option>
+                                <option value="medium" {{ old('difficulty') == 'medium' ? 'selected' : '' }}>Medium
+                                </option>
                                 <option value="hard" {{ old('difficulty') == 'hard' ? 'selected' : '' }}>Hard</option>
                             </select>
                             @error('difficulty')
@@ -82,22 +84,18 @@
                             @enderror
                         </div>
 
-                        @if (in_array(auth()->user()->role, ['admin', 'staff', 'commissioner']))
-                            <div class="mb-3">
-                                <label for="subject_id" class="form-label">Subject:</label>
-                                <select name="subject_id" id="subject_id"
-                                    class="form-control @error('subject_id') is-invalid @enderror" required>
-                                    <option value="">Select a subject</option>
-                                    @foreach ($subjects as $subject)
-                                        <option value="{{ $subject->id }}"
-                                            {{ old('subject_id') == $subject->id ? 'selected' : '' }}>{{ $subject->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        @else
-                            <input type="hidden" name="subject_id" value="{{ auth()->user()->subject_id }}">
-                        @endif
+                        <div class="mb-3">
+                            <label for="subject_id" class="form-label">Subject:</label>
+                            <select name="subject_id" id="subject_id"
+                                class="form-control @error('subject_id') is-invalid @enderror" required>
+                                <option value="">Select a subject</option>
+                                @foreach ($subjects as $subject)
+                                    <option value="{{ $subject->id }}"
+                                        {{ old('subject_id') == $subject->id ? 'selected' : '' }}>{{ $subject->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>

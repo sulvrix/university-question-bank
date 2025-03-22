@@ -21,7 +21,6 @@ return new class extends Migration
             $table->enum('role', ['admin', 'staff', 'commissioner', 'teacher']);
             $table->enum('status', ['active', 'inactive']);
             $table->foreignId('department_id')->constrained('departments')->onDelete('cascade');
-            $table->foreignId('subject_id')->nullable()->constrained('subjects')->onDelete('cascade');
             $table->rememberToken();
             $table->timestamps();
         });
