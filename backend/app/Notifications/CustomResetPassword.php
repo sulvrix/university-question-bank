@@ -43,10 +43,6 @@ class CustomResetPassword extends ResetPassword
         return (new MailMessage)
             ->subject('Reset Your Password')
             ->view('emails.password-reset', ['resetUrl' => $resetUrl])
-            ->attach(public_path('images/logo40.png'), [
-                'as' => 'logo.png',
-                'mime' => 'image/png',
-            ])
             ->priority(1);
     }
 

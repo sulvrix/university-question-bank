@@ -16,6 +16,7 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
     <!-- Scripts -->
     <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.bootstrap5.css" />
@@ -62,37 +63,38 @@
                             </ul>
                         </div>
                         <!-- Right Part -->
-                        <ul class="navbar-nav">
-                            <!-- Authentication Links -->
-                            @guest
-                                @if (Route::has('login'))
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                    </li>
-                                @endif
-                            @else
-                                <li class="nav-item dropdown">
-                                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                        {{ Auth::user()->name }}
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="{{ route('profile.edit') }}">
-                                            <i class="fas fa-user-circle me-2"></i>{{ __('Profile') }}
+                        <!-- Authentication Links -->
+                        @if (Route::has('login'))
+                            @auth
+                                <ul class="navbar-nav">
+                                    <li class="nav-item dropdown">
+                                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#"
+                                            role="button" data-bs-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false" v-pre>
+                                            {{ Auth::user()->name }}
                                         </a>
-                                        <a class="dropdown-item" href="{{ route('logout') }}"
-                                            onclick="event.preventDefault();
+                                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                            <a class="dropdown-item" href="{{ route('profile.edit') }}">
+                                                <i class="fas fa-user-circle me-2"></i>{{ __('Profile') }}
+                                            </a>
+                                            <a class="dropdown-item" href="{{ route('logout') }}"
+                                                onclick="event.preventDefault();
                                             document.getElementById('logout-form').submit();">
-                                            <i class="fas fa-sign-out-alt me-2"></i>{{ __('Logout') }}
-                                        </a>
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                            class="d-none">
-                                            @csrf
-                                        </form>
-                                    </div>
+                                                <i class="fas fa-sign-out-alt me-2"></i>{{ __('Logout') }}
+                                            </a>
+                                            <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                                class="d-none">
+                                                @csrf
+                                            </form>
+                                        </div>
+                                    </li>
+                                </ul>
+                            @else
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
                                 </li>
-                            @endguest
-                        </ul>
+                            @endauth
+                        @endif
                         <!-- Hamburger Button for Mobile -->
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                             data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
@@ -138,6 +140,72 @@
             padding-top: 0.5rem !important;
             min-height: 44px !important;
             max-height: 260px !important;
+        }
+
+
+        .navbar-nav .nav-link {
+            color: var(--text) !important;
+            font-weight: 500;
+            margin: 0 0.75rem;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-nav .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            bottom: -5px;
+            left: 0;
+            transition: width 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: var(--primary) !important;
+        }
+
+        /* Dropdown Menu */
+        .navbar-nav .dropdown-menu {
+            background: white;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 10px;
+            padding: 0.5rem 0;
+        }
+
+        .navbar-nav .dropdown-item {
+            color: var(--text);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .navbar-nav .dropdown-item:hover {
+            background-color: var(--primary-light);
+            color: var(--text);
+        }
+
+        .navbar-nav .dropdown-item i {
+            width: 20px;
+            text-align: center;
+            margin-right: 0.5rem;
+        }
+
+        /* Dropdown Toggle */
+        .navbar-nav .dropdown-toggle::after {
+            display: none;
+            /* Hide default dropdown arrow */
+        }
+
+        .navbar-nav .dropdown-toggle:hover {
+            color: var(--primary);
         }
 
         /* form Section */
@@ -322,70 +390,7 @@
             color: var(--primary-dark);
         }
 
-        .navbar-nav .nav-link {
-            color: var(--text) !important;
-            font-weight: 500;
-            margin: 0 0.75rem;
-            position: relative;
-            transition: color 0.3s ease;
-        }
 
-        .navbar-nav .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            background: var(--primary);
-            bottom: -5px;
-            left: 0;
-            transition: width 0.3s ease;
-        }
-
-        .navbar-nav .nav-link:hover::after {
-            width: 100%;
-        }
-
-        .navbar-nav .nav-link:hover {
-            color: var(--primary) !important;
-        }
-
-        /* Dropdown Menu */
-        .navbar-nav .dropdown-menu {
-            background: white;
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-top: 10px;
-            padding: 0.5rem 0;
-        }
-
-        .navbar-nav .dropdown-item {
-            color: var(--text);
-            font-weight: 500;
-            padding: 0.5rem 1rem;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        .navbar-nav .dropdown-item:hover {
-            background-color: var(--primary-light);
-            color: var(--text);
-        }
-
-        .navbar-nav .dropdown-item i {
-            width: 20px;
-            text-align: center;
-            margin-right: 0.5rem;
-        }
-
-        /* Dropdown Toggle */
-        .navbar-nav .dropdown-toggle::after {
-            display: none;
-            /* Hide default dropdown arrow */
-        }
-
-        .navbar-nav .dropdown-toggle:hover {
-            color: var(--primary);
-        }
 
 
         .input-group:hover .label,
@@ -441,7 +446,8 @@
     <script>
         $(document).ready(function() {
             var tables = $('table').not('#questionsTable').DataTable({
-                autoWidth: true,
+                autoWidth: false,
+                orderCellsTop: true, // Place filters in the second header row
                 layout: {
                     topStart: {
                         pageLength: {
@@ -453,7 +459,7 @@
                     },
                     topEnd: {
                         search: {
-                            placeholder: 'Type Something..'
+                            placeholder: 'type something here...'
                         }
                     },
                     bottomEnd: {
@@ -467,9 +473,13 @@
                     {
                         targets: '_all', // Target all columns
                         render: function(data, type, row, meta) {
+
                             // Exclude the first and last columns
-                            if (meta.col === 0 || meta.col === meta.settings.aoColumns.length - 1) {
-                                return '<span class="no-truncate">' + data + '</span>';
+                            if (meta.col === 0 || meta.col === meta.settings
+                                .aoColumns
+                                .length - 1) {
+                                return '<span class="no-truncate">' + data +
+                                    '</span>';
                             }
 
                             function formatDatetime(value) {
@@ -477,19 +487,34 @@
                                 if (isNaN(date)) {
                                     return value; // Return the original value if it's not a valid date
                                 }
-                                return date.toLocaleString(); // Format based on the user's locale
+
+                                // Format the date as Y-m-d (year-month-day)
+                                const year = date.getFullYear();
+                                const month = String(date.getMonth() + 1)
+                                    .padStart(2,
+                                        '0'); // Months are zero-based
+                                const day = String(date.getDate()).padStart(2,
+                                    '0');
+
+                                return `${year}-${month}-${day}`; // Return formatted date
                             }
 
                             // Check if the cell contains a datetime in the format YYYY-MM-DD HH:mm:ss
-                            const datetimeRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
+                            const datetimeRegex =
+                                /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
                             if (datetimeRegex.test(data)) {
-                                const formattedDate = formatDatetime(data); // Format the datetime
-                                return '<span class="truncate-text-date" title="' + data + '">' +
+                                const formattedDate = formatDatetime(
+                                    data); // Format the datetime
+                                return '<span class="truncate-text-date" title="' +
+                                    data +
+                                    '">' +
                                     formattedDate + '</span>';
                             }
 
                             // Default truncation for text
-                            return '<span class="truncate-text" title="' + data + '">' + data +
+                            return '<span class="truncate-text" title="' +
+                                data + '">' +
+                                data +
                                 '</span>';
                         }
                     },
@@ -510,8 +535,14 @@
                         targets: '_all'
                     },
                 ],
+
             });
             attachDeleteButtonListeners();
+
+            // Reinitialize listeners after each table draw event
+            tables.on('draw', function() {
+                attachDeleteButtonListeners();
+            });
         });
     </script>
     <script>

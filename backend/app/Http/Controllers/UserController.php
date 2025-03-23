@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Department;
+use App\Models\Faculty;
 use App\Models\Subject;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\Rules\Password;
 
 class UserController extends Controller
 {
@@ -48,6 +50,7 @@ class UserController extends Controller
 
             $users = User::all();
             $departments = Department::all();
+            $faculties = Faculty::all();
             $subjects = Subject::all();
         } else {
             $roles = ['commissioner', 'teacher'];
@@ -55,9 +58,10 @@ class UserController extends Controller
             $users = User::all();
             $subjects = Subject::all();
             $departments = Department::all();
+            $faculties = Faculty::all();
         }
 
-        return view('admin.users.create', compact('users', 'roles', 'statuses', 'departments', 'subjects'));
+        return view('admin.users.create', compact('users', 'roles', 'statuses', 'departments', 'subjects', 'faculties'));
     }
 
     public function store(Request $request)
@@ -70,9 +74,18 @@ class UserController extends Controller
                 'email' => 'required|string|email|max:255|unique:users',
                 'role' => 'required|string|in:admin,staff,commissioner,teacher',
                 'status' => 'required|string|in:active,inactive',
-                'password' => 'required|string|min:6|confirmed',
-                'password_confirmation' => 'required|string|min:6',
+                'password' => [
+                    'required',
+                    'confirmed',
+                    Password::min(8) // Minimum length of 8
+                        ->letters()  // Must contain at least one letter
+                        ->mixedCase() // Must contain both uppercase and lowercase letters
+                        ->numbers()  // Must contain at least one number
+                        ->symbols(), // Must contain at least one symbol
+                ],
+                'password_confirmation' => 'required|string|min:8',
                 'department_id' => 'required|integer|exists:departments,id',
+                'faculty_id' => 'required|integer|exists:faculties,id',
                 'subject_ids' => 'nullable|array', // Add validation for subject_ids
                 'subject_ids.*' => 'integer|exists:subjects,id', // Ensure each subject_id exists
             ]);
@@ -112,17 +125,19 @@ class UserController extends Controller
             $statuses = ['active', 'inactive'];
 
             $departments = Department::all();
+            $faculties = Faculty::all();
             $subjects = Subject::all();
         } else {
             $user = User::findOrFail($user->id);
 
             $roles = ['commissioner', 'teacher'];
             $statuses = ['active', 'inactive'];
+            $faculties = Faculty::all();
             $departments = Department::all();
             $subjects = Subject::all();
         }
 
-        return view('admin.users.edit', compact('user', 'roles', 'statuses', 'departments', 'subjects'));
+        return view('admin.users.edit', compact('user', 'roles', 'statuses', 'departments', 'subjects', 'faculties'));
     }
 
     public function update(Request $request, User $user)
@@ -135,6 +150,7 @@ class UserController extends Controller
             'role' => 'required|string|in:admin,staff,commissioner,teacher',
             'status' => 'required|string|in:active,inactive',
             'department_id' => 'required|integer|exists:departments,id',
+            'faculty_id' => 'required|integer|exists:faculties,id',
             'subject_ids' => 'nullable|array', // Add validation for subject_ids
             'subject_ids.*' => 'integer|exists:subjects,id', // Ensure each subject_id exists
         ]);

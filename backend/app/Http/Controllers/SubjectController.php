@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Subject;
 use App\Models\Department;
+use App\Models\Faculty;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Auth;
@@ -40,12 +41,14 @@ class SubjectController extends Controller
         if ($user->role === 'admin') {
             // Admins can create subjects for any department
             $departments = Department::all();
+            $faculties = Faculty::all();
         } else {
             // Non-admins can only create subjects for their own department
+            $faculties = Faculty::all();
             $departments = Department::where('id', $user->department_id)->get();
         }
 
-        return view('admin.subjects.create', compact('departments'));
+        return view('admin.subjects.create', compact('departments', 'faculties'));
     }
 
     /**
@@ -57,8 +60,9 @@ class SubjectController extends Controller
             // Validate the request data
             $validatedData = $request->validate([
                 'name' => 'required|string|max:255',
-                'level' => 'required|in:1,2,3',
+                'level' => 'required|in:1,2,3,4,5',
                 'department_id' => 'required|integer|exists:departments,id',
+                'faculty_id' => 'required|integer|exists:faculties,id',
             ]);
 
             Subject::create([
@@ -80,9 +84,17 @@ class SubjectController extends Controller
      */
     public function edit(Subject $subject)
     {
-        $subject = Subject::findOrFail($subject->id);
-        $departments = Department::all(); // Fetch all unique departments // Fetch all unique departments
-        return view('admin.subjects.edit', compact('subject', 'departments'));
+        $user = auth::User();
+        if ($user->role === 'admin') {
+            // Admins can create subjects for any department
+            $departments = Department::all();
+            $faculties = Faculty::all();
+        } else {
+            // Non-admins can only create subjects for their own department
+            $faculties = Faculty::all();
+            $departments = Department::where('id', $user->department_id)->get();
+        }
+        return view('admin.subjects.edit', compact('subject', 'departments', 'faculties'));
     }
 
     /**
@@ -93,8 +105,9 @@ class SubjectController extends Controller
         // Validate the request data
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'level' => 'required|in:1,2,3',
+            'level' => 'required|in:1,2,3,4,5',
             'department_id' => 'required|integer|exists:departments,id',
+            'faculty_id' => 'required|integer|exists:faculties,id',
         ]);
 
         $subject->name = $validatedData['name'];

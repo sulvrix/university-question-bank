@@ -48,6 +48,23 @@
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
                         </div>
+                        @if (Auth::check() && auth()->user()->role == 'admin')
+                            <div class="mb-3">
+                                <label for="faculty_id" class="form-label">Faculty:</label>
+                                <select class="form-control" name="faculty_id" id="faculty_id" required>
+                                    <option value="">Select Faculty</option>
+                                    @foreach ($faculties as $faculty)
+                                        <option value="{{ $faculty['id'] }}"
+                                            {{ old('faculty_id') == $faculty['id'] ? 'selected' : '' }}>
+                                            {{ $faculty['name'] }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @else
+                            <input type="hidden" name="faculty_id" value="{{ auth()->user()->department->faculty_id }}"
+                                id="faculty_id">
+                        @endif
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
@@ -66,11 +83,13 @@
                         @if (Auth::check() && auth()->user()->role == 'admin')
                             <div class="mb-3">
                                 <label for="department_id" class="form-label">Department:</label>
-                                <select class="form-control" name="department_id" id="department_id" required>
+                                <select class="form-control" name="department_id" id="department_id" required disabled>
+                                    <option value="">Select Department</option>
                                     @foreach ($departments as $department)
-                                        <option value="{{ $department['id'] }}"
-                                            {{ old('department_id') == $department['id'] ? 'selected' : '' }}>
-                                            {{ $department['name'] }}
+                                        <option value="{{ $department->id }}"
+                                            data-faculty-id="{{ $department->faculty_id }}"
+                                            {{ old('department_id') == $department->id ? 'selected' : '' }}>
+                                            {{ $department->name }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -113,10 +132,10 @@
                                 <i class="bi bi-eye-fill password-eye"></i>
                                 <i class="bi bi-eye-slash-fill password-eye-closed"></i>
                             </span>
-                            @error('password')
-                                <div class="text-danger">{{ $message }}</div>
-                            @enderror
                         </div>
+                        @error('password')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
 
                         <label for="password_confirmation" class="form-label">Confirm Password:</label>
                         <div class="mb-3 input-group">
@@ -126,10 +145,10 @@
                                 <i class="bi bi-eye-fill password-confirm-eye"></i>
                                 <i class="bi bi-eye-slash-fill password-confirm-eye-closed"></i>
                             </span>
-                            @error('password_confirmation')
-                                <div class="text-danger">{{ $message }}</div>
-                            @enderror
                         </div>
+                        @error('password_confirmation')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
 
@@ -213,12 +232,38 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const roleDropdown = document.getElementById('role');
+            const facultyDropdown = document.getElementById('faculty_id');
             const departmentDropdown = document.getElementById('department_id');
             const subjectDropdown = document.getElementById('subject_dropdown');
             const subjectCheckboxes = document.querySelectorAll('input[name="subject_ids[]"]');
             const subjectDropdownButton = document.getElementById('subjectDropdownButton');
 
-            // Function to filter subjects based on department
+            // Function to filter departments based on the selected faculty
+            function filterDepartments(facultyId) {
+                const departmentOptions = departmentDropdown.querySelectorAll('option');
+                departmentOptions.forEach(option => {
+                    if (option.value === "") {
+                        return; // Skip the default option
+                    }
+                    const departmentFacultyId = option.getAttribute('data-faculty-id');
+                    if (facultyId === null || departmentFacultyId == facultyId) {
+                        option.style.display = 'block';
+                    } else {
+                        option.style.display = 'none';
+                    }
+                });
+
+                // Enable or disable the department dropdown based on whether a faculty is selected
+                if (facultyId) {
+                    departmentDropdown.disabled = false;
+                } else {
+                    departmentDropdown.disabled = true;
+                    departmentDropdown.value = ""; // Clear the selected value
+                    resetSubjects(); // Reset subjects when no faculty is selected
+                }
+            }
+
+            // Function to filter subjects based on the selected department
             function filterSubjects(departmentId) {
                 subjectCheckboxes.forEach(checkbox => {
                     const subjectDepartmentId = checkbox.getAttribute('data-department-id');
@@ -228,6 +273,15 @@
                         checkbox.closest('li').style.display = 'none';
                     }
                 });
+            }
+
+            // Function to reset the subjects dropdown
+            function resetSubjects() {
+                subjectCheckboxes.forEach(checkbox => {
+                    checkbox.checked = false; // Uncheck all checkboxes
+                    checkbox.closest('li').style.display = 'none'; // Hide all subjects
+                });
+                updateDropdownButtonText(); // Update the dropdown button text
             }
 
             // Function to update the dropdown button text
@@ -251,16 +305,24 @@
 
             // Event listeners
             roleDropdown.addEventListener('change', function() {
-                if (this.value === 'teacher') {
+                if (this.value === 'teacher') { // Reset the department dropdown) {
                     subjectDropdownButton.disabled = false;
                     filterSubjects(departmentDropdown.value);
                 } else {
                     subjectDropdownButton.disabled = true;
+                    resetSubjects(); // Reset subjects when the role is not "teacher"
                 }
+            });
+
+            facultyDropdown.addEventListener('change', function() {
+                filterDepartments(this.value);
+                departmentDropdown.value = ""; // Reset the department dropdown
+                resetSubjects(); // Reset the subjects dropdown
             });
 
             departmentDropdown.addEventListener('change', function() {
                 if (roleDropdown.value === 'teacher') {
+                    resetSubjects(); // Reset subjects before filtering
                     filterSubjects(this.value);
                 }
             });
@@ -275,6 +337,7 @@
                 filterSubjects(departmentDropdown.value);
             } else {
                 subjectDropdownButton.disabled = true;
+                resetSubjects(); // Reset subjects if the role is not "teacher"
             }
             updateDropdownButtonText();
         });
