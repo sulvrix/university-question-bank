@@ -40,10 +40,6 @@ class CustomVerifyEmail extends VerifyEmail
         return (new MailMessage)
             ->subject('Verify Your Email Address')
             ->view('emails.verify-email', ['verificationUrl' => $verificationUrl])
-            ->attach(public_path('images/logo40.png'), [
-                'as' => 'logo.png',
-                'mime' => 'image/png',
-            ])
             ->priority(1);
     }
 

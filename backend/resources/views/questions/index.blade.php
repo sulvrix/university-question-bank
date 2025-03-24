@@ -19,9 +19,11 @@
                                         <th scope="col">Difficulty</th>
                                         <th scope="col">Points</th>
                                         <th scope="col">Subject</th>
+                                        <th scope="col">Semester</th>
                                         <th scope="col">Time</th>
                                         <th scope="col">Manage</th>
                                     </tr>
+
                                 </thead>
                                 <tbody>
                                     @foreach ($questions as $question)
@@ -32,6 +34,7 @@
                                             <td>{{ $question->difficulty }}</td>
                                             <td>{{ $question->points }}</td>
                                             <td>{{ $question->subject->name }}</td>
+                                            <td>{{ $question->subject->semester }}</td>
                                             <td>{{ $question->created_at }}</td>
                                             @if (Auth::check() && in_array(auth()->user()->role, ['staff', 'commissioner']))
                                                 <td>

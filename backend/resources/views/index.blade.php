@@ -69,13 +69,32 @@
                     <!-- Right Part: Get Started Button -->
                     @if (Route::has('login'))
                         @auth
-                            <div class="d-none d-lg-flex align-items-center">
-                                <a class="btn custom-btn px-4 py-2 rounded-3 fw-medium"
-                                    href="{{ url('/dashboard') }}">Dashboard</a>
-                            </div>
+                            <ul class="navbar-nav">
+                                <li class="nav-item dropdown">
+                                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                        {{ Auth::user()->name }}
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="{{ route('profile.edit') }}">
+                                            <i class="fas fa-user-circle me-2"></i>{{ __('Profile') }}
+                                        </a>
+                                        <a class="dropdown-item" href="{{ route('logout') }}"
+                                            onclick="event.preventDefault();
+                                    document.getElementById('logout-form').submit();">
+                                            <i class="fas fa-sign-out-alt me-2"></i>{{ __('Logout') }}
+                                        </a>
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                            class="d-none">
+                                            @csrf
+                                        </form>
+                                    </div>
+                                </li>
+                            </ul>
                         @else
                             <div class="d-none d-lg-flex align-items-center">
-                                <a class="btn custom-btn px-4 py-2 rounded-3 fw-medium" href="{{ url('login') }}">Login</a>
+                                <a class="btn custom-btn px-4 py-2 rounded-3 fw-medium"
+                                    href="{{ url('login') }}">Login</a>
                             </div>
                         @endauth
                     @endif
@@ -180,7 +199,7 @@
                         <p>"This platform has revolutionized how we create and manage exams. Highly
                             recommended!"</p>
                         <div class="user-info">
-                            <img src="user1.jpg" alt="User 1">
+                            <img src="{{ asset('images/logo40.png') }}" alt="User 1">
                             <div>
                                 <h4>Dr. John Doe</h4>
                                 <p>Head of Computer Science</p>
@@ -192,7 +211,7 @@
                     <div class="testimonial-card">
                         <p>"The AI tools are a game-changer. They save us so much time and effort."</p>
                         <div class="user-info">
-                            <img src="user2.jpg" alt="User 2">
+                            <img src="{{ asset('images/logo40.png') }}" alt="User 2">
                             <div>
                                 <h4>Prof. Jane Smith</h4>
                                 <p>Dean of Engineering</p>
@@ -205,7 +224,7 @@
                         <p>"The question bank is incredibly secure and easy to use. It's a must-have for any
                             university."</p>
                         <div class="user-info">
-                            <img src="user3.jpg" alt="User 3">
+                            <img src="{{ asset('images/logo40.png') }}" alt="User 3">
                             <div>
                                 <h4>Dr. Alice Johnson</h4>
                                 <p>Director of Academics</p>
@@ -327,6 +346,47 @@
             .navbar-nav .nav-link:hover {
                 color: var(--primary) !important;
             }
+
+
+
+            /* Dropdown Menu */
+            .navbar-nav .dropdown-menu {
+                background: white;
+                border: none;
+                border-radius: 10px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                margin-top: 10px;
+                padding: 0.5rem 0;
+            }
+
+            .navbar-nav .dropdown-item {
+                color: var(--text);
+                font-weight: 500;
+                padding: 0.5rem 1rem;
+                transition: background-color 0.3s ease, color 0.3s ease;
+            }
+
+            .navbar-nav .dropdown-item:hover {
+                background-color: var(--primary-light);
+                color: var(--text);
+            }
+
+            .navbar-nav .dropdown-item i {
+                width: 20px;
+                text-align: center;
+                margin-right: 0.5rem;
+            }
+
+            /* Dropdown Toggle */
+            .navbar-nav .dropdown-toggle::after {
+                display: none;
+                /* Hide default dropdown arrow */
+            }
+
+            .navbar-nav .dropdown-toggle:hover {
+                color: var(--primary);
+            }
+
 
             /* Custom Button Styles */
             .custom-btn {

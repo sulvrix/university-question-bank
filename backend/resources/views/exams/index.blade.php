@@ -24,7 +24,7 @@
                                         @endif
                                         <th scope="col">Level</th>
                                         <th scope="col">Department</th>
-                                        <th scope="col">Created At</th>
+                                        <th scope="col">Date</th>
                                         <th scope="col">Manage</th>
                                     </tr>
                                 </thead>
@@ -42,7 +42,7 @@
                                             @endif
                                             <td>{{ $exam->level }}</td>
                                             <td>{{ $exam->department->name }}</td>
-                                            <td>{{ $exam->created_at }}</td>
+                                            <td>{{ $exam->date }}</td>
                                             @if (Auth::check() && auth()->user()->role == 'staff')
                                                 <td>
                                                     <a href="{{ route('exams.edit', $exam) }}" role="button"><i
