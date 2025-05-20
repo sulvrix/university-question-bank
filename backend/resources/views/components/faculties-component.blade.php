@@ -40,7 +40,7 @@
                             </tbody>
                         </table>
                         <div class="d-flex align-items-center justify-content-center">
-                            <a class="btn btn-primary custom-btn btn-lg" href="{{ route('departments.create') }}"
+                            <a class="btn btn-primary custom-btn btn-lg" href="{{ route('faculties.create') }}"
                                 role="button">Add Faculty</a>
                         </div>
                     </div>

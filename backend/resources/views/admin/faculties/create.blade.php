@@ -17,7 +17,7 @@
 
                 <div class="mb-3">
                     <label for="university_id" class="form-label">University:</label>
-                    <select class="form-control" name="university">
+                    <select class="form-control" name="university_id">
                         @foreach ($universities as $university)
                             <option value="{{ $university->id }}">{{ $university->name }}</option>
                         @endforeach

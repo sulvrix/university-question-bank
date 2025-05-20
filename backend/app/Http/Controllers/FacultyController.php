@@ -39,7 +39,7 @@ class FacultyController extends Controller
             // Validate the request data
             $validatedData = $request->validate([
                 'name' => 'required|string|max:255',
-                'university_id' => 'required|integer|exists:university,id',
+                'university_id' => 'required|integer|exists:universities,id',
             ]);
 
             Faculty::create([
@@ -58,21 +58,18 @@ class FacultyController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Faculty $faculty)
+    public function show(Faculty $faculty, University $university)
     {
-        return $this->edit($faculty);
+        return $this->edit($faculty, $university);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Faculty $faculty)
+    public function edit(Faculty $faculty, University $university)
     {
-
-        $faculties = Faculty::all(); // Fetch all unique faculties
-        $universities = University::all(); // Fetch all unique faculties
-
-        return view('admin.faculties.edit', compact('faculties', 'universities'));
+        $universities = University::all();
+        return view('admin.faculties.edit', compact('faculty', 'universities'));
     }
 
     /**

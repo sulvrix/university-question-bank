@@ -537,15 +537,34 @@
                 ],
 
             });
-            attachDeleteButtonListeners();
+            //attachDeleteButtonListeners();
 
             // Reinitialize listeners after each table draw event
-            tables.on('draw', function() {
-                attachDeleteButtonListeners();
+            //tables.on('draw', function() {
+            //attachDeleteButtonListeners();
+            //});
+
+            $(document).on('click', '.delete-btn', function(event) {
+                event.preventDefault();
+                const form = $(this).closest('.delete-form')[0];
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#607de3',
+                    cancelButtonColor: '#de5464',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
             });
+
         });
-    </script>
-    <script>
+
         function attachDeleteButtonListeners() {
             const deleteButtons = document.querySelectorAll('.delete-btn');
 

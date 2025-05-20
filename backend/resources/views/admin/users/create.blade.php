@@ -237,6 +237,21 @@
             const subjectDropdown = document.getElementById('subject_dropdown');
             const subjectCheckboxes = document.querySelectorAll('input[name="subject_ids[]"]');
             const subjectDropdownButton = document.getElementById('subjectDropdownButton');
+            const password = document.getElementById('password');
+            const eye = document.querySelector('.bi-eye-fill');
+            const eyeSlash = document.querySelector('.bi-eye-slash-fill');
+
+            eye.addEventListener('click', () => {
+                eye.style.display = 'none';
+                eyeSlash.style.display = 'block';
+                password.setAttribute('type', 'text');
+            });
+
+            eyeSlash.addEventListener('click', () => {
+                eyeSlash.style.display = 'none';
+                eye.style.display = 'block';
+                password.setAttribute('type', 'password');
+            });
 
             // Function to filter departments based on the selected faculty
             function filterDepartments(facultyId) {

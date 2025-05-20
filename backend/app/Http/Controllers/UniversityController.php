@@ -64,9 +64,8 @@ class UniversityController extends Controller
      */
     public function edit(University $university)
     {
-        $universities = University::all();
 
-        return view('admin.universities.edit', compact('universities'));
+        return view('admin.universities.edit', compact('university'));
     }
 
     /**
