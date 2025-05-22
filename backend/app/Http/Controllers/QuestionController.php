@@ -31,7 +31,6 @@ class QuestionController extends Controller
             })->get();
         }
 
-
         // Add a computed property for the correct answer
         foreach ($questions as $question) {
             $answers = is_array($question->answers) ? $question->answers : json_decode($question->answers, true);
@@ -44,6 +43,7 @@ class QuestionController extends Controller
             }
             $question->correct_answer = $correctAnswer;
         }
+
 
         return view('questions.index', compact('questions'));
     }
@@ -100,13 +100,7 @@ class QuestionController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->role === 'teacher') {
-            // Non-admins can only see subjects from their department
-            $subjects = $user->subjects;
-        } else {
-
-            $subjects = Subject::where('department_id', $user->department_id)->get();
-        }
+        $subjects = Subject::where('department_id', $user->department_id)->get();
 
 
 

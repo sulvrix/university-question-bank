@@ -19,7 +19,9 @@
                                         <th scope="col">Difficulty</th>
                                         <th scope="col">Points</th>
                                         <th scope="col">Subject</th>
-                                        <th scope="col">Semester</th>
+                                        @if (Auth::check() && auth()->user()->department_id == 4)
+                                            <th scope="col">Semester</th>
+                                        @endif
                                         <th scope="col">Time</th>
                                         <th scope="col">Manage</th>
                                     </tr>
@@ -34,7 +36,9 @@
                                             <td>{{ $question->difficulty }}</td>
                                             <td>{{ $question->points }}</td>
                                             <td>{{ $question->subject->name }}</td>
-                                            <td>{{ $question->subject->semester }}</td>
+                                            @if (Auth::check() && auth()->user()->department_id == 4)
+                                                <td>{{ $question->subject->semester }}</td>
+                                            @endif
                                             <td>{{ $question->created_at }}</td>
                                             @if (Auth::check() && in_array(auth()->user()->role, ['staff', 'commissioner']))
                                                 <td>

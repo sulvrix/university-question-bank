@@ -5,9 +5,18 @@ namespace App\Services;
 use OpenAI\Laravel\Facades\OpenAI;
 use Illuminate\Support\Facades\Log;
 use Smalot\PdfParser\Parser;
+use Illuminate\Support\Facades\Http;
 
 class OpenAIService
 {
+
+    protected $apiKey;
+
+    public function __construct()
+    {
+        $this->apiKey = config('services.openai.api_key');
+    }
+
     public function chat($prompt, $model = 'gpt-4o-mini', $maxTokens = 500, $temperature = 0.7)
     {
         try {
@@ -57,4 +66,5 @@ class OpenAIService
             return null;
         }
     }
+
 }

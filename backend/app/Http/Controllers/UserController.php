@@ -116,7 +116,8 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        if ($user->role === 'admin') {
+        $currentUser = Auth::user();
+        if ($currentUser->role === 'admin') {
             // Fetch the user being edited
             $user = User::findOrFail($user->id);
 
