@@ -1,17 +1,23 @@
 # University Question Bank
 A structured question bank system for university-level multiple-choice questions (MCQs). This repository provides a foundation for managing, organizing, and retrieving questions efficiently, making it useful for online learning platforms, exam preparation tools, or educational content management systems.
 
-## User Interface
+## UI
+### Home Page
 <img alt="Home / Landing Page" src="https://github.com/sulvrix/university-question-bank/blob/main/frontend/New/Home1.jpeg">
+
+### Administration Dashboard Page
+<img alt="Administration Page" src="https://github.com/sulvrix/university-question-bank/blob/main/frontend/New/Administration.jpeg">
+
+### Question Creation Page
+<img alt="Question Creation Page" src="https://github.com/sulvrix/university-question-bank/blob/main/frontend/New/Create%20Question.jpeg">
+
+### Exam Creation Page
+<img alt="Exam Creation Page" src="https://github.com/sulvrix/university-question-bank/blob/main/frontend/New/Exam%20Create.jpeg">
 
 ## Libraries & Technologies
 Laravel – PHP framework for the backend.
 
-Alpine.js – Lightweight frontend framework for handling UI interactions.
-
-Tailwind CSS – Utility-first CSS framework.
-
-Tesseract.js – OCR library for extracting text from images.
+Bootstap 5 CSS – Utility-first CSS framework.
 
 Roboto Font – Used for typography.
 
@@ -35,9 +41,3 @@ Roboto Font – Used for typography.
 ├── package.json         # JavaScript dependencies
 ├── README.md            # Project documentation
 ```
-
-- public/images/ – Stores images for questions.
-
-- resources/js/ – Contains Alpine.js scripts for interactive components.
-
-- routes/ – Defines API endpoints for fetching questions and related data.
