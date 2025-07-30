@@ -1,16 +1,8 @@
 # University Question Bank
 A structured question bank system for university-level multiple-choice questions (MCQs). This repository provides a foundation for managing, organizing, and retrieving questions efficiently, making it useful for online learning platforms, exam preparation tools, or educational content management systems.
 
-## Techniques Used
-Lazy Loading with Intersection Observer – The project optimizes performance by only loading content when it comes into view. MDN: Intersection Observer
-
-Efficient Text Search – Implements indexed search for fast question retrieval.
-
-Debouncing Input – Prevents unnecessary API calls when typing in search fields. MDN: debounce concept
-
-Dynamic Imports – Reduces initial load time by importing modules as needed. MDN: dynamic import()
-
-CSS Grid for Layouts – Uses modern CSS techniques for flexible UI. MDN: CSS Grid
+## User Interface
+<img alt="Home / Landing Page" src="https://github.com/sulvrix/university-question-bank/blob/main/frontend/New/Home1.jpeg">
 
 ## Libraries & Technologies
 Laravel – PHP framework for the backend.
